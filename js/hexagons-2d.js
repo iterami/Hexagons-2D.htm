@@ -8,6 +8,7 @@ function create_hexagon(x, y){
     }
 
     hexagons.push({
+      'color': '#fff',
       'x': x,
       'y': y,
     });
@@ -17,8 +18,8 @@ function draw_logic(){
     // Save the current buffer state.
     canvas_buffer.save();
 
-    canvas_buffer.fillStyle = '#fff';
     for(var hexagon in hexagons){
+        canvas_buffer.fillStyle = hexagons[hexagon]['color'];
         canvas_buffer.beginPath();
         for(var i = 0; i < 6; i++){
             var angle = math_degrees_to_radians(30 + i * 60);
