@@ -19,20 +19,23 @@ function draw_logic(){
     canvas_buffer.save();
 
     for(var hexagon in hexagons){
-        canvas_buffer.fillStyle = hexagons[hexagon]['color'];
-        canvas_buffer.beginPath();
+        var vertices = [];
         for(var i = 0; i < 6; i++){
             var angle = math_degrees_to_radians(30 + i * 60);
-            canvas_buffer[i === 0
-              ? 'moveTo'
-              : 'lineTo'
-            ](
-              hexagons[hexagon]['x'] + Math.cos(angle) * 25,
-              hexagons[hexagon]['y'] + Math.sin(angle) * 25
-            );
+            vertices.push({
+              'type': i === 0
+                ? 'moveTo'
+                : 'lineTo',
+              'x': hexagons[hexagon]['x'] + Math.cos(angle) * 25,
+              'y': hexagons[hexagon]['y'] + Math.sin(angle) * 25,
+            });
         }
-        canvas_buffer.closePath();
-        canvas_buffer.fill();
+        canvas_draw_path(
+          vertices,
+          {
+            'fillStyle': hexagons[hexagon]['color'],
+          }
+        );
     }
 }
 
