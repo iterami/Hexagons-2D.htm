@@ -1,27 +1,5 @@
 'use strict';
 
-function create_hexagon(x, y){
-    x = Math.ceil((x - 23) / 46) * 46;
-    y = Math.ceil((y - 20) / 40) * 40;
-    if(y % 80){
-        x += 23;
-    }
-
-    // Prevent hexagon overlap.
-    for(var hexagon in hexagons){
-        if(hexagons[hexagon]['x'] === x
-          && hexagons[hexagon]['y'] === y){
-            return;
-        }
-    }
-
-    hexagons.push({
-      'color': '#fff',
-      'x': x,
-      'y': y,
-    });
-}
-
 function draw_logic(){
     // Save the current buffer state.
     canvas_buffer.save();
@@ -47,6 +25,29 @@ function draw_logic(){
     }
 }
 
+function toggle_hexagon(x, y){
+    x = Math.ceil((x - 23) / 46) * 46;
+    y = Math.ceil((y - 20) / 40) * 40;
+    if(y % 80){
+        x += 23;
+    }
+
+    // Delete hexagon if one exists on this spot.
+    for(var hexagon in hexagons){
+        if(hexagons[hexagon]['x'] === x
+          && hexagons[hexagon]['y'] === y){
+            delete hexagons[hexagon];
+            return;
+        }
+    }
+
+    hexagons.push({
+      'color': '#fff',
+      'x': x,
+      'y': y,
+    });
+}
+
 var hexagons = [];
 
 window.onload = function(){
@@ -62,7 +63,19 @@ window.onload = function(){
       {
         'mousedown': {
           'todo': function(){
-              create_hexagon(
+              toggle_hexagon(
+                input_mouse['x'],
+                input_mouse['y']
+              );
+          },
+        },
+        'mousemove': {
+          'todo': function(){
+              if(!input_mouse['down']){
+                  return;
+              }
+
+              toggle_hexagon(
                 input_mouse['x'],
                 input_mouse['y']
               );
