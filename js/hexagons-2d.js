@@ -1,10 +1,10 @@
 'use strict';
 
 function create_hexagon(x, y){
-    x = Math.ceil((x - 20) / 40) * 40;
+    x = Math.ceil((x - 23) / 46) * 46;
     y = Math.ceil((y - 20) / 40) * 40;
     if(y % 80){
-        x += 20;
+        x += 23;
     }
 
     hexagons.push({
