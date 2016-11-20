@@ -7,6 +7,14 @@ function create_hexagon(x, y){
         x += 23;
     }
 
+    // Prevent hexagon overlap.
+    for(var hexagon in hexagons){
+        if(hexagons[hexagon]['x'] === x
+          && hexagons[hexagon]['y'] === y){
+            return;
+        }
+    }
+
     hexagons.push({
       'color': '#fff',
       'x': x,
