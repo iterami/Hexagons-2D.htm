@@ -26,10 +26,13 @@ function draw_logic(){
 }
 
 function toggle_hexagon(x, y){
+    var side = x % 46 < 23
+      ? 23
+      : -23;
     x = Math.ceil((x - 23) / 46) * 46;
     y = Math.ceil((y - 20) / 40) * 40;
     if(y % 80){
-        x += 23;
+        x += side;
     }
 
     // Delete hexagon if one exists on this spot.
