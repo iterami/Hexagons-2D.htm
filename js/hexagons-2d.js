@@ -47,8 +47,10 @@ function setmode_logic(newgame){
         document.body.innerHTML = '<div><div><a onclick=canvas_setmode(1,true)>New Game</a></div></div>'
           + '<div class=right><div><input disabled value=ESC>Menu<br>'
           + '<input id=end-turn-key>End Turn</div><hr>'
-          + '<div><input id=hexagons>Hexagons<br>'
+          + '<div><input id=height>Height<br>'
+          + '<input id=hexagons>Hexagons<br>'
           + '<input id=players>Players<br>'
+          + '<div><input id=width>Width<br>'
           + '<a onclick=settings_reset()>Reset Settings</a></div></div>';
         settings_update();
 
@@ -123,8 +125,10 @@ window.onload = function(){
       'Hexagons-2D.htm-',
       {
         'end-turn-key': 'H',
+        'height': 500,
         'hexagons': 100,
         'players': 5,
+        'width': 500,
       }
     );
     canvas_init();

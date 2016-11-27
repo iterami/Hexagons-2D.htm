@@ -5,8 +5,8 @@ function load_level(id){
     var loop_counter = settings_settings['hexagons'] - 1;
     do{
         toggle_hexagon(
-          random_integer(500) - 250,
-          random_integer(500) - 250
+          Math.ceil(random_integer(settings_settings['width']) - settings_settings['width'] / 2),
+          Math.ceil(random_integer(settings_settings['height']) - settings_settings['height'] / 2)
         );
     }while(loop_counter--);
 
