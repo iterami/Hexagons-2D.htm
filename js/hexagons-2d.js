@@ -44,7 +44,8 @@ function setmode_logic(newgame){
     // Main menu mode.
     if(canvas_mode === 0){
         document.body.innerHTML = '<div><div><a onclick=canvas_setmode(1,true)>New Game</a></div></div>'
-          + '<div class=right><div><input disabled value=ESC>Menu</div><hr>'
+          + '<div class=right><div><input disabled value=ESC>Menu<br>'
+          + '<input id=end-turn-key>End Turn</div><hr>'
           + '<div><input id=hexagons>Hexagons<br>'
           + '<input id=players>Players<br>'
           + '<a onclick=settings_reset()>Reset Settings</a></div></div>';
@@ -95,7 +96,7 @@ window.onkeydown = function(e){
 
     var key = e.keyCode || e.which;
 
-    // ESC: update best score and return to main menu.
+    // ESC: return to main menu.
     if(key === 27){
         canvas_menu_toggle();
         return;
@@ -103,7 +104,15 @@ window.onkeydown = function(e){
 
     key = String.fromCharCode(key);
 
-    if(key === 'Q'){
+    if(key === settings_settings['end-turn-key']){
+        if(turn === players.length - 1){
+            turn = 0;
+
+        }else{
+            turn += 1;
+        }
+
+    }else if(key === 'Q'){
         canvas_menu_quit();
     }
 };
@@ -112,6 +121,7 @@ window.onload = function(){
     settings_init(
       'Hexagons-2D.htm-',
       {
+        'end-turn-key': 'H',
         'hexagons': 100,
         'players': 5,
       }
