@@ -188,9 +188,8 @@ window.onmousedown = function(e){
       && (hexagons[target]['color'] === settings_settings['default-color']
       || random_boolean())){
         hexagons[target]['color'] = players[turn]['color'];
+        end_turn();
     }
-
-    end_turn();
 };
 
 window.onload = function(){
