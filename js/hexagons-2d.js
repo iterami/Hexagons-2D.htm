@@ -45,7 +45,7 @@ function draw_logic(){
       camera['x'],
       camera['y'],
       30,
-      settings_settings['selection-color']
+      players[turn]['color']
     );
 
     // Draw hexagons.
@@ -111,7 +111,6 @@ function setmode_logic(newgame){
           + '<input id=height>Height<br>'
           + '<input id=hexagons>Hexagons<br>'
           + '<input id=players>Players<br>'
-          + '<input id=selection-color>Selection Color<br>'
           + '<div><input id=width>Width<br>'
           + '<a onclick=settings_reset()>Reset Settings</a></div></div>';
         settings_update();
@@ -178,12 +177,12 @@ window.onmousedown = function(e){
     // Check if current player has a hexagon next to target hexagon.
     var next = false;
     var next_positions = [
-      [50, 0,],
-      [25, 25,],
-      [-25, 25,],
-      [-50, 0,],
-      [-25, -25,],
-      [25, -25,],
+      [46, 0,],
+      [23, 40,],
+      [-23, 40,],
+      [-46, 0,],
+      [-23, -40,],
+      [23, -40,],
     ];
     for(var next_position in next_positions){
         var position = select_hexagon(
@@ -204,10 +203,12 @@ window.onmousedown = function(e){
     }
 
     // Attempt to conquer the hexagon.
-    if(hexagons[target]['color'] !== players[turn]['color']
-      && (hexagons[target]['color'] === settings_settings['default-color']
-      || random_boolean())){
-        hexagons[target]['color'] = players[turn]['color'];
+    if(hexagons[target]['color'] !== players[turn]['color']){
+        if(hexagons[target]['color'] === settings_settings['default-color']
+          || random_boolean()){
+            hexagons[target]['color'] = players[turn]['color'];
+        }
+
         end_turn();
     }
 };
@@ -228,7 +229,6 @@ window.onload = function(){
         'height': 500,
         'hexagons': 100,
         'players': 5,
-        'selection-color': '#fff',
         'width': 500,
       }
     );
