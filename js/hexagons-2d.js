@@ -16,27 +16,45 @@ function create_hexagon(x, y){
     });
 }
 
+function draw_hexagon(x, y, size, color){
+    var vertices = [];
+    for(var i = 0; i < 6; i++){
+        var angle = math_degrees_to_radians(30 + i * 60);
+        vertices.push({
+          'type': i === 0
+            ? 'moveTo'
+            : 'lineTo',
+          'x': x + Math.cos(angle) * size + canvas_x,
+          'y': y + Math.sin(angle) * size + canvas_y,
+        });
+    }
+    canvas_draw_path(
+      vertices,
+      {
+        'fillStyle': color,
+      }
+    );
+}
+
 function draw_logic(){
     // Save the current buffer state.
     canvas_buffer.save();
 
+    // Draw selection.
+    draw_hexagon(
+      camera['x'],
+      camera['y'],
+      30,
+      settings_settings['selection-color']
+    );
+
+    // Draw hexagons.
     for(var hexagon in hexagons){
-        var vertices = [];
-        for(var i = 0; i < 6; i++){
-            var angle = math_degrees_to_radians(30 + i * 60);
-            vertices.push({
-              'type': i === 0
-                ? 'moveTo'
-                : 'lineTo',
-              'x': hexagons[hexagon]['x'] + Math.cos(angle) * 25 + canvas_x,
-              'y': hexagons[hexagon]['y'] + Math.sin(angle) * 25 + canvas_y,
-            });
-        }
-        canvas_draw_path(
-          vertices,
-          {
-            'fillStyle': hexagons[hexagon]['color'],
-          }
+        draw_hexagon(
+          hexagons[hexagon]['x'],
+          hexagons[hexagon]['y'],
+          25,
+          hexagons[hexagon]['color']
         );
     }
 
@@ -93,6 +111,7 @@ function setmode_logic(newgame){
           + '<input id=height>Height<br>'
           + '<input id=hexagons>Hexagons<br>'
           + '<input id=players>Players<br>'
+          + '<input id=selection-color>Selection Color<br>'
           + '<div><input id=width>Width<br>'
           + '<a onclick=settings_reset()>Reset Settings</a></div></div>';
         settings_update();
@@ -105,6 +124,7 @@ function setmode_logic(newgame){
     }
 }
 
+var camera = {};
 var hexagons = [];
 var players = [];
 var turn = 0;
@@ -192,6 +212,13 @@ window.onmousedown = function(e){
     }
 };
 
+window.onmousemove = function(e){
+    camera = select_hexagon(
+      e.pageX - canvas_x,
+      e.pageY - canvas_y
+    );
+};
+
 window.onload = function(){
     settings_init(
       'Hexagons-2D.htm-',
@@ -201,6 +228,7 @@ window.onload = function(){
         'height': 500,
         'hexagons': 100,
         'players': 5,
+        'selection-color': '#fff',
         'width': 500,
       }
     );
