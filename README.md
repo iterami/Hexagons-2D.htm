@@ -1,7 +1,7 @@
 iterami/Hexagons-2D.htm
 -----------------------
 
-2D hexagon grid simulation.
+2D hexagon conquest simulation.
 
 ---
 

@@ -1,5 +1,21 @@
 'use strict';
 
+function create_hexagon(x, y){
+    // Only create a hexagon if one doesn't already exist at this x,y.
+    for(var hexagon in hexagons){
+        if(hexagons[hexagon]['x'] === x
+          && hexagons[hexagon]['y'] === y){
+            return;
+        }
+    }
+
+    hexagons.push({
+      'color': settings_settings['default-color'],
+      'x': x,
+      'y': y,
+    });
+}
+
 function draw_logic(){
     // Save the current buffer state.
     canvas_buffer.save();
@@ -32,10 +48,35 @@ function draw_logic(){
     );
 }
 
+function end_turn(){
+    if(turn === players.length - 1){
+        turn = 0;
+
+    }else{
+        turn += 1;
+    }
+}
+
 function logic(){
     if(canvas_menu){
         return;
     }
+}
+
+function select_hexagon(x, y){
+    var side = x % 46 < 23
+      ? 23
+      : -23;
+    x = Math.ceil((x - 23) / 46) * 46;
+    y = Math.ceil((y - 20) / 40) * 40;
+    if(y % 80){
+        x += side;
+    }
+
+    return {
+      'x': x,
+      'y': y,
+    };
 }
 
 function setmode_logic(newgame){
@@ -64,31 +105,6 @@ function setmode_logic(newgame){
     }
 }
 
-function toggle_hexagon(x, y){
-    var side = x % 46 < 23
-      ? 23
-      : -23;
-    x = Math.ceil((x - 23) / 46) * 46;
-    y = Math.ceil((y - 20) / 40) * 40;
-    if(y % 80){
-        x += side;
-    }
-
-    // Modify hexagon if one exists at this x,y.
-    for(var hexagon in hexagons){
-        if(hexagons[hexagon]['x'] === x
-          && hexagons[hexagon]['y'] === y){
-            return;
-        }
-    }
-
-    hexagons.push({
-      'color': settings_settings['default-color'],
-      'x': x,
-      'y': y,
-    });
-}
-
 var hexagons = [];
 var players = [];
 var turn = 0;
@@ -109,16 +125,72 @@ window.onkeydown = function(e){
     key = String.fromCharCode(key);
 
     if(key === settings_settings['end-turn-key']){
-        if(turn === players.length - 1){
-            turn = 0;
-
-        }else{
-            turn += 1;
-        }
+        end_turn();
 
     }else if(key === 'Q'){
         canvas_menu_quit();
     }
+};
+
+window.onmousedown = function(e){
+    if(canvas_mode <= 0){
+        return;
+    }
+
+    var position = select_hexagon(
+      e.pageX - canvas_x,
+      e.pageY - canvas_y
+    );
+
+    // Check if a hexagon exists at this location.
+    var target = false;
+    for(var hexagon in hexagons){
+        if(hexagons[hexagon]['x'] === position['x']
+          && hexagons[hexagon]['y'] === position['y']){
+            target = hexagon;
+            break;
+        }
+    }
+    if(target === false){
+        return;
+    }
+
+    // Check if current player has a hexagon next to target hexagon.
+    var next = false;
+    var next_positions = [
+      [50, 0,],
+      [25, 25,],
+      [-25, 25,],
+      [-50, 0,],
+      [-25, -25,],
+      [25, -25,],
+    ];
+    for(var next_position in next_positions){
+        var position = select_hexagon(
+          hexagons[target]['x'] + next_positions[next_position][0],
+          hexagons[target]['y'] + next_positions[next_position][1]
+        );
+        for(hexagon in hexagons){
+            if(hexagons[hexagon]['x'] === position['x']
+              && hexagons[hexagon]['y'] === position['y']
+              && hexagons[hexagon]['color'] === players[turn]['color']){
+                next = true;
+                break;
+            }
+        }
+    }
+    if(next === false){
+        return;
+    }
+
+    // Attempt to conquer the hexagon.
+    if(hexagons[target]['color'] !== players[turn]['color']
+      && (hexagons[target]['color'] === settings_settings['default-color']
+      || random_boolean())){
+        hexagons[target]['color'] = players[turn]['color'];
+    }
+
+    end_turn();
 };
 
 window.onload = function(){
