@@ -12,8 +12,8 @@ function draw_logic(){
               'type': i === 0
                 ? 'moveTo'
                 : 'lineTo',
-              'x': hexagons[hexagon]['x'] + Math.cos(angle) * 25,
-              'y': hexagons[hexagon]['y'] + Math.sin(angle) * 25,
+              'x': hexagons[hexagon]['x'] + Math.cos(angle) * 25 + canvas_x,
+              'y': hexagons[hexagon]['y'] + Math.sin(angle) * 25 + canvas_y,
             });
         }
         canvas_draw_path(
@@ -22,6 +22,39 @@ function draw_logic(){
             'fillStyle': hexagons[hexagon]['color'],
           }
         );
+    }
+
+    canvas_buffer.fillText(
+      'Turn: ' + turn,
+      0,
+      25
+    );
+}
+
+function logic(){
+    if(canvas_menu){
+        return;
+    }
+}
+
+function setmode_logic(newgame){
+    hexagons = [];
+    turn = 0;
+
+    // Main menu mode.
+    if(canvas_mode === 0){
+        document.body.innerHTML = '<div><div><a onclick=canvas_setmode(1,true)>New Game</a></div></div>'
+          + '<div class=right><div><input disabled value=ESC>Menu</div><hr>'
+          + '<div><input id=hexagons>Hexagons<br>'
+          + '<input id=players>Players<br>'
+          + '<a onclick=settings_reset()>Reset Settings</a></div></div>';
+        settings_update();
+
+    // New game mode.
+    }else{
+        if(newgame){
+            settings_save();
+        }
     }
 }
 
@@ -39,13 +72,6 @@ function toggle_hexagon(x, y){
     for(var hexagon in hexagons){
         if(hexagons[hexagon]['x'] === x
           && hexagons[hexagon]['y'] === y){
-            if(hexagons[hexagon]['color'] === default_color){
-                hexagons[hexagon]['color'] = random_hex();
-
-            }else{
-                delete hexagons[hexagon];
-            }
-
             return;
         }
     }
@@ -59,38 +85,36 @@ function toggle_hexagon(x, y){
 
 var default_color = '#fff';
 var hexagons = [];
+var players = [];
+var turn = 0;
+
+window.onkeydown = function(e){
+    if(canvas_mode <= 0){
+        return;
+    }
+
+    var key = e.keyCode || e.which;
+
+    // ESC: update best score and return to main menu.
+    if(key === 27){
+        canvas_menu_toggle();
+        return;
+    }
+
+    key = String.fromCharCode(key);
+
+    if(key === 'Q'){
+        canvas_menu_quit();
+    }
+};
 
 window.onload = function(){
-    canvas_init();
-    input_init(
+    settings_init(
+      'Hexagons-2D.htm-',
       {
-        27: {
-          'todo': function(){
-              hexagons.length = 0;
-          },
-        },
-      },
-      {
-        'mousedown': {
-          'todo': function(){
-              toggle_hexagon(
-                input_mouse['x'],
-                input_mouse['y']
-              );
-          },
-        },
-        'mousemove': {
-          'todo': function(){
-              if(!input_mouse['down']){
-                  return;
-              }
-
-              toggle_hexagon(
-                input_mouse['x'],
-                input_mouse['y']
-              );
-          },
-        },
+        'hexagons': 100,
+        'players': 5,
       }
     );
+    canvas_init();
 };
