@@ -35,22 +35,29 @@ function toggle_hexagon(x, y){
         x += side;
     }
 
-    // Delete hexagon if one exists on this spot.
+    // Modify hexagon if one exists at this x,y.
     for(var hexagon in hexagons){
         if(hexagons[hexagon]['x'] === x
           && hexagons[hexagon]['y'] === y){
-            delete hexagons[hexagon];
+            if(hexagons[hexagon]['color'] === default_color){
+                hexagons[hexagon]['color'] = random_hex();
+
+            }else{
+                delete hexagons[hexagon];
+            }
+
             return;
         }
     }
 
     hexagons.push({
-      'color': '#fff',
+      'color': default_color,
       'x': x,
       'y': y,
     });
 }
 
+var default_color = '#fff';
 var hexagons = [];
 
 window.onload = function(){
