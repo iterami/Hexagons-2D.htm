@@ -40,6 +40,7 @@ function logic(){
 
 function setmode_logic(newgame){
     hexagons = [];
+    players = [];
     turn = 0;
 
     // Main menu mode.
