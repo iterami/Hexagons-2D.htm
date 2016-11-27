@@ -24,6 +24,7 @@ function draw_logic(){
         );
     }
 
+    canvas_buffer.fillStyle = players[turn]['color'];
     canvas_buffer.fillText(
       'Turn: ' + turn,
       0,
