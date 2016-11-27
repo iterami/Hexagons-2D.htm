@@ -21,7 +21,7 @@ function load_level(id){
         };
 
         var hexagon = random_integer(hexagons.length);
-        while(hexagons[hexagon]['color'] !== default_color){
+        while(hexagons[hexagon]['color'] !== settings_settings['default-color']){
             hexagon = random_integer(hexagons.length);
         }
         hexagons[hexagon]['color'] = player['color'];

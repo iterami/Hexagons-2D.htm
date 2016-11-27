@@ -48,7 +48,8 @@ function setmode_logic(newgame){
         document.body.innerHTML = '<div><div><a onclick=canvas_setmode(1,true)>New Game</a></div></div>'
           + '<div class=right><div><input disabled value=ESC>Menu<br>'
           + '<input id=end-turn-key>End Turn</div><hr>'
-          + '<div><input id=height>Height<br>'
+          + '<div><input id=default-color>Default Color<br>'
+          + '<input id=height>Height<br>'
           + '<input id=hexagons>Hexagons<br>'
           + '<input id=players>Players<br>'
           + '<div><input id=width>Width<br>'
@@ -82,13 +83,12 @@ function toggle_hexagon(x, y){
     }
 
     hexagons.push({
-      'color': default_color,
+      'color': settings_settings['default-color'],
       'x': x,
       'y': y,
     });
 }
 
-var default_color = '#fff';
 var hexagons = [];
 var players = [];
 var turn = 0;
@@ -125,6 +125,7 @@ window.onload = function(){
     settings_init(
       'Hexagons-2D.htm-',
       {
+        'default-color': '#fff',
         'end-turn-key': 'H',
         'height': 500,
         'hexagons': 100,
