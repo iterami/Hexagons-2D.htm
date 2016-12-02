@@ -83,11 +83,14 @@ function logic(){
 }
 
 function select_hexagon(x, y){
-    var side = x % 46 < 23
+    var side = Math.abs(x) % 46 < 23
       ? 23
       : -23;
     x = Math.ceil((x - 23) / 46) * 46;
     y = Math.ceil((y - 20) / 40) * 40;
+    if(x < 0){
+        side = -side;
+    }
     if(y % 80){
         x += side;
     }
