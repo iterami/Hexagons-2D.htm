@@ -188,17 +188,18 @@ window.onmousedown = function(e){
       [-23, -40,],
       [23, -40,],
     ];
+    next_position_loop:
     for(var next_position in next_positions){
         var position = select_hexagon(
-          hexagons[target]['x'] + next_positions[next_position][0],
-          hexagons[target]['y'] + next_positions[next_position][1]
+          position['x'] + next_positions[next_position][0],
+          position['y'] + next_positions[next_position][1]
         );
         for(hexagon in hexagons){
             if(hexagons[hexagon]['x'] === position['x']
               && hexagons[hexagon]['y'] === position['y']
               && hexagons[hexagon]['color'] === players[turn]['color']){
                 next = true;
-                break;
+                break next_position_loop;
             }
         }
     }
