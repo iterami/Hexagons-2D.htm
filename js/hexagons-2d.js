@@ -1,6 +1,6 @@
 'use strict';
 
-function create_hexagon(x, y){
+function create_hexagon(x, y, size){
     // Only create a hexagon if one doesn't already exist at this x,y.
     for(var hexagon in hexagons){
         if(hexagons[hexagon]['x'] === x
@@ -11,6 +11,7 @@ function create_hexagon(x, y){
 
     hexagons.push({
       'color': settings_settings['default-color'],
+      'size': size,
       'x': x,
       'y': y,
     });
@@ -53,7 +54,7 @@ function draw_logic(){
         draw_hexagon(
           hexagons[hexagon]['x'],
           hexagons[hexagon]['y'],
-          25,
+          hexagons[hexagon]['size'],
           hexagons[hexagon]['color']
         );
     }

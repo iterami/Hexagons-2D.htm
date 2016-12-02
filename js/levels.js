@@ -11,7 +11,8 @@ function load_level(id){
 
         create_hexagon(
           position['x'],
-          position['y']
+          position['y'],
+          25
         );
     }while(loop_counter--);
 
