@@ -181,22 +181,22 @@ window.onmousedown = function(e){
     // Check if current player has a hexagon next to target hexagon.
     var next = false;
     var next_positions = [
-      [46, 0,],
-      [23, 40,],
-      [-23, 40,],
-      [-46, 0,],
       [-23, -40,],
-      [23, -40,],
+      [-23, 0,],
+      [-23, 40,],
+      [46, -40,],
+      [46, 0,],
+      [46, 40,],
     ];
     next_position_loop:
     for(var next_position in next_positions){
-        var position = select_hexagon(
-          position['x'] + next_positions[next_position][0],
-          position['y'] + next_positions[next_position][1]
+        var new_next_position = select_hexagon(
+          hexagons[target]['x'] + next_positions[next_position][0],
+          hexagons[target]['y'] + next_positions[next_position][1]
         );
         for(hexagon in hexagons){
-            if(hexagons[hexagon]['x'] === position['x']
-              && hexagons[hexagon]['y'] === position['y']
+            if(hexagons[hexagon]['x'] === new_next_position['x']
+              && hexagons[hexagon]['y'] === new_next_position['y']
               && hexagons[hexagon]['color'] === players[turn]['color']){
                 next = true;
                 break next_position_loop;
