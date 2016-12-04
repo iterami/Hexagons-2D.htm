@@ -188,11 +188,11 @@ window.onmousedown = function(e){
     var next = false;
     var next_positions = [
       [-23, -40,],
-      [-23, 0,],
+      [-46, 0,],
       [-23, 40,],
-      [46, -40,],
+      [23, -40,],
       [46, 0,],
-      [46, 40,],
+      [23, 40,],
     ];
     next_position_loop:
     for(var next_position in next_positions){
