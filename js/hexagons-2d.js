@@ -65,6 +65,15 @@ function draw_logic(){
       0,
       25
     );
+
+    for(var player in players){
+        canvas_buffer.fillStyle = players[player]['color'];
+        canvas_buffer.fillText(
+          player + ': ' + players[player]['hexagons'],
+          0,
+          50 + 25 * player
+        );
+    }
 }
 
 function end_turn(){
@@ -211,6 +220,12 @@ window.onmousedown = function(e){
     if(hexagons[target]['color'] !== players[turn]['color']){
         if(hexagons[target]['color'] === settings_settings['default-color']
           || random_boolean()){
+            players[turn]['hexagons'] += 1;
+            for(var player in players){
+                if(hexagons[target]['color'] === players[player]['color']){
+                    players[player]['hexagons'] -= 1;
+                }
+            }
             hexagons[target]['color'] = players[turn]['color'];
         }
 

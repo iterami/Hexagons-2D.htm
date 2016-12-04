@@ -24,6 +24,7 @@ function load_level(id){
     do{
         var player = {
           'color': random_hex(),
+          'hexagons': 1,
         };
 
         var hexagon = random_integer(hexagons.length);
