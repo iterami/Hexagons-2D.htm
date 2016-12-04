@@ -99,6 +99,10 @@ function select_hexagon(x, y){
     }
     if(y % 80){
         x += side;
+        if(x > 0
+          && mouse_x < 0){
+            x -= 46;
+        }
     }
 
     return {
@@ -134,6 +138,7 @@ function setmode_logic(newgame){
 
 var camera = {};
 var hexagons = [];
+var mouse_x = 0;
 var player_ids = [];
 var players = {};
 var turn = 0;
@@ -244,8 +249,9 @@ window.onmousedown = function(e){
 };
 
 window.onmousemove = function(e){
+    mouse_x = e.pageX - canvas_x;
     camera = select_hexagon(
-      e.pageX - canvas_x,
+      mouse_x,
       e.pageY - canvas_y
     );
 };
