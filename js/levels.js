@@ -33,6 +33,7 @@ function load_level(id){
         }
         hexagons[hexagon]['color'] = player['color'];
 
-        players.push(player);
+        players[loop_counter] = player;
+        player_ids.push(settings_settings['players'] - loop_counter - 1);
     }while(loop_counter--);
 }
