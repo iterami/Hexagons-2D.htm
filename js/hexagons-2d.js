@@ -235,6 +235,7 @@ window.onmousedown = function(e){
                                   id,
                                   1
                                 );
+                                break;
                             }
                         }
                         delete players[player];
