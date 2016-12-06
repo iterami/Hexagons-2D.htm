@@ -71,6 +71,15 @@ function draw_logic(){
         );
         x += 25;
     }
+
+    if(player_ids.length === 1){
+        canvas_buffer.fillStyle = '#fff';
+        canvas_buffer.fillText(
+          'Player ' + player_ids[0] + ' wins!',
+          0,
+          50
+        );
+    }
 }
 
 function end_turn(){
