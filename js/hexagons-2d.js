@@ -20,7 +20,9 @@ function create_hexagon(x, y, size){
 function draw_hexagon(x, y, size, color){
     var vertices = [];
     for(var i = 0; i < 6; i++){
-        var angle = math_degrees_to_radians(30 + i * 60);
+        var angle = math_degrees_to_radians({
+          'degrees': 30 + i * 60,
+        });
         vertices.push({
           'type': i === 0
             ? 'moveTo'
