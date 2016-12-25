@@ -18,6 +18,10 @@ function create_hexagon(x, y, size){
 }
 
 function draw_hexagon(x, y, size, color){
+    if(y % 80){
+        x += 23;
+    }
+
     var vertices = [];
     for(var i = 0; i < 6; i++){
         var angle = math_degrees_to_radians({
@@ -100,26 +104,22 @@ function logic(){
 }
 
 function select_hexagon(x, y){
-    var side = Math.abs(x) % 46 < 23
-      ? 23
-      : -23;
-    x = Math.ceil((x - 23) / 46) * 46;
-    y = Math.ceil((y - 20) / 40) * 40;
-    if(x < 0){
-        side = -side;
-    }
-    if(y % 80){
-        x += side;
-        if(x > 0
-          && mouse_x < 0){
-            x -= 46;
-        }
+    return {
+      'x': Math.ceil((x - 23) / 46) * 46,
+      'y': Math.ceil((y - 20) / 40) * 40,
+    };
+}
+
+function select_y_mod(x, y, move){
+    move = move || -23;
+
+    var y_mod = Math.abs(y % 80);
+    if(y_mod > 20
+      && y_mod < 60){
+        x += move;
     }
 
-    return {
-      'x': x,
-      'y': y,
-    };
+    return x;
 }
 
 function setmode_logic(newgame){
@@ -149,7 +149,6 @@ function setmode_logic(newgame){
 
 var camera = {};
 var hexagons = [];
-var mouse_x = 0;
 var player_ids = [];
 var players = {};
 var turn = 0;
@@ -183,8 +182,8 @@ window.onmousedown = function(e){
     }
 
     var position = select_hexagon(
-      e.pageX - canvas_x,
-      e.pageY - canvas_y
+      camera['x'],
+      camera['y']
     );
 
     // Check if a hexagon exists at this location.
@@ -212,8 +211,15 @@ window.onmousedown = function(e){
     ];
     next_position_loop:
     for(var next_position in next_positions){
+        if(camera['y'] % 80){
+            next_positions[next_position][0] += 46;
+        }
+
         var new_next_position = select_hexagon(
-          hexagons[target]['x'] + next_positions[next_position][0],
+          select_y_mod(
+            hexagons[target]['x'] + next_positions[next_position][0],
+            hexagons[target]['y'] + next_positions[next_position][1]
+          ),
           hexagons[target]['y'] + next_positions[next_position][1]
         );
         for(hexagon in hexagons){
@@ -261,10 +267,14 @@ window.onmousedown = function(e){
 };
 
 window.onmousemove = function(e){
-    mouse_x = e.pageX - canvas_x;
+    var mouse_x = e.pageX - canvas_x;
+    var mouse_y = e.pageY - canvas_y;
     camera = select_hexagon(
-      mouse_x,
-      e.pageY - canvas_y
+      select_y_mod(
+        mouse_x,
+        mouse_y
+      ),
+      mouse_y
     );
 };
 
