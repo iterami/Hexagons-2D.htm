@@ -121,12 +121,25 @@ function end_turn(){
 }
 
 function handle_ai(){
+    for(var player in players){
+        if(!players[player]['ai']){
+            continue;
+        }
+
+        for(var hexagon in hexagons){
+            if(hexagons[hexagon]['color'] !== players[player]['color']){
+                continue;
+            }
+        }
+    }
 }
 
 function logic(){
     if(canvas_menu){
         return;
     }
+
+    //handle_ai();
 }
 
 function select_hexagon(x, y){
