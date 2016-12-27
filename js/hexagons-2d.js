@@ -31,8 +31,9 @@ function create_player(properties){
     }
     hexagons[hexagon]['color'] = properties['color'];
 
-    player_ids.push(player_ids.length);
-    players[player_ids.length - 1] = properties;
+    player_ids.push(player_count);
+    players[player_count] = properties;
+    player_count += 1;
 }
 
 function draw_hexagon(x, y, size, color){
@@ -101,10 +102,10 @@ function draw_logic(){
         x += 25;
     }
 
-    if(player_ids.length === 1){
+    if(player_count === 1){
         canvas_buffer.fillStyle = '#fff';
         canvas_buffer.fillText(
-          'Player ' + player_ids[0] + ' wins!',
+          'Player ' + player_ids[turn] + ' wins!',
           0,
           50
         );
@@ -117,6 +118,10 @@ function end_turn(){
 
     }else{
         turn += 1;
+    }
+
+    if(!players[player_ids[turn]]){
+        end_turn();
     }
 }
 
@@ -142,6 +147,14 @@ function logic(){
     //handle_ai();
 }
 
+function lose_hexagon(player){
+    players[player]['hexagons'] -= 1;
+    if(players[player]['hexagons'] <= 0){
+        delete players[player];
+        player_count -= 1;
+    }
+}
+
 function select_hexagon(x, y){
     return {
       'x': Math.ceil((x - 23) / 46) * 46,
@@ -163,6 +176,7 @@ function select_y_mod(x, y, move){
 
 function setmode_logic(newgame){
     hexagons = [];
+    player_count = 0;
     player_ids = [];
     players = {};
     turn = 0;
@@ -170,8 +184,9 @@ function setmode_logic(newgame){
     // Main menu mode.
     if(canvas_mode === 0){
         document.body.innerHTML = '<div><div><a onclick=canvas_setmode(1,true)>New Game</a></div></div>'
-          + '<div class=right><div><input disabled value=ESC>Menu<br>'
-          + '<input id=end-turn-key>End Turn</div><hr>'
+          + '<div class=right><div><input id=delete-player>Delete Player<br>'
+          + '<input id=end-turn-key>End Turn<br>'
+          + '<input disabled value=ESC>Menu</div><hr>'
           + '<div><input id=ai>AI<br>'
           + '<input id=default-color>Default Color<br>'
           + '<input id=height>Height<br>'
@@ -189,6 +204,7 @@ function setmode_logic(newgame){
 
 var camera = {};
 var hexagons = [];
+var player_count = 0;
 var player_ids = [];
 var players = {};
 var turn = 0;
@@ -213,6 +229,20 @@ window.onkeydown = function(e){
 
     }else if(key === 'Q'){
         canvas_menu_quit();
+
+    }else if(key === 'P'){
+        if(player_count > 0){
+            for(var hexagon in hexagons){
+                if(!players[player_ids[turn]]){
+                    break;
+                }
+                if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
+                    hexagons[hexagon]['color'] = settings_settings['default-color'];
+                    lose_hexagon(player_ids[turn]);
+                }
+            }
+            end_turn();
+        }
     }
 };
 
@@ -284,19 +314,7 @@ window.onmousedown = function(e){
             players[player_ids[turn]]['hexagons'] += 1;
             for(var player in players){
                 if(old_color === players[player]['color']){
-                    players[player]['hexagons'] -= 1;
-                    if(players[player]['hexagons'] <= 0){
-                        for(var id in player_ids){
-                            if(player_ids[id] == player){
-                                player_ids.splice(
-                                  id,
-                                  1
-                                );
-                                break;
-                            }
-                        }
-                        delete players[player];
-                    }
+                    lose_hexagon(player);
                     break;
                 }
             }
@@ -324,6 +342,7 @@ window.onload = function(){
       {
         'ai': 4,
         'default-color': '#fff',
+        'delete-player': 'P',
         'end-turn-key': 'H',
         'height': 500,
         'hexagons': 100,
