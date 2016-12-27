@@ -231,7 +231,7 @@ window.onkeydown = function(e){
         canvas_menu_quit();
 
     }else if(key === 'P'){
-        if(player_count > 0){
+        if(player_count > 1){
             for(var hexagon in hexagons){
                 if(!players[player_ids[turn]]){
                     break;
