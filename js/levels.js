@@ -17,23 +17,14 @@ function load_level(id){
     }while(loop_counter--);
 
     // Create players.
-    loop_counter = Math.min(
-      settings_settings['hexagons'],
-      settings_settings['players']
-    ) - 1;
-    do{
-        var player = {
-          'color': random_hex(),
-          'hexagons': 1,
-        };
+    for(var i = settings_settings['players']; i > 0; i--){
+        create_player();
+    }
 
-        var hexagon = random_integer(hexagons.length);
-        while(hexagons[hexagon]['color'] !== settings_settings['default-color']){
-            hexagon = random_integer(hexagons.length);
-        }
-        hexagons[hexagon]['color'] = player['color'];
-
-        players[loop_counter] = player;
-        player_ids.push(settings_settings['players'] - loop_counter - 1);
-    }while(loop_counter--);
+    // Create AI.
+    for(var i = settings_settings['ai']; i > 0; i--){
+        create_player({
+          'ai': true,
+        });
+    }
 }

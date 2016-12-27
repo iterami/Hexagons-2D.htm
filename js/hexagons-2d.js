@@ -17,6 +17,24 @@ function create_hexagon(x, y, size){
     });
 }
 
+function create_player(properties){
+    properties = properties || {};
+    properties = {
+      'ai': properties['ai'] || false,
+      'color': properties['color'] || random_hex(),
+      'hexagons': 1,
+    };
+
+    var hexagon = random_integer(hexagons.length);
+    while(hexagons[hexagon]['color'] !== settings_settings['default-color']){
+        hexagon = random_integer(hexagons.length);
+    }
+    hexagons[hexagon]['color'] = properties['color'];
+
+    player_ids.push(player_ids.length);
+    players[player_ids.length - 1] = properties;
+}
+
 function draw_hexagon(x, y, size, color){
     if(y % 80){
         x += 23;
@@ -69,9 +87,14 @@ function draw_logic(){
     for(var player in players){
         canvas_buffer.fillStyle = players[player]['color'];
         canvas_buffer.fillText(
-          player + ': ' + players[player]['hexagons'] + (player == player_ids[turn]
-            ? ', TURN'
-            : ''),
+          (players[player]['ai']
+            ? 'AI'
+            : ' P')
+            + player + ': '
+            + players[player]['hexagons']
+            + (player == player_ids[turn]
+              ? ', TURN'
+              : ''),
           0,
           x
         );
@@ -95,6 +118,9 @@ function end_turn(){
     }else{
         turn += 1;
     }
+}
+
+function handle_ai(){
 }
 
 function logic(){
@@ -133,7 +159,8 @@ function setmode_logic(newgame){
         document.body.innerHTML = '<div><div><a onclick=canvas_setmode(1,true)>New Game</a></div></div>'
           + '<div class=right><div><input disabled value=ESC>Menu<br>'
           + '<input id=end-turn-key>End Turn</div><hr>'
-          + '<div><input id=default-color>Default Color<br>'
+          + '<div><input id=ai>AI<br>'
+          + '<input id=default-color>Default Color<br>'
           + '<input id=height>Height<br>'
           + '<input id=hexagons>Hexagons<br>'
           + '<input id=players>Players<br>'
@@ -282,11 +309,12 @@ window.onload = function(){
     settings_init(
       'Hexagons-2D.htm-',
       {
+        'ai': 4,
         'default-color': '#fff',
         'end-turn-key': 'H',
         'height': 500,
         'hexagons': 100,
-        'players': 5,
+        'players': 1,
         'width': 500,
       }
     );
