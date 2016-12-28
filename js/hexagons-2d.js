@@ -232,24 +232,26 @@ window.onkeydown = function(e){
 
     key = String.fromCharCode(key);
 
-    if(key === settings_settings['end-turn-key']){
-        end_turn();
-
-    }else if(key === 'Q'){
+    if(key === 'Q'){
         canvas_menu_quit();
 
-    }else if(key === 'P'){
-        if(player_count > 1){
-            for(var hexagon in hexagons){
-                if(!players[player_ids[turn]]){
-                    break;
-                }
-                if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
-                    hexagons[hexagon]['color'] = settings_settings['default-color'];
-                    lose_hexagon(player_ids[turn]);
-                }
-            }
+    }else if(!players[player_ids[turn]]['ai']){
+        if(key === settings_settings['end-turn-key']){
             end_turn();
+
+        }else if(key === 'P'){
+            if(player_count > 1){
+                for(var hexagon in hexagons){
+                    if(!players[player_ids[turn]]){
+                        break;
+                    }
+                    if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
+                        hexagons[hexagon]['color'] = settings_settings['default-color'];
+                        lose_hexagon(player_ids[turn]);
+                    }
+                }
+                end_turn();
+            }
         }
     }
 };
