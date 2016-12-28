@@ -153,23 +153,28 @@ function draw_logic(){
     // Restore the buffer state.
     canvas_buffer.restore();
 
-    // Draw turn.
+    // Draw turns.
     canvas_buffer.fillStyle = '#fff';
+    canvas_buffer.fillText(
+      'Turns: ' + turns,
+      0,
+      25
+    );
     canvas_buffer.fillText(
       'Turn: ' + players[player_ids[turn]]['name'],
       0,
-      25
+      50
     );
 
     if(player_count === 1){
         canvas_buffer.fillText(
           players[player_ids[turn]]['name'] + ' wins!',
           0,
-          75
+          100
         );
     }
 
-    var x = 50;
+    var x = 75;
     for(var player in scoreboard){
         if(!players[scoreboard[player]['id']]){
             continue;
@@ -192,6 +197,8 @@ function end_turn(){
     }else{
         turn += 1;
     }
+
+    turns += 1;
 
     if(!players[player_ids[turn]]){
         end_turn();
@@ -312,6 +319,7 @@ function setmode_logic(newgame){
     players = {};
     scoreboard = [];
     turn = 0;
+    turns = 0;
 
     // Main menu mode.
     if(canvas_mode === 0){
@@ -373,6 +381,7 @@ var player_ids = [];
 var players = {};
 var scoreboard = [];
 var turn = 0;
+var turns = 0;
 
 window.onload = function(){
     settings_init(
