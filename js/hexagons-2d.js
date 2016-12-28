@@ -321,7 +321,7 @@ function setmode_logic(newgame){
           + '<input id=end-turn-key>End Turn<br>'
           + '<input disabled value=ESC>Menu</div><hr>'
           + '<div><input id=ai>AI<br>'
-          + '<input id=default-color>Default Color<br>'
+          + '<input id=default-color type=color>Default Color<br>'
           + '<input id=height>Height<br>'
           + '<input id=hexagons>Hexagons<br>'
           + '<input id=players>Players<br>'
@@ -380,7 +380,7 @@ window.onload = function(){
       {
         'ai': 4,
         'camera-keys': 'WASD',
-        'default-color': '#fff',
+        'default-color': '#ffffff',
         'delete-player': 'P',
         'end-turn-key': 'H',
         'height': 500,
