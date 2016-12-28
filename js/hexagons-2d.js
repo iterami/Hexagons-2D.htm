@@ -1,5 +1,58 @@
 'use strict';
 
+function check_neighbor_match(position){
+    var match = false;
+    var next_positions = [
+      [-23, -40,],
+      [-46, 0,],
+      [-23, 40,],
+      [23, -40,],
+      [46, 0,],
+      [23, 40,],
+    ];
+    next_position_loop:
+    for(var next_position in next_positions){
+        if(position['y'] % 80){
+            next_positions[next_position][0] += 46;
+        }
+
+        var new_next_position = select_hexagon(
+          select_y_mod(
+            position['x'] + next_positions[next_position][0],
+            position['y'] + next_positions[next_position][1]
+          ),
+          position['y'] + next_positions[next_position][1]
+        );
+        for(var hexagon in hexagons){
+            if(hexagons[hexagon]['x'] === new_next_position['x']
+              && hexagons[hexagon]['y'] === new_next_position['y']
+              && hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
+                match = true;
+                break next_position_loop;
+            }
+        }
+    }
+
+    return match;
+}
+
+function conquer_hexagon(hexagon){
+    if(hexagons[hexagon]['color'] !== players[player_ids[turn]]['color']){
+        if(hexagons[hexagon]['color'] === settings_settings['default-color']
+          || random_boolean()){
+            var old_color = hexagons[hexagon]['color'];
+            hexagons[hexagon]['color'] = players[player_ids[turn]]['color'];
+            players[player_ids[turn]]['hexagons'] += 1;
+            for(var player in players){
+                if(old_color === players[player]['color']){
+                    lose_hexagon(player);
+                    break;
+                }
+            }
+        }
+    }
+}
+
 function create_hexagon(position, size){
     // Only create a hexagon if one doesn't already exist at this x,y.
     for(var hexagon in hexagons){
@@ -132,15 +185,16 @@ function handle_ai_turn(){
         return;
     }
 
-    for(var player in players){
-        if(!players[player]['ai']){
+    for(var hexagon in hexagons){
+        if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
             continue;
         }
 
-        for(var hexagon in hexagons){
-            if(hexagons[hexagon]['color'] !== players[player]['color']){
-                continue;
-            }
+        if(check_neighbor_match({
+          'x': hexagons[hexagon]['x'],
+          'y': hexagons[hexagon]['y'],
+        })){
+            conquer_hexagon(hexagon);
         }
     }
 
@@ -257,11 +311,8 @@ window.onkeydown = function(e){
 };
 
 window.onmousedown = function(e){
-    if(canvas_mode <= 0){
-        return;
-    }
-
-    if(players[player_ids[turn]]['ai']){
+    if(canvas_mode <= 0
+      || players[player_ids[turn]]['ai']){
         return;
     }
 
@@ -284,58 +335,17 @@ window.onmousedown = function(e){
     }
 
     // Check if current player has a hexagon next to target hexagon.
-    var next = false;
-    var next_positions = [
-      [-23, -40,],
-      [-46, 0,],
-      [-23, 40,],
-      [23, -40,],
-      [46, 0,],
-      [23, 40,],
-    ];
-    next_position_loop:
-    for(var next_position in next_positions){
-        if(camera['y'] % 80){
-            next_positions[next_position][0] += 46;
-        }
-
-        var new_next_position = select_hexagon(
-          select_y_mod(
-            hexagons[target]['x'] + next_positions[next_position][0],
-            hexagons[target]['y'] + next_positions[next_position][1]
-          ),
-          hexagons[target]['y'] + next_positions[next_position][1]
-        );
-        for(hexagon in hexagons){
-            if(hexagons[hexagon]['x'] === new_next_position['x']
-              && hexagons[hexagon]['y'] === new_next_position['y']
-              && hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
-                next = true;
-                break next_position_loop;
-            }
-        }
-    }
-    if(next === false){
+    if(!check_neighbor_match({
+      'x': hexagons[target]['x'],
+      'y': hexagons[target]['y'],
+    })){
         return;
     }
 
     // Attempt to conquer the hexagon.
-    if(hexagons[target]['color'] !== players[player_ids[turn]]['color']){
-        if(hexagons[target]['color'] === settings_settings['default-color']
-          || random_boolean()){
-            var old_color = hexagons[target]['color'];
-            hexagons[target]['color'] = players[player_ids[turn]]['color'];
-            players[player_ids[turn]]['hexagons'] += 1;
-            for(var player in players){
-                if(old_color === players[player]['color']){
-                    lose_hexagon(player);
-                    break;
-                }
-            }
-        }
+    conquer_hexagon(hexagon);
 
-        end_turn();
-    }
+    end_turn();
 };
 
 window.onmousemove = function(e){
