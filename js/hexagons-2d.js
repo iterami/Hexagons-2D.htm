@@ -153,28 +153,32 @@ function draw_logic(){
     // Restore the buffer state.
     canvas_buffer.restore();
 
-    var x = 25;
-    for(var player in players){
-        canvas_buffer.fillStyle = players[player]['color'];
+    // Draw turn.
+    canvas_buffer.fillStyle = '#fff';
+    canvas_buffer.fillText(
+      'Turn: ' + players[player_ids[turn]]['name'],
+      0,
+      25
+    );
+
+
+    if(player_count === 1){
         canvas_buffer.fillText(
-          players[player]['name']  + ': '
-            + players[player]['hexagons']
-            + (player == player_ids[turn]
-              ? ', TURN'
-              : ''),
+          players[player]['name'] + ' wins!',
+          0,
+          75
+        );
+    }
+
+    var x = 50;
+    for(var player in scoreboard){
+        canvas_buffer.fillStyle = players[scoreboard[player]['id']]['color'];
+        canvas_buffer.fillText(
+          scoreboard[player]['id']  + ': ' + scoreboard[player]['hexagons'],
           0,
           x
         );
         x += 25;
-    }
-
-    if(player_count === 1){
-        canvas_buffer.fillStyle = '#fff';
-        canvas_buffer.fillText(
-          players[player]['name'] + ' wins!',
-          0,
-          50
-        );
     }
 }
 
@@ -248,6 +252,7 @@ function logic(){
     }
 
     handle_ai_turn();
+    update_scoreboard();
 }
 
 function lose_hexagon(player){
@@ -286,6 +291,7 @@ function setmode_logic(newgame){
     player_count = 0;
     player_ids = [];
     players = {};
+    scoreboard = [];
     turn = 0;
 
     // Main menu mode.
@@ -316,6 +322,25 @@ function setmode_logic(newgame){
     }
 }
 
+function update_scoreboard(){
+    scoreboard = [];
+    for(var player in players){
+        scoreboard.push({
+          'hexagons': players[player]['hexagons'],
+          'id': player,
+        });
+    }
+    scoreboard.sort(function(a, b){
+        if(a['hexagons'] > b['hexagons']){
+            return -1;
+        }
+        if(a['hexagons'] < b['hexagons']){
+            return 1;
+        }
+        return 0;
+    });
+}
+
 var camera = {};
 var hexagons = [];
 var key_down = false;
@@ -327,6 +352,7 @@ var mouse_y = 0;
 var player_count = 0;
 var player_ids = [];
 var players = {};
+var scoreboard = [];
 var turn = 0;
 
 window.onload = function(){
