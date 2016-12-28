@@ -174,7 +174,7 @@ function draw_logic(){
     for(var player in scoreboard){
         canvas_buffer.fillStyle = players[scoreboard[player]['id']]['color'];
         canvas_buffer.fillText(
-          scoreboard[player]['id']  + ': ' + scoreboard[player]['hexagons'],
+          players[scoreboard[player]['id']]['name']  + ': ' + scoreboard[player]['hexagons'],
           0,
           x
         );
