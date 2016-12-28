@@ -23,6 +23,7 @@ function create_player(properties){
       'ai': properties['ai'] || false,
       'color': properties['color'] || random_hex(),
       'hexagons': 1,
+      'name': '',
     };
 
     var hexagon = random_integer(hexagons.length);
@@ -32,6 +33,10 @@ function create_player(properties){
     hexagons[hexagon]['color'] = properties['color'];
 
     player_ids.push(player_count);
+    properties['name'] = (properties['ai']
+      ? 'AI'
+      : ' P')
+      + player_count;
     players[player_count] = properties;
     player_count += 1;
 }
@@ -88,10 +93,7 @@ function draw_logic(){
     for(var player in players){
         canvas_buffer.fillStyle = players[player]['color'];
         canvas_buffer.fillText(
-          (players[player]['ai']
-            ? 'AI'
-            : ' P')
-            + player + ': '
+          players[player]['name']  + ': '
             + players[player]['hexagons']
             + (player == player_ids[turn]
               ? ', TURN'
@@ -105,7 +107,7 @@ function draw_logic(){
     if(player_count === 1){
         canvas_buffer.fillStyle = '#fff';
         canvas_buffer.fillText(
-          'Player ' + player_ids[turn] + ' wins!',
+          players[player]['name'] + player_ids[turn] + ' wins!',
           0,
           50
         );
