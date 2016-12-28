@@ -124,13 +124,15 @@ function draw_logic(){
     // Save the current buffer state.
     canvas_buffer.save();
 
-    // Draw selection.
-    draw_hexagon(
-      camera['x'],
-      camera['y'],
-      30,
-      players[player_ids[turn]]['color']
-    );
+    // Draw selection if not AI turn.
+    if(!players[player_ids[turn]]['ai']){
+        draw_hexagon(
+          camera['x'],
+          camera['y'],
+          30,
+          players[player_ids[turn]]['color']
+        );
+    }
 
     // Draw hexagons.
     for(var hexagon in hexagons){
