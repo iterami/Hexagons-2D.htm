@@ -1,10 +1,10 @@
 'use strict';
 
-function create_hexagon(x, y, size){
+function create_hexagon(position, size){
     // Only create a hexagon if one doesn't already exist at this x,y.
     for(var hexagon in hexagons){
-        if(hexagons[hexagon]['x'] === x
-          && hexagons[hexagon]['y'] === y){
+        if(hexagons[hexagon]['x'] === position['x']
+          && hexagons[hexagon]['y'] === position['y']){
             return;
         }
     }
@@ -12,8 +12,8 @@ function create_hexagon(x, y, size){
     hexagons.push({
       'color': settings_settings['default-color'],
       'size': size,
-      'x': x,
-      'y': y,
+      'x': position['x'],
+      'y': position['y'],
     });
 }
 
