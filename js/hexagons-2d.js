@@ -124,11 +124,17 @@ function draw_logic(){
     // Save the current buffer state.
     canvas_buffer.save();
 
+    // Translate to camera position.
+    canvas_buffer.translate(
+      camera['x'],
+      camera['y']
+    );
+
     // Draw selection if not AI turn.
     if(!players[player_ids[turn]]['ai']){
         draw_hexagon(
-          camera['x'],
-          camera['y'],
+          mouse_x,
+          mouse_y,
           30,
           players[player_ids[turn]]['color']
         );
@@ -143,6 +149,9 @@ function draw_logic(){
           hexagons[hexagon]['color']
         );
     }
+
+    // Restore the buffer state.
+    canvas_buffer.restore();
 
     var x = 25;
     for(var player in players){
@@ -218,6 +227,26 @@ function logic(){
         return;
     }
 
+    // Move camera down.
+    if(key_down){
+        camera['y'] -= settings_settings['scroll-speed'];
+    }
+
+    // Move camera left.
+    if(key_left){
+        camera['x'] += settings_settings['scroll-speed'];
+    }
+
+    // Move camera right.
+    if(key_right){
+        camera['x'] -= settings_settings['scroll-speed'];
+    }
+
+    // Move camera up.
+    if(key_up){
+        camera['y'] += settings_settings['scroll-speed'];
+    }
+
     handle_ai_turn();
 }
 
@@ -249,6 +278,10 @@ function select_y_mod(x, y, move){
 }
 
 function setmode_logic(newgame){
+    camera = {
+      'x': 0,
+      'y': 0,
+    };
     hexagons = [];
     player_count = 0;
     player_ids = [];
@@ -258,7 +291,8 @@ function setmode_logic(newgame){
     // Main menu mode.
     if(canvas_mode === 0){
         document.body.innerHTML = '<div><div><a onclick=canvas_setmode(1,true)>New Game</a></div></div>'
-          + '<div class=right><div><input id=delete-player>Delete Player<br>'
+          + '<div class=right><div><input id=camera-keys maxlength=4>Camera ↑←↓→<br>'
+          + '<input id=delete-player>Delete Player<br>'
           + '<input id=end-turn-key>End Turn<br>'
           + '<input disabled value=ESC>Menu</div><hr>'
           + '<div><input id=ai>AI<br>'
@@ -266,125 +300,170 @@ function setmode_logic(newgame){
           + '<input id=height>Height<br>'
           + '<input id=hexagons>Hexagons<br>'
           + '<input id=players>Players<br>'
-          + '<div><input id=width>Width<br>'
+          + '<input id=scroll-speed>Scroll Speed<br>'
+          + '<input id=width>Width<br>'
           + '<a onclick=settings_reset()>Reset Settings</a></div></div>';
         settings_update();
 
     // New game mode.
     }else if(newgame){
         settings_save();
+
+        key_down = false;
+        key_left = false;
+        key_right = false;
+        key_up = false;
     }
 }
 
 var camera = {};
 var hexagons = [];
+var key_down = false;
+var key_left = false;
+var key_right = false;
+var key_up = false;
+var mouse_x = 0;
+var mouse_y = 0;
 var player_count = 0;
 var player_ids = [];
 var players = {};
 var turn = 0;
-
-window.onkeydown = function(e){
-    if(canvas_mode <= 0){
-        return;
-    }
-
-    var key = e.keyCode || e.which;
-
-    // ESC: return to main menu.
-    if(key === 27){
-        canvas_menu_toggle();
-        return;
-    }
-
-    key = String.fromCharCode(key);
-
-    if(key === 'Q'){
-        canvas_menu_quit();
-
-    }else if(!players[player_ids[turn]]['ai']){
-        if(key === settings_settings['end-turn-key']){
-            end_turn();
-
-        }else if(key === 'P'){
-            if(player_count > 1){
-                for(var hexagon in hexagons){
-                    if(!players[player_ids[turn]]){
-                        break;
-                    }
-                    if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
-                        hexagons[hexagon]['color'] = settings_settings['default-color'];
-                        lose_hexagon(player_ids[turn]);
-                    }
-                }
-                end_turn();
-            }
-        }
-    }
-};
-
-window.onmousedown = function(e){
-    if(canvas_mode <= 0
-      || players[player_ids[turn]]['ai']){
-        return;
-    }
-
-    var position = select_hexagon(
-      camera['x'],
-      camera['y']
-    );
-
-    // Check if a hexagon exists at this location.
-    var target = false;
-    for(var hexagon in hexagons){
-        if(hexagons[hexagon]['x'] === position['x']
-          && hexagons[hexagon]['y'] === position['y']){
-            target = hexagon;
-            break;
-        }
-    }
-    if(target === false){
-        return;
-    }
-
-    // Check if current player has a hexagon next to target hexagon.
-    if(!check_neighbor_match({
-      'x': hexagons[target]['x'],
-      'y': hexagons[target]['y'],
-    })){
-        return;
-    }
-
-    // Attempt to conquer the hexagon.
-    conquer_hexagon(hexagon);
-
-    end_turn();
-};
-
-window.onmousemove = function(e){
-    var mouse_x = e.pageX - canvas_x;
-    var mouse_y = e.pageY - canvas_y;
-    camera = select_hexagon(
-      select_y_mod(
-        mouse_x,
-        mouse_y
-      ),
-      mouse_y
-    );
-};
 
 window.onload = function(){
     settings_init(
       'Hexagons-2D.htm-',
       {
         'ai': 4,
+        'camera-keys': 'WASD',
         'default-color': '#fff',
         'delete-player': 'P',
         'end-turn-key': 'H',
         'height': 500,
         'hexagons': 100,
         'players': 1,
+        'scroll-speed': 5,
         'width': 500,
       }
     );
     canvas_init();
+
+    window.onkeydown = function(e){
+        if(canvas_mode <= 0){
+            return;
+        }
+
+        var key = e.keyCode || e.which;
+
+        // ESC: return to main menu.
+        if(key === 27){
+            canvas_menu_toggle();
+            return;
+        }
+
+        key = String.fromCharCode(key);
+
+        if(key === settings_settings['camera-keys'][1]){
+            key_left = true;
+
+        }else if(key === settings_settings['camera-keys'][3]){
+            key_right = true;
+
+        }else if(key === settings_settings['camera-keys'][2]){
+            key_down = true;
+
+        }else if(key === settings_settings['camera-keys'][0]){
+            key_up = true;
+
+        }else if(key === 'Q'){
+            canvas_menu_quit();
+
+        }else if(!players[player_ids[turn]]['ai']){
+            if(key === settings_settings['end-turn-key']){
+                end_turn();
+
+            }else if(key === 'P'){
+                if(player_count > 1){
+                    for(var hexagon in hexagons){
+                        if(!players[player_ids[turn]]){
+                            break;
+                        }
+                        if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
+                            hexagons[hexagon]['color'] = settings_settings['default-color'];
+                            lose_hexagon(player_ids[turn]);
+                        }
+                    }
+                    end_turn();
+                }
+            }
+        }
+    };
+
+    window.onkeyup = function(e){
+        var key = String.fromCharCode(e.keyCode || e.which);
+
+        if(key === settings_settings['camera-keys'][1]){
+            key_left = false;
+
+        }else if(key === settings_settings['camera-keys'][3]){
+            key_right = false;
+
+        }else if(key === settings_settings['camera-keys'][2]){
+            key_down = false;
+
+        }else if(key === settings_settings['camera-keys'][0]){
+            key_up = false;
+        }
+    };
+
+    window.onmousedown = function(e){
+        if(canvas_mode <= 0
+          || players[player_ids[turn]]['ai']){
+            return;
+        }
+
+        var position = select_hexagon(
+          mouse_x,
+          mouse_y
+        );
+
+        // Check if a hexagon exists at this location.
+        var target = false;
+        for(var hexagon in hexagons){
+            if(hexagons[hexagon]['x'] === position['x']
+              && hexagons[hexagon]['y'] === position['y']){
+                target = hexagon;
+                break;
+            }
+        }
+        if(target === false){
+            return;
+        }
+
+        // Check if current player has a hexagon next to target hexagon.
+        if(!check_neighbor_match({
+          'x': hexagons[target]['x'],
+          'y': hexagons[target]['y'],
+        })){
+            return;
+        }
+
+        // Attempt to conquer the hexagon.
+        conquer_hexagon(hexagon);
+
+        end_turn();
+    };
+
+    window.onmousemove = function(e){
+        var x = e.pageX - canvas_x - camera['x'];
+        var y = e.pageY - canvas_y - camera['y'];
+        var position = select_hexagon(
+          select_y_mod(
+            x,
+            y
+          ),
+          y
+        );
+        mouse_x = position['x'];
+        mouse_y = position['y'];
+    };
 };
