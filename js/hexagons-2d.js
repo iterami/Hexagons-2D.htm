@@ -471,11 +471,13 @@ window.onload = function(){
           mouse_y
         );
 
-        // Check if a hexagon exists at this location.
+        // Check if a hexagon exists at this location
+        //   with a different color.
         var target = false;
         for(var hexagon in hexagons){
             if(hexagons[hexagon]['x'] === position['x']
-              && hexagons[hexagon]['y'] === position['y']){
+              && hexagons[hexagon]['y'] === position['y']
+              && hexagons[hexagon]['color'] !== players[player_ids[turn]]['color']){
                 target = hexagon;
                 break;
             }
