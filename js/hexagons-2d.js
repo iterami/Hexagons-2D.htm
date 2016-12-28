@@ -195,6 +195,7 @@ function handle_ai_turn(){
           'y': hexagons[hexagon]['y'],
         })){
             conquer_hexagon(hexagon);
+            break;
         }
     }
 
