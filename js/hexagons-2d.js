@@ -185,6 +185,7 @@ function handle_ai_turn(){
         return;
     }
 
+    var target = false;
     for(var hexagon in hexagons){
         if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
             continue;
@@ -194,9 +195,17 @@ function handle_ai_turn(){
           'x': hexagons[hexagon]['x'],
           'y': hexagons[hexagon]['y'],
         })){
-            conquer_hexagon(hexagon);
-            break;
+            if(hexagons[hexagon]['color'] === settings_settings['default-color']){
+                conquer_hexagon(hexagon);
+                break;
+
+            }else{
+                target = hexagon;
+            }
         }
+    }
+    if(target !== false){
+        conquer_hexagon(target);
     }
 
     end_turn();
