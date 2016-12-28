@@ -125,7 +125,11 @@ function end_turn(){
     }
 }
 
-function handle_ai(){
+function handle_ai_turn(){
+    if(!players[player_ids[turn]]['ai']){
+        return;
+    }
+
     for(var player in players){
         if(!players[player]['ai']){
             continue;
@@ -137,6 +141,8 @@ function handle_ai(){
             }
         }
     }
+
+    end_turn();
 }
 
 function logic(){
@@ -144,7 +150,7 @@ function logic(){
         return;
     }
 
-    //handle_ai();
+    handle_ai_turn();
 }
 
 function lose_hexagon(player){
@@ -248,6 +254,10 @@ window.onkeydown = function(e){
 
 window.onmousedown = function(e){
     if(canvas_mode <= 0){
+        return;
+    }
+
+    if(players[player_ids[turn]]['ai']){
         return;
     }
 
