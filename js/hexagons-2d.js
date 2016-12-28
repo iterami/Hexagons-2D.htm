@@ -229,7 +229,7 @@ function handle_ai_turn(){
         do{
             for(var option in options){
                 if(hexagons[options[option]]['color'] === players[scoreboard[loop_counter]['id']]['color']){
-                    conquer_hexagon(options[random_integer(options.length)]);
+                    conquer_hexagon(options[option]);
                     break scoreboard_loop;
                 }
             }
