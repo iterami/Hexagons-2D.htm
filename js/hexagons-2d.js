@@ -172,6 +172,10 @@ function draw_logic(){
 
     var x = 50;
     for(var player in scoreboard){
+        if(!players[scoreboard[player]['id']]){
+            continue;
+        }
+
         canvas_buffer.fillStyle = players[scoreboard[player]['id']]['color'];
         canvas_buffer.fillText(
           players[scoreboard[player]['id']]['name']  + ': ' + scoreboard[player]['hexagons'],
