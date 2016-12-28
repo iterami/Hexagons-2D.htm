@@ -88,7 +88,7 @@ function create_player(properties){
     player_ids.push(player_count);
     properties['name'] = (properties['ai']
       ? 'AI'
-      : ' P')
+      : 'P')
       + player_count;
     players[player_count] = properties;
     player_count += 1;
