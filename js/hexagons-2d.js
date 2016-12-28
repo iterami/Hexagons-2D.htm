@@ -107,7 +107,7 @@ function draw_logic(){
     if(player_count === 1){
         canvas_buffer.fillStyle = '#fff';
         canvas_buffer.fillText(
-          players[player]['name'] + player_ids[turn] + ' wins!',
+          players[player]['name'] + ' wins!',
           0,
           50
         );
