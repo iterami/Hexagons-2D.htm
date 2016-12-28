@@ -224,7 +224,16 @@ function handle_ai_turn(){
         }
     }
     if(options.length > 0){
-        conquer_hexagon(options[random_integer(options.length)]);
+        var loop_counter = scoreboard.length - 1;
+        scoreboard_loop:
+        do{
+            for(var option in options){
+                if(hexagons[options[option]]['color'] === players[scoreboard[loop_counter]['id']]['color']){
+                    conquer_hexagon(options[random_integer(options.length)]);
+                    break scoreboard_loop;
+                }
+            }
+        }while(loop_counter--);
     }
 
     end_turn();
