@@ -196,7 +196,7 @@ function handle_ai_turn(){
         return;
     }
 
-    var target = false;
+    var options = [];
     for(var hexagon in hexagons){
         if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
             continue;
@@ -211,12 +211,12 @@ function handle_ai_turn(){
                 break;
 
             }else{
-                target = hexagon;
+                options.push(hexagon);
             }
         }
     }
-    if(target !== false){
-        conquer_hexagon(target);
+    if(options.length > 0){
+        conquer_hexagon(options[random_integer(options.length)]);
     }
 
     end_turn();
