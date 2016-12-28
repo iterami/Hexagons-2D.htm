@@ -161,10 +161,9 @@ function draw_logic(){
       25
     );
 
-
     if(player_count === 1){
         canvas_buffer.fillText(
-          players[player]['name'] + ' wins!',
+          players[player_ids[turn]]['name'] + ' wins!',
           0,
           75
         );
@@ -224,9 +223,16 @@ function handle_ai_turn(){
         }
     }
     if(options.length > 0){
+        options.sort(function(a, b){
+            return Math.random();
+        });
         var loop_counter = scoreboard.length - 1;
         scoreboard_loop:
         do{
+            if(!players[scoreboard[loop_counter]['id']]){
+                continue;
+            }
+
             for(var option in options){
                 if(hexagons[options[option]]['color'] === players[scoreboard[loop_counter]['id']]['color']){
                     conquer_hexagon(options[option]);
