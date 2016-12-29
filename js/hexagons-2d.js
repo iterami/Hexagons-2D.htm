@@ -230,8 +230,8 @@ function handle_ai_turn(){
         }
     }
     if(options.length > 0){
-        options.sort(function(a, b){
-            return Math.random();
+        sort_random({
+          'array': options,
         });
         var loop_counter = scoreboard.length - 1;
         scoreboard_loop:
@@ -357,14 +357,9 @@ function update_scoreboard(){
           'id': player,
         });
     }
-    scoreboard.sort(function(a, b){
-        if(a['hexagons'] > b['hexagons']){
-            return -1;
-        }
-        if(a['hexagons'] < b['hexagons']){
-            return 1;
-        }
-        return 0;
+    sort_property({
+      'array': scoreboard,
+      'property': 'hexagons',
     });
 }
 
