@@ -232,21 +232,21 @@ function handle_ai_turn(){
     if(options.length > 0){
         sort_random({
           'array': options,
+          'reverse': true,
         });
-        var loop_counter = scoreboard.length - 1;
         scoreboard_loop:
-        do{
-            if(!players[scoreboard[loop_counter]['id']]){
+        for(var player in scoreboard){
+            if(!players[scoreboard[player]['id']]){
                 continue;
             }
 
             for(var option in options){
-                if(hexagons[options[option]]['color'] === players[scoreboard[loop_counter]['id']]['color']){
+                if(hexagons[options[option]]['color'] === players[scoreboard[player]['id']]['color']){
                     conquer_hexagon(options[option]);
                     break scoreboard_loop;
                 }
             }
-        }while(loop_counter--);
+        }
     }
 
     end_turn();
