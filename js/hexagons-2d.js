@@ -379,9 +379,9 @@ var turn = 0;
 var turns = 0;
 
 window.onload = function(){
-    settings_init(
-      'Hexagons-2D.htm-',
-      {
+    settings_init({
+      'prefix': 'Hexagons-2D.htm-',
+      'settings': {
         'ai': 4,
         'camera-keys': 'WASD',
         'default-color': '#ffffff',
@@ -392,8 +392,8 @@ window.onload = function(){
         'players': 1,
         'scroll-speed': 5,
         'width': 500,
-      }
-    );
+      },
+    });
     canvas_init();
 
     window.onkeydown = function(e){
