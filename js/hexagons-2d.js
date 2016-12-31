@@ -232,16 +232,15 @@ function handle_ai_turn(){
     if(options.length > 0){
         sort_random({
           'array': options,
-          'reverse': true,
         });
         scoreboard_loop:
-        for(var player in scoreboard){
-            if(!players[scoreboard[player]['id']]){
+        for(var i = scoreboard.length; i--;){
+            if(!players[scoreboard[i]['id']]){
                 continue;
             }
 
             for(var option in options){
-                if(hexagons[options[option]]['color'] === players[scoreboard[player]['id']]['color']){
+                if(hexagons[options[option]]['color'] === players[scoreboard[i]['id']]['color']){
                     conquer_hexagon(options[option]);
                     break scoreboard_loop;
                 }
@@ -359,6 +358,7 @@ function update_scoreboard(){
     }
     sort_property({
       'array': scoreboard,
+      'reverse': true,
       'property': 'hexagons',
     });
 }
