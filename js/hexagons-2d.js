@@ -157,28 +157,23 @@ function draw_logic(){
     // Restore the buffer state.
     canvas_buffer.restore();
 
-    // Draw turns.
+    // Draw turn info.
     canvas_buffer.fillStyle = '#fff';
     canvas_buffer.fillText(
-      'Turns: ' + turns,
+      'Turn #' + turns + ', ' + players[player_ids[turn]]['name'],
       0,
       25
-    );
-    canvas_buffer.fillText(
-      'Turn: ' + players[player_ids[turn]]['name'],
-      0,
-      50
     );
 
     if(player_count === 1){
         canvas_buffer.fillText(
           players[player_ids[turn]]['name'] + ' wins!',
           0,
-          100
+          75
         );
     }
 
-    var x = 75;
+    var x = 50;
     for(var player in scoreboard){
         if(!players[scoreboard[player]['id']]){
             continue;
