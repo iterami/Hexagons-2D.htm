@@ -6,8 +6,12 @@ function load_level(id){
     do{
         create_hexagon(
           select_hexagon(
-            random_integer(settings_settings['width']) - settings_settings['width'] / 2,
-            random_integer(settings_settings['height']) - settings_settings['height'] / 2
+            random_integer({
+              'max': settings_settings['width'],
+            }) - settings_settings['width'] / 2,
+            random_integer({
+              'max': settings_settings['height'],
+            }) - settings_settings['height'] / 2
           ),
           25
         );

@@ -79,9 +79,13 @@ function create_player(properties){
       'name': '',
     };
 
-    var hexagon = random_integer(hexagons.length);
+    var hexagon = random_integer({
+      'max': hexagons.length,
+    });
     while(hexagons[hexagon]['color'] !== settings_settings['default-color']){
-        hexagon = random_integer(hexagons.length);
+        hexagon = random_integer({
+          'max': hexagons.length,
+        });
     }
     hexagons[hexagon]['color'] = properties['color'];
 
