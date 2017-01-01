@@ -206,7 +206,8 @@ function end_turn(){
 }
 
 function handle_ai_turn(){
-    if(!players[player_ids[turn]]['ai']){
+    if(!players[player_ids[turn]]['ai']
+      || scoreboard.length === 1){
         return;
     }
 
