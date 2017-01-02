@@ -18,12 +18,12 @@ function load_level(id){
     }while(loop_counter--);
 
     // Create players.
-    for(var i = settings_settings['players']; i > 0; i--){
+    for(var i = settings_settings['players']; i--;){
         create_player();
     }
 
     // Create AI.
-    for(var i = settings_settings['ai']; i > 0; i--){
+    for(var i = settings_settings['ai']; i--;){
         create_player({
           'ai': true,
         });
