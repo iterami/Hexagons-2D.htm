@@ -160,7 +160,7 @@ function draw_logic(){
     // Draw turn info.
     canvas_buffer.fillStyle = '#fff';
     canvas_buffer.fillText(
-      'Turn #' + turns + ', ' + players[player_ids[turn]]['name'],
+      'Turn #' + turns + ' ' + players[player_ids[turn]]['name'],
       0,
       25
     );
