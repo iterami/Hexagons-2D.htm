@@ -176,8 +176,19 @@ function draw_logic(){
       25
     );
 
-    // Draw scoreboard.
     var x = 50;
+    if(unclaimed > 0){
+        // Draw unclaimed hexagons.
+        canvas_buffer.fillStyle = settings_settings['default-color'],
+        canvas_buffer.fillText(
+          'Unclaimed: ' + unclaimed,
+          0,
+          x
+        );
+        x += 25;
+    }
+
+    // Draw scoreboard.
     for(var player in scoreboard){
         if(!players[scoreboard[player]['id']]){
             continue;
@@ -196,17 +207,6 @@ function draw_logic(){
     if(player_count === 1){
         canvas_buffer.fillText(
           players[player_ids[turn]]['name'] + ' wins!',
-          0,
-          x
-        );
-        x += 25;
-    }
-
-    if(unclaimed > 0){
-        // Draw unclaimed hexagons.
-        canvas_buffer.fillStyle = settings_settings['default-color'],
-        canvas_buffer.fillText(
-          'Unclaimed: ' + unclaimed,
           0,
           x
         );
