@@ -40,9 +40,12 @@ function conquer_hexagon(hexagon, playerid){
     playerid = playerid || player_ids[turn];
 
     if(hexagons[hexagon]['color'] !== players[playerid]['color']){
-        var default_color = hexagons[hexagon]['color'] === settings_settings['default-color'];
-        if(default_color
-          || random_boolean()){
+        if(hexagons[hexagon]['color'] === settings_settings['default-color']){
+            hexagons[hexagon]['color'] = players[playerid]['color'];
+            players[playerid]['hexagons'] += 1;
+            unclaimed -= 1;
+
+        }else if(random_boolean()){
             var old_color = hexagons[hexagon]['color'];
             hexagons[hexagon]['color'] = players[playerid]['color'];
             players[playerid]['hexagons'] += 1;
@@ -52,10 +55,6 @@ function conquer_hexagon(hexagon, playerid){
                     break;
                 }
             }
-        }
-        if(default_color
-          && unclaimed > 0){
-            unclaimed -= 1;
         }
     }
 }
@@ -75,7 +74,7 @@ function create_hexagon(position, size){
       'x': position['x'],
       'y': position['y'],
     });
-    unclaimed += 1;
+    unclaimed = hexagons.length + 1;
 }
 
 function create_player(properties){
@@ -177,15 +176,6 @@ function draw_logic(){
       25
     );
 
-    // Draw winner.
-    if(player_count === 1){
-        canvas_buffer.fillText(
-          players[player_ids[turn]]['name'] + ' wins!',
-          0,
-          75
-        );
-    }
-
     // Draw scoreboard.
     var x = 50;
     for(var player in scoreboard){
@@ -202,13 +192,25 @@ function draw_logic(){
         x += 25;
     }
 
-    // Draw unclaimed hexagons.
-    canvas_buffer.fillStyle = settings_settings['default-color'],
-    canvas_buffer.fillText(
-      'Unclaimed: ' + unclaimed,
-      0,
-      x
-    );
+    // Draw winner.
+    if(player_count === 1){
+        canvas_buffer.fillText(
+          players[player_ids[turn]]['name'] + ' wins!',
+          0,
+          x
+        );
+        x += 25;
+    }
+
+    if(unclaimed > 0){
+        // Draw unclaimed hexagons.
+        canvas_buffer.fillStyle = settings_settings['default-color'],
+        canvas_buffer.fillText(
+          'Unclaimed: ' + unclaimed,
+          0,
+          x
+        );
+    }
 }
 
 function end_turn(){
