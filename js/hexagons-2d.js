@@ -36,19 +36,26 @@ function check_neighbor_match(position){
     return match;
 }
 
-function conquer_hexagon(hexagon){
-    if(hexagons[hexagon]['color'] !== players[player_ids[turn]]['color']){
-        if(hexagons[hexagon]['color'] === settings_settings['default-color']
+function conquer_hexagon(hexagon, playerid){
+    playerid = playerid || player_ids[turn];
+
+    if(hexagons[hexagon]['color'] !== players[playerid]['color']){
+        var default_color = hexagons[hexagon]['color'] === settings_settings['default-color'];
+        if(default_color
           || random_boolean()){
             var old_color = hexagons[hexagon]['color'];
-            hexagons[hexagon]['color'] = players[player_ids[turn]]['color'];
-            players[player_ids[turn]]['hexagons'] += 1;
+            hexagons[hexagon]['color'] = players[playerid]['color'];
+            players[playerid]['hexagons'] += 1;
             for(var player in players){
                 if(old_color === players[player]['color']){
                     lose_hexagon(player);
                     break;
                 }
             }
+        }
+        if(default_color
+          && unclaimed > 0){
+            unclaimed -= 1;
         }
     }
 }
@@ -68,6 +75,7 @@ function create_hexagon(position, size){
       'x': position['x'],
       'y': position['y'],
     });
+    unclaimed += 1;
 }
 
 function create_player(properties){
@@ -75,9 +83,16 @@ function create_player(properties){
     properties = {
       'ai': properties['ai'] || false,
       'color': properties['color'] || random_hex(),
-      'hexagons': 1,
+      'hexagons': 0,
       'name': '',
     };
+    properties['name'] = (properties['ai']
+      ? 'AI'
+      : 'P')
+      + properties['color'];
+
+    players[player_count] = properties;
+    player_ids.push(player_count);
 
     var hexagon = random_integer({
       'max': hexagons.length,
@@ -87,14 +102,11 @@ function create_player(properties){
           'max': hexagons.length,
         });
     }
-    hexagons[hexagon]['color'] = properties['color'];
-    properties['name'] = (properties['ai']
-      ? 'AI'
-      : 'P')
-      + properties['color'];
+    conquer_hexagon(
+      hexagon,
+      player_count
+    );
 
-    players[player_count] = properties;
-    player_ids.push(player_count);
     player_count += 1;
 }
 
@@ -165,6 +177,7 @@ function draw_logic(){
       25
     );
 
+    // Draw winner.
     if(player_count === 1){
         canvas_buffer.fillText(
           players[player_ids[turn]]['name'] + ' wins!',
@@ -173,6 +186,7 @@ function draw_logic(){
         );
     }
 
+    // Draw scoreboard.
     var x = 50;
     for(var player in scoreboard){
         if(!players[scoreboard[player]['id']]){
@@ -187,6 +201,14 @@ function draw_logic(){
         );
         x += 25;
     }
+
+    // Draw unclaimed hexagons.
+    canvas_buffer.fillStyle = settings_settings['default-color'],
+    canvas_buffer.fillText(
+      'Unclaimed: ' + unclaimed,
+      0,
+      x
+    );
 }
 
 function end_turn(){
@@ -319,6 +341,7 @@ function setmode_logic(newgame){
     scoreboard = [];
     turn = 0;
     turns = 0;
+    unclaimed = 0;
 
     // Main menu mode.
     if(canvas_mode === 0){
@@ -384,6 +407,7 @@ var players = {};
 var scoreboard = [];
 var turn = 0;
 var turns = 0;
+var unclaimed = 0;
 var x_scaled = 0;
 var x_scaled_half = 0;
 var y_scaled = 0;
