@@ -146,7 +146,8 @@ function draw_logic(){
     );
 
     // Draw selection if not AI turn.
-    if(!players[player_ids[turn]]['ai']){
+    if(players[player_ids[turn]]
+      && players[player_ids[turn]]['ai'] === false){
         draw_hexagon(
           mouse_x,
           mouse_y,
@@ -168,15 +169,19 @@ function draw_logic(){
     // Restore the buffer state.
     canvas_buffer.restore();
 
-    // Draw turn info.
-    canvas_buffer.fillStyle = '#fff';
-    canvas_buffer.fillText(
-      'Turn #' + turns + ' ' + players[player_ids[turn]]['name'],
-      0,
-      25
-    );
+    var x = 25;
 
-    var x = 50;
+    // Draw turn info.
+    if(players[player_ids[turn]]){
+        canvas_buffer.fillStyle = '#fff';
+        canvas_buffer.fillText(
+          'Turn #' + turns + ' ' + players[player_ids[turn]]['name'],
+          0,
+          x
+        );
+        x += 25;
+    }
+
     if(unclaimed > 0){
         // Draw unclaimed hexagons.
         canvas_buffer.fillStyle = settings_settings['default-color'],
@@ -229,7 +234,8 @@ function end_turn(){
 }
 
 function handle_ai_turn(){
-    if(!players[player_ids[turn]]['ai']
+    if(!players[player_ids[turn]]
+      || !players[player_ids[turn]]['ai']
       || scoreboard.length === 1){
         return;
     }
@@ -465,12 +471,13 @@ window.onload = function(){
         }else if(key === 'Q'){
             canvas_menu_quit();
 
-        }else if(!players[player_ids[turn]]['ai']){
+        }else if(players[player_ids[turn]]
+          && !players[player_ids[turn]]['ai']){
             if(key === settings_settings['end-turn-key']){
                 end_turn();
 
-            }else if(key === 'P'){
-                if(player_count > 1){
+            }else if(key === settings_settings['delete-player']){
+                if(scoreboard.length > 1){
                     for(var hexagon in hexagons){
                         if(!players[player_ids[turn]]){
                             break;
@@ -505,6 +512,7 @@ window.onload = function(){
 
     window.onmousedown = function(e){
         if(canvas_mode <= 0
+          || !players[player_ids[turn]]
           || players[player_ids[turn]]['ai']){
             return;
         }
