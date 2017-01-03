@@ -88,13 +88,13 @@ function create_player(properties){
         });
     }
     hexagons[hexagon]['color'] = properties['color'];
-
-    player_ids.push(player_count);
     properties['name'] = (properties['ai']
       ? 'AI'
       : 'P')
-      + player_count;
+      + properties['color'];
+
     players[player_count] = properties;
+    player_ids.push(player_count);
     player_count += 1;
 }
 
