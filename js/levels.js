@@ -13,7 +13,7 @@ function load_level(id){
               'max': settings_settings['height'],
             }) - settings_settings['height'] / 2
           ),
-          25
+          settings_settings['hexagon-size']
         );
     }while(loop_counter--);
 

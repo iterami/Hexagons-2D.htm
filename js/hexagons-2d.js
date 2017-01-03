@@ -3,17 +3,17 @@
 function check_neighbor_match(position){
     var match = false;
     var next_positions = [
-      [-23, -40,],
-      [-46, 0,],
-      [-23, 40,],
-      [23, -40,],
-      [46, 0,],
-      [23, 40,],
+      [-x_scaled_half, -y_scaled,],
+      [-x_scaled, 0,],
+      [-x_scaled_half, y_scaled,],
+      [x_scaled_half, -y_scaled,],
+      [x_scaled, 0,],
+      [x_scaled_half, y_scaled,],
     ];
     next_position_loop:
     for(var next_position in next_positions){
-        if(position['y'] % 80){
-            next_positions[next_position][0] += 46;
+        if(position['y'] % y_scaled_double){
+            next_positions[next_position][0] += x_scaled;
         }
 
         var new_next_position = select_hexagon(
@@ -99,8 +99,8 @@ function create_player(properties){
 }
 
 function draw_hexagon(x, y, size, color){
-    if(y % 80){
-        x += 23;
+    if(y % Math.floor(settings_settings['hexagon-size'] * 3.2)){
+        x += x_scaled_half;
     }
 
     var vertices = [];
@@ -139,7 +139,7 @@ function draw_logic(){
         draw_hexagon(
           mouse_x,
           mouse_y,
-          30,
+          settings_settings['hexagon-size'] + 5,
           players[player_ids[turn]]['color']
         );
     }
@@ -290,17 +290,17 @@ function lose_hexagon(player){
 
 function select_hexagon(x, y){
     return {
-      'x': Math.ceil((x - 23) / 46) * 46,
-      'y': Math.ceil((y - 20) / 40) * 40,
+      'x': Math.ceil((x - x_scaled_half) / x_scaled) * x_scaled,
+      'y': Math.ceil((y - y_scaled_half) / y_scaled) * y_scaled,
     };
 }
 
 function select_y_mod(x, y, move){
-    move = move || -23;
+    move = move || -(x_scaled_half);
 
-    var y_mod = Math.abs(y % 80);
-    if(y_mod > 20
-      && y_mod < 60){
+    var y_mod = Math.abs(y % y_scaled_double);
+    if(y_mod > y_scaled_half
+      && y_mod < y_scaled * 1.5){
         x += move;
     }
 
@@ -331,6 +331,7 @@ function setmode_logic(newgame){
           + '<input id=default-color type=color>Default Color<br>'
           + '<input id=height>Height<br>'
           + '<input id=hexagons>Hexagons<br>'
+          + '<input id=hexagon-size>Hexagon Size<br>'
           + '<input id=players>Players<br>'
           + '<input id=scroll-speed>Scroll Speed<br>'
           + '<input id=width>Width<br>'
@@ -345,6 +346,12 @@ function setmode_logic(newgame){
         key_left = false;
         key_right = false;
         key_up = false;
+
+        x_scaled = settings_settings['hexagon-size'] * 1.84;
+        x_scaled_half = x_scaled / 2;
+        y_scaled = settings_settings['hexagon-size'] * 1.6;
+        y_scaled_double = y_scaled * 2;
+        y_scaled_half = y_scaled / 2;
     }
 }
 
@@ -377,6 +384,11 @@ var players = {};
 var scoreboard = [];
 var turn = 0;
 var turns = 0;
+var x_scaled = 0;
+var x_scaled_half = 0;
+var y_scaled = 0;
+var y_scaled_double = 0;
+var y_scaled_half = 0;
 
 window.onload = function(){
     settings_init({
@@ -389,6 +401,7 @@ window.onload = function(){
         'end-turn-key': 'H',
         'height': 500,
         'hexagons': 100,
+        'hexagon-size': 25,
         'players': 1,
         'scroll-speed': 5,
         'width': 500,
