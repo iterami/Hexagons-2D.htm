@@ -342,6 +342,7 @@ function setmode_logic(newgame){
       'x': 0,
       'y': 0,
     };
+    canvas_interval_ms = settings_settings['ms-per-frame'];
     hexagons = [];
     player_count = 0;
     player_ids = [];
@@ -363,6 +364,7 @@ function setmode_logic(newgame){
           + '<input id=height>Height<br>'
           + '<input id=hexagons>Hexagons<br>'
           + '<input id=hexagon-size>Hexagon Size<br>'
+          + '<input id=ms-per-frame>ms/Frame<br>'
           + '<input id=players>Players<br>'
           + '<input id=scroll-speed>Scroll Speed<br>'
           + '<input id=width>Width<br>'
@@ -434,6 +436,7 @@ window.onload = function(){
         'height': 500,
         'hexagon-size': 25,
         'hexagons': 150,
+        'ms-per-frame': 1,
         'players': 1,
         'scroll-speed': 5,
         'width': 500,
