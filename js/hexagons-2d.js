@@ -226,10 +226,11 @@ function end_turn(){
         turn += 1;
     }
 
-    turns += 1;
-
     if(!players[player_ids[turn]]){
         end_turn();
+
+    }else{
+        turns += 1;
     }
 }
 
@@ -282,10 +283,6 @@ function handle_ai_turn(){
 }
 
 function logic(){
-    if(canvas_menu){
-        return;
-    }
-
     // Move camera down.
     if(key_down){
         camera['y'] -= settings_settings['scroll-speed'];
@@ -304,6 +301,11 @@ function logic(){
     // Move camera up.
     if(key_up){
         camera['y'] += settings_settings['scroll-speed'];
+    }
+
+    if(canvas_menu
+      || turns >= settings_settings['turn-limit']){
+        return;
     }
 
     handle_ai_turn();
@@ -367,6 +369,7 @@ function setmode_logic(newgame){
           + '<input id=ms-per-frame>ms/Frame<br>'
           + '<input id=players>Players<br>'
           + '<input id=scroll-speed>Scroll Speed<br>'
+          + '<input id=turn-limit>Turn Limit<br>'
           + '<input id=width>Width<br>'
           + '<a onclick=settings_reset()>Reset Settings</a></div></div>';
         settings_update();
@@ -398,8 +401,8 @@ function update_scoreboard(){
     }
     sort_property({
       'array': scoreboard,
-      'reverse': true,
       'property': 'hexagons',
+      'reverse': true,
     });
 }
 
@@ -439,6 +442,7 @@ window.onload = function(){
         'ms-per-frame': 1,
         'players': 1,
         'scroll-speed': 5,
+        'turn-limit': Infinity,
         'width': 500,
       },
     });
