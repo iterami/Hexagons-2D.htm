@@ -78,6 +78,10 @@ function create_hexagon(position, size){
 }
 
 function create_player(properties){
+    if(player_count > hexagons.length - 1){
+        return;
+    }
+
     properties = properties || {};
     properties = {
       'ai': properties['ai'] || false,
