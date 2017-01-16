@@ -344,7 +344,6 @@ function setmode_logic(newgame){
       'x': 0,
       'y': 0,
     };
-    canvas_interval_ms = settings_settings['ms-per-frame'];
     hexagons = [];
     player_count = 0;
     player_ids = [];
@@ -377,6 +376,7 @@ function setmode_logic(newgame){
     // New game mode.
     }else if(newgame){
         settings_save();
+        canvas_interval_ms = settings_settings['ms-per-frame'];
 
         key_down = false;
         key_left = false;
