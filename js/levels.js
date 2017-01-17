@@ -2,10 +2,7 @@
 
 function load_level(id){
     // Create base hexagons.
-    var loop_counter = Math.max(
-      settings_settings['hexagons'],
-      settings_settings['players'] + settings_settings['ai']
-    ) - 1;
+    var loop_counter = settings_settings['hexagons'] - 1;
     do{
         create_hexagon(
           select_hexagon(
