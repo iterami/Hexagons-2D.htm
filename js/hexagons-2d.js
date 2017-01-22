@@ -40,7 +40,7 @@ function conquer_hexagon(hexagon, playerid){
     playerid = playerid || player_ids[turn];
 
     if(hexagons[hexagon]['color'] !== players[playerid]['color']){
-        if(hexagons[hexagon]['color'] === settings_settings['default-color']){
+        if(hexagons[hexagon]['color'] === storage_data['default-color']){
             hexagons[hexagon]['color'] = players[playerid]['color'];
             players[playerid]['hexagons'] += 1;
             unclaimed -= 1;
@@ -69,7 +69,7 @@ function create_hexagon(position, size){
     }
 
     hexagons.push({
-      'color': settings_settings['default-color'],
+      'color': storage_data['default-color'],
       'size': size,
       'x': position['x'],
       'y': position['y'],
@@ -100,7 +100,7 @@ function create_player(properties){
     var hexagon = random_integer({
       'max': hexagons.length,
     });
-    while(hexagons[hexagon]['color'] !== settings_settings['default-color']){
+    while(hexagons[hexagon]['color'] !== storage_data['default-color']){
         hexagon = random_integer({
           'max': hexagons.length,
         });
@@ -114,7 +114,7 @@ function create_player(properties){
 }
 
 function draw_hexagon(x, y, size, color){
-    if(y % Math.floor(settings_settings['hexagon-size'] * 3.2)){
+    if(y % Math.floor(storage_data['hexagon-size'] * 3.2)){
         x += x_scaled_half;
     }
 
@@ -155,7 +155,7 @@ function draw_logic(){
         draw_hexagon(
           mouse_x,
           mouse_y,
-          settings_settings['hexagon-size'] + 5,
+          storage_data['hexagon-size'] + 5,
           players[player_ids[turn]]['color']
         );
     }
@@ -179,7 +179,7 @@ function draw_logic(){
     if(players[player_ids[turn]]){
         canvas_buffer.fillStyle = '#fff';
         canvas_buffer.fillText(
-          'Turn #' + turns + '/' + settings_settings['turn-limit'] + ' ' + players[player_ids[turn]]['name'],
+          'Turn #' + turns + '/' + storage_data['turn-limit'] + ' ' + players[player_ids[turn]]['name'],
           0,
           x
         );
@@ -188,7 +188,7 @@ function draw_logic(){
 
     if(unclaimed > 0){
         // Draw unclaimed hexagons.
-        canvas_buffer.fillStyle = settings_settings['default-color'],
+        canvas_buffer.fillStyle = storage_data['default-color'],
         canvas_buffer.fillText(
           'Unclaimed: ' + unclaimed,
           0,
@@ -255,7 +255,7 @@ function handle_ai_turn(){
           'x': hexagons[hexagon]['x'],
           'y': hexagons[hexagon]['y'],
         })){
-            if(hexagons[hexagon]['color'] === settings_settings['default-color']){
+            if(hexagons[hexagon]['color'] === storage_data['default-color']){
                 conquer_hexagon(hexagon);
                 break;
 
@@ -289,26 +289,26 @@ function handle_ai_turn(){
 function logic(){
     // Move camera down.
     if(key_down){
-        camera['y'] -= settings_settings['scroll-speed'];
+        camera['y'] -= storage_data['scroll-speed'];
     }
 
     // Move camera left.
     if(key_left){
-        camera['x'] += settings_settings['scroll-speed'];
+        camera['x'] += storage_data['scroll-speed'];
     }
 
     // Move camera right.
     if(key_right){
-        camera['x'] -= settings_settings['scroll-speed'];
+        camera['x'] -= storage_data['scroll-speed'];
     }
 
     // Move camera up.
     if(key_up){
-        camera['y'] += settings_settings['scroll-speed'];
+        camera['y'] += storage_data['scroll-speed'];
     }
 
     if(canvas_menu
-      || turns >= settings_settings['turn-limit']){
+      || turns >= storage_data['turn-limit']){
         return;
     }
 
@@ -374,22 +374,22 @@ function setmode_logic(newgame){
           + '<input id=scroll-speed>Scroll Speed<br>'
           + '<input id=turn-limit>Turn Limit<br>'
           + '<input id=width>Width<br>'
-          + '<a onclick=settings_reset()>Reset Settings</a></div></div>';
-        settings_update();
+          + '<a onclick=storage_reset()>Reset Settings</a></div></div>';
+        storage_update();
 
     // New game mode.
     }else if(newgame){
-        settings_save();
-        canvas_interval_ms = settings_settings['ms-per-frame'];
+        storage_save();
+        canvas_interval_ms = storage_data['ms-per-frame'];
 
         key_down = false;
         key_left = false;
         key_right = false;
         key_up = false;
 
-        x_scaled = settings_settings['hexagon-size'] * 1.84;
+        x_scaled = storage_data['hexagon-size'] * 1.84;
         x_scaled_half = x_scaled / 2;
-        y_scaled = settings_settings['hexagon-size'] * 1.6;
+        y_scaled = storage_data['hexagon-size'] * 1.6;
         y_scaled_double = y_scaled * 2;
         y_scaled_half = y_scaled / 2;
     }
@@ -432,9 +432,8 @@ var y_scaled_double = 0;
 var y_scaled_half = 0;
 
 window.onload = function(){
-    settings_init({
-      'prefix': 'Hexagons-2D.htm-',
-      'settings': {
+    storage_init({
+      'data': {
         'ai': 4,
         'camera-keys': 'WASD',
         'default-color': '#ffffff',
@@ -449,6 +448,7 @@ window.onload = function(){
         'turn-limit': Infinity,
         'width': 500,
       },
+      'prefix': 'Hexagons-2D.htm-',
     });
     canvas_init();
 
@@ -467,16 +467,16 @@ window.onload = function(){
 
         key = String.fromCharCode(key);
 
-        if(key === settings_settings['camera-keys'][1]){
+        if(key === storage_data['camera-keys'][1]){
             key_left = true;
 
-        }else if(key === settings_settings['camera-keys'][3]){
+        }else if(key === storage_data['camera-keys'][3]){
             key_right = true;
 
-        }else if(key === settings_settings['camera-keys'][2]){
+        }else if(key === storage_data['camera-keys'][2]){
             key_down = true;
 
-        }else if(key === settings_settings['camera-keys'][0]){
+        }else if(key === storage_data['camera-keys'][0]){
             key_up = true;
 
         }else if(key === 'Q'){
@@ -484,17 +484,17 @@ window.onload = function(){
 
         }else if(players[player_ids[turn]]
           && !players[player_ids[turn]]['ai']){
-            if(key === settings_settings['end-turn-key']){
+            if(key === storage_data['end-turn-key']){
                 end_turn();
 
-            }else if(key === settings_settings['delete-player']){
+            }else if(key === storage_data['delete-player']){
                 if(scoreboard.length > 1){
                     for(var hexagon in hexagons){
                         if(!players[player_ids[turn]]){
                             break;
                         }
                         if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
-                            hexagons[hexagon]['color'] = settings_settings['default-color'];
+                            hexagons[hexagon]['color'] = storage_data['default-color'];
                             lose_hexagon(player_ids[turn]);
                         }
                     }
@@ -507,16 +507,16 @@ window.onload = function(){
     window.onkeyup = function(e){
         var key = String.fromCharCode(e.keyCode || e.which);
 
-        if(key === settings_settings['camera-keys'][1]){
+        if(key === storage_data['camera-keys'][1]){
             key_left = false;
 
-        }else if(key === settings_settings['camera-keys'][3]){
+        }else if(key === storage_data['camera-keys'][3]){
             key_right = false;
 
-        }else if(key === settings_settings['camera-keys'][2]){
+        }else if(key === storage_data['camera-keys'][2]){
             key_down = false;
 
-        }else if(key === settings_settings['camera-keys'][0]){
+        }else if(key === storage_data['camera-keys'][0]){
             key_up = false;
         }
     };
