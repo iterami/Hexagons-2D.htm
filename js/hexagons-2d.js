@@ -206,7 +206,10 @@ function draw_logic(){
 
         canvas_buffer.fillStyle = players[scoreboard[player]['id']]['color'];
         canvas_buffer.fillText(
-          players[scoreboard[player]['id']]['name']  + ': ' + scoreboard[player]['hexagons'],
+          players[scoreboard[player]['id']]['name']  + ': ' + scoreboard[player]['hexagons']
+            + (players[scoreboard[player]['id']]['done']
+              ? '='
+              : ''),
           0,
           x
         );
@@ -214,9 +217,10 @@ function draw_logic(){
     }
 
     // Draw winner.
-    if(player_count === 1){
+    if(game_over){
+        canvas_buffer.fillStyle = players[scoreboard[0]['id']]['color'];
         canvas_buffer.fillText(
-          players[player_ids[turn]]['name'] + ' wins!',
+          players[scoreboard[0]['id']]['name'] + ' wins!',
           0,
           x
         );
@@ -224,6 +228,17 @@ function draw_logic(){
 }
 
 function end_turn(){
+    var over = true;
+    for(var player in players){
+        if(!players[player]['done']){
+            over = false;
+            break;
+        }
+    }
+    if(over){
+        game_over = true;
+    }
+
     if(turn >= player_ids.length - 1){
         turn = 0;
 
@@ -242,7 +257,7 @@ function end_turn(){
 function handle_ai_turn(){
     if(!players[player_ids[turn]]
       || !players[player_ids[turn]]['ai']
-      || scoreboard.length === 1){
+      || game_over){
         return;
     }
 
@@ -356,6 +371,7 @@ function setmode_logic(newgame){
       'x': 0,
       'y': 0,
     };
+    game_over = false;
     hexagons = [];
     player_count = 0;
     player_ids = [];
@@ -420,6 +436,7 @@ function update_scoreboard(){
 
 var camera = {};
 var hexagons = [];
+var game_over = false;
 var key_down = false;
 var key_left = false;
 var key_right = false;
@@ -496,7 +513,7 @@ window.onload = function(){
                 end_turn();
 
             }else if(key === storage_data['delete-player']){
-                if(scoreboard.length > 1){
+                if(!game_over){
                     for(var hexagon in hexagons){
                         if(!players[player_ids[turn]]){
                             break;
