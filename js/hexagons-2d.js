@@ -322,7 +322,6 @@ function lose_hexagon(player){
         delete players[player];
         player_count -= 1;
     }
-    unclaimed += 1;
 }
 
 function select_hexagon(x, y){
@@ -497,6 +496,7 @@ window.onload = function(){
                         if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
                             hexagons[hexagon]['color'] = storage_data['default-color'];
                             lose_hexagon(player_ids[turn]);
+                            unclaimed += 1;
                         }
                     }
                     end_turn();
