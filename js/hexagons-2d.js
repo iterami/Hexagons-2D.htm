@@ -235,7 +235,8 @@ function end_turn(){
             break;
         }
     }
-    if(over){
+    if(over
+      || turns >= storage_data['turn-limit']){
         game_over = true;
     }
 
@@ -330,8 +331,7 @@ function logic(){
         camera['y'] += storage_data['scroll-speed'];
     }
 
-    if(canvas_menu
-      || turns >= storage_data['turn-limit']){
+    if(canvas_menu){
         return;
     }
 
