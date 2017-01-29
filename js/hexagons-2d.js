@@ -74,7 +74,7 @@ function create_hexagon(position, size){
       'x': position['x'],
       'y': position['y'],
     });
-    unclaimed = hexagons.length + 1;
+    unclaimed = hexagons.length;
 }
 
 function create_player(properties){
