@@ -322,6 +322,7 @@ function lose_hexagon(player){
         delete players[player];
         player_count -= 1;
     }
+    unclaimed += 1;
 }
 
 function select_hexagon(x, y){
