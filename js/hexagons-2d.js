@@ -312,22 +312,26 @@ function handle_ai_turn(){
 
 function logic(){
     // Move camera down.
-    if(key_down){
+    if(key_down
+      && camera['y'] > -height_half){
         camera['y'] -= storage_data['scroll-speed'];
     }
 
     // Move camera left.
-    if(key_left){
+    if(key_left
+      && camera['x'] < width_half){
         camera['x'] += storage_data['scroll-speed'];
     }
 
     // Move camera right.
-    if(key_right){
+    if(key_right
+      && camera['x'] > -width_half){
         camera['x'] -= storage_data['scroll-speed'];
     }
 
     // Move camera up.
-    if(key_up){
+    if(key_up
+      && camera['y'] < height_half){
         camera['y'] += storage_data['scroll-speed'];
     }
 
@@ -416,6 +420,9 @@ function setmode_logic(newgame){
         y_scaled = storage_data['hexagon-size'] * 1.6;
         y_scaled_double = y_scaled * 2;
         y_scaled_half = y_scaled / 2;
+
+        height_half = storage_data['height'] / 2;
+        width_half = storage_data['width'] / 2;
     }
 }
 
@@ -435,8 +442,9 @@ function update_scoreboard(){
 }
 
 var camera = {};
-var hexagons = [];
 var game_over = false;
+var height_half = 0;
+var hexagons = [];
 var key_down = false;
 var key_left = false;
 var key_right = false;
@@ -450,6 +458,7 @@ var scoreboard = [];
 var turn = 0;
 var turns = 0;
 var unclaimed = 0;
+var width_half = 0;
 var x_scaled = 0;
 var x_scaled_half = 0;
 var y_scaled = 0;

@@ -8,10 +8,10 @@ function load_level(id){
           select_hexagon(
             random_integer({
               'max': storage_data['width'],
-            }) - storage_data['width'] / 2,
+            }) - width_half,
             random_integer({
               'max': storage_data['height'],
-            }) - storage_data['height'] / 2
+            }) - height_half
           ),
           storage_data['hexagon-size']
         );
