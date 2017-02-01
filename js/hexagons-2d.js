@@ -191,7 +191,7 @@ function draw_logic(){
         // Draw unclaimed hexagons.
         canvas_buffer.fillStyle = storage_data['default-color'],
         canvas_buffer.fillText(
-          'Unclaimed: ' + unclaimed,
+          'Unclaimed:' + unclaimed,
           0,
           x
         );
@@ -206,7 +206,7 @@ function draw_logic(){
 
         canvas_buffer.fillStyle = players[scoreboard[player]['id']]['color'];
         canvas_buffer.fillText(
-          players[scoreboard[player]['id']]['name']  + ': ' + scoreboard[player]['hexagons']
+          players[scoreboard[player]['id']]['name']  + ':' + scoreboard[player]['hexagons']
             + (players[scoreboard[player]['id']]['done']
               ? '='
               : ''),
