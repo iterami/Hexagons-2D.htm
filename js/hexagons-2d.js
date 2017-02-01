@@ -206,10 +206,11 @@ function draw_logic(){
 
         canvas_buffer.fillStyle = players[scoreboard[player]['id']]['color'];
         canvas_buffer.fillText(
-          players[scoreboard[player]['id']]['name']  + ':' + scoreboard[player]['hexagons']
+          players[scoreboard[player]['id']]['name']
             + (players[scoreboard[player]['id']]['done']
               ? '='
-              : ''),
+              : ':')
+            + scoreboard[player]['hexagons'],
           0,
           x
         );
