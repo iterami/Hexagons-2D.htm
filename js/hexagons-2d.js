@@ -1,7 +1,6 @@
 'use strict';
 
 function check_neighbor_match(position){
-    var match = false;
     var next_positions = [
       [-x_scaled_half, -y_scaled,],
       [-x_scaled, 0,],
@@ -10,7 +9,6 @@ function check_neighbor_match(position){
       [x_scaled, 0,],
       [x_scaled_half, y_scaled,],
     ];
-    next_position_loop:
     for(var next_position in next_positions){
         if(position['y'] % y_scaled_double){
             next_positions[next_position][0] += x_scaled;
@@ -27,13 +25,12 @@ function check_neighbor_match(position){
             if(hexagons[hexagon]['x'] === new_next_position['x']
               && hexagons[hexagon]['y'] === new_next_position['y']
               && hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
-                match = true;
-                break next_position_loop;
+                return true;
             }
         }
     }
 
-    return match;
+    return false;
 }
 
 function conquer_hexagon(hexagon, playerid){
