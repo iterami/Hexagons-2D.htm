@@ -260,48 +260,50 @@ function handle_ai_turn(){
         return;
     }
 
-    var options = [];
-    var options_used = true;
-    for(var hexagon in hexagons){
-        if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
-            continue;
-        }
+    if(!players[player_ids[turn]]['done']){
+        var options = [];
+        var options_used = true;
+        for(var hexagon in hexagons){
+            if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
+                continue;
+            }
 
-        if(check_neighbor_match({
-          'x': hexagons[hexagon]['x'],
-          'y': hexagons[hexagon]['y'],
-        })){
-            if(hexagons[hexagon]['color'] === storage_data['default-color']){
-                conquer_hexagon(hexagon);
-                options_used = false;
-                break;
+            if(check_neighbor_match({
+              'x': hexagons[hexagon]['x'],
+              'y': hexagons[hexagon]['y'],
+            })){
+                if(hexagons[hexagon]['color'] === storage_data['default-color']){
+                    conquer_hexagon(hexagon);
+                    options_used = false;
+                    break;
 
-            }else{
-                options.push(hexagon);
+                }else{
+                    options.push(hexagon);
+                }
             }
         }
-    }
-    if(options_used){
-        if(options.length > 0){
-            sort_random({
-              'array': options,
-            });
-            scoreboard_loop:
-            for(var i = scoreboard.length; i--;){
-                if(!players[scoreboard[i]['id']]){
-                    continue;
-                }
+        if(options_used){
+            if(options.length > 0){
+                sort_random({
+                  'array': options,
+                });
+                scoreboard_loop:
+                for(var i = scoreboard.length; i--;){
+                    if(!players[scoreboard[i]['id']]){
+                        continue;
+                    }
 
-                for(var option in options){
-                    if(hexagons[options[option]]['color'] === players[scoreboard[i]['id']]['color']){
-                        conquer_hexagon(options[option]);
-                        break scoreboard_loop;
+                    for(var option in options){
+                        if(hexagons[options[option]]['color'] === players[scoreboard[i]['id']]['color']){
+                            conquer_hexagon(options[option]);
+                            break scoreboard_loop;
+                        }
                     }
                 }
-            }
 
-        }else{
-            players[player_ids[turn]]['done'] = true;
+            }else{
+                players[player_ids[turn]]['done'] = true;
+            }
         }
     }
 
@@ -530,6 +532,9 @@ window.onload = function(){
                             lose_hexagon(player_ids[turn]);
                             unclaimed += 1;
                         }
+                    }
+                    for(var player in players){
+                        players[player]['done'] = false;
                     }
                     end_turn();
                 }
