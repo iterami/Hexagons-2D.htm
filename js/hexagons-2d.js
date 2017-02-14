@@ -177,7 +177,7 @@ function draw_logic(){
     if(players[player_ids[turn]]){
         canvas_buffer.fillStyle = '#fff';
         canvas_buffer.fillText(
-          'Turn #' + turns + '/' + storage_data['turn-limit'] + ' ' + players[player_ids[turn]]['name'],
+          'Turn#' + turns + '/' + storage_data['turn-limit'] + ' ' + players[player_ids[turn]]['name'],
           0,
           x
         );
