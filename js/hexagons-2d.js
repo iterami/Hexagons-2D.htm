@@ -177,7 +177,7 @@ function draw_logic(){
     if(players[player_ids[turn]]){
         canvas_buffer.fillStyle = '#fff';
         canvas_buffer.fillText(
-          'Turn#' + turns + '/' + storage_data['turn-limit'] + ' ' + players[player_ids[turn]]['name'],
+          'Turn#' + turns + turn_limit_string + ' ' + players[player_ids[turn]]['name'],
           0,
           x
         );
@@ -236,6 +236,7 @@ function end_turn(){
     if(over
       || turns >= storage_data['turn-limit']){
         game_over = true;
+        return;
     }
 
     if(turn >= player_ids.length - 1){
@@ -409,6 +410,9 @@ function setmode_logic(newgame){
     }else if(newgame){
         storage_save();
         canvas_interval_ms = storage_data['ms-per-frame'];
+        turn_limit_string = isFinite(storage_data['turn-limit'])
+          ? '/' + storage_data['turn-limit']
+          : '';
 
         key_down = false;
         key_left = false;
@@ -457,6 +461,7 @@ var players = {};
 var scoreboard = [];
 var turn = 0;
 var turns = 0;
+var turn_limit_string = '';
 var unclaimed = 0;
 var width_half = 0;
 var x_scaled = 0;
