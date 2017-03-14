@@ -82,7 +82,7 @@ function create_player(properties){
     properties = properties || {};
     properties = {
       'ai': properties['ai'] || false,
-      'color': properties['color'] || random_hex(),
+      'color': properties['color'] || '#' + random_hex(),
       'done': false,
       'hexagons': 0,
       'name': '',
