@@ -112,7 +112,7 @@ function create_player(properties){
 }
 
 function draw_hexagon(x, y, size, color){
-    if(y % Math.floor(storage_data['hexagon-size'] * 3.2)){
+    if(y % hexagon_size){
         x += x_scaled_half;
     }
 
@@ -410,6 +410,7 @@ function setmode_logic(newgame){
     }else if(newgame){
         storage_save();
         canvas_interval_ms = storage_data['ms-per-frame'];
+        hexagon_size = Math.floor(storage_data['hexagon-size'] * 3.2);
         turn_limit_string = isFinite(storage_data['turn-limit'])
           ? '/' + storage_data['turn-limit']
           : '';
@@ -448,6 +449,7 @@ function update_scoreboard(){
 var camera = {};
 var game_over = false;
 var height_half = 0;
+var hexagon_size = 0;
 var hexagons = [];
 var key_down = false;
 var key_left = false;
@@ -460,8 +462,8 @@ var player_ids = [];
 var players = {};
 var scoreboard = [];
 var turn = 0;
-var turns = 0;
 var turn_limit_string = '';
+var turns = 0;
 var unclaimed = 0;
 var width_half = 0;
 var x_scaled = 0;
