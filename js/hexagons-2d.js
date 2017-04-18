@@ -336,7 +336,7 @@ function logic(){
         camera['y'] += storage_data['scroll-speed'];
     }
 
-    if(canvas_menu){
+    if(core_menu_open){
         return;
     }
 
@@ -502,7 +502,7 @@ window.onload = function(){
 
         // ESC: return to main menu.
         if(key === 27){
-            canvas_menu_toggle();
+            core_menu_toggle();
             return;
         }
 
