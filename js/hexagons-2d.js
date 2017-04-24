@@ -336,10 +336,6 @@ function logic(){
         camera['y'] += storage_data['scroll-speed'];
     }
 
-    if(core_menu_open){
-        return;
-    }
-
     handle_ai_turn();
     update_scoreboard();
 }
