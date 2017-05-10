@@ -6,10 +6,10 @@ function load_level(id){
     do{
         create_hexagon(
           select_hexagon(
-            random_integer({
+            core_random_integer({
               'max': storage_data['width'],
             }) - width_half,
-            random_integer({
+            core_random_integer({
               'max': storage_data['height'],
             }) - height_half
           ),

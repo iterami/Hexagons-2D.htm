@@ -42,7 +42,7 @@ function conquer_hexagon(hexagon, playerid){
             players[playerid]['hexagons'] += 1;
             unclaimed -= 1;
 
-        }else if(random_boolean()){
+        }else if(core_random_boolean()){
             var old_color = hexagons[hexagon]['color'];
             hexagons[hexagon]['color'] = players[playerid]['color'];
             players[playerid]['hexagons'] += 1;
@@ -82,7 +82,7 @@ function create_player(properties){
     properties = properties || {};
     properties = {
       'ai': properties['ai'] || false,
-      'color': properties['color'] || '#' + random_hex(),
+      'color': properties['color'] || '#' + core_random_hex(),
       'done': false,
       'hexagons': 0,
       'name': '',
@@ -95,11 +95,11 @@ function create_player(properties){
     players[player_count] = properties;
     player_ids.push(player_count);
 
-    var hexagon = random_integer({
+    var hexagon = core_random_integer({
       'max': hexagons.length,
     });
     while(hexagons[hexagon]['color'] !== storage_data['default-color']){
-        hexagon = random_integer({
+        hexagon = core_random_integer({
           'max': hexagons.length,
         });
     }
