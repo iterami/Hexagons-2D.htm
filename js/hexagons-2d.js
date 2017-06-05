@@ -378,7 +378,7 @@ function repo_init(){
 
         // ESC: return to main menu.
         if(key === 27){
-            core_menu_toggle();
+            core_escape();
             return;
         }
 
