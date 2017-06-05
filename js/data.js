@@ -1,6 +1,6 @@
 'use strict';
 
-function load_level(id){
+function load_data(id){
     // Create base hexagons.
     var loop_counter = core_storage_data['hexagons'] - 1;
     do{
