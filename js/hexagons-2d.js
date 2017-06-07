@@ -349,8 +349,8 @@ function lose_hexagon(player){
 }
 
 function repo_init(){
-    core_storage_init({
-      'data': {
+    core_repo_init({
+      'storage': {
         'ai': 4,
         'camera-keys': 'WASD',
         'default-color': '#ffffff',
@@ -365,7 +365,7 @@ function repo_init(){
         'turn-limit': Infinity,
         'width': 500,
       },
-      'prefix': 'Hexagons-2D.htm-',
+      'title': 'Hexagons-2D.htm',
     });
     canvas_init();
 
