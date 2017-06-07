@@ -534,7 +534,7 @@ function setmode_logic(newgame){
 
     // Main menu mode.
     if(canvas_mode === 0){
-        document.body.innerHTML = '<div><div><a onclick=canvas_setmode({mode:1,newgame:true})>New Game</a></div></div>'
+        document.getElementById('wrap').innerHTML = '<div><div><a onclick=canvas_setmode({mode:1,newgame:true})>New Game</a></div></div>'
           + '<div class=right><div><input id=camera-keys maxlength=4>Camera ↑←↓→<br>'
           + '<input id=delete-player>Delete Player<br>'
           + '<input id=end-turn-key>End Turn<br>'
