@@ -151,8 +151,8 @@ function draw_logic(){
     if(players[player_ids[turn]]
       && players[player_ids[turn]]['ai'] === false){
         draw_hexagon(
-          mouse_x,
-          mouse_y,
+          core_mouse['x'],
+          core_mouse['y'],
           core_storage_data['hexagon-size'] + 5,
           players[player_ids[turn]]['color']
         );
@@ -312,26 +312,26 @@ function handle_ai_turn(){
 }
 
 function logic(){
-    // Move camera down.
-    if(key_down
-      && camera['y'] > -height_half){
-        camera['y'] -= core_storage_data['scroll-speed'];
-    }
-
     // Move camera left.
-    if(key_left
+    if(core_keys[65]['state']
       && camera['x'] < width_half){
         camera['x'] += core_storage_data['scroll-speed'];
     }
 
     // Move camera right.
-    if(key_right
+    if(core_keys[68]['state']
       && camera['x'] > -width_half){
         camera['x'] -= core_storage_data['scroll-speed'];
     }
 
+    // Move camera down.
+    if(core_keys[83]['state']
+      && camera['y'] > -height_half){
+        camera['y'] -= core_storage_data['scroll-speed'];
+    }
+
     // Move camera up.
-    if(key_up
+    if(core_keys[87]['state']
       && camera['y'] < height_half){
         camera['y'] += core_storage_data['scroll-speed'];
     }
@@ -350,6 +350,104 @@ function lose_hexagon(player){
 
 function repo_init(){
     core_repo_init({
+      'keybinds': {
+        65: {},
+        68: {},
+        72: {
+          'todo': function(){
+              if(players[player_ids[turn]]
+                && !players[player_ids[turn]]['ai']){
+                  end_turn();
+              }
+          },
+        },
+        80: {
+          'todo': function(){
+              if(!game_over
+                && players[player_ids[turn]]
+                && !players[player_ids[turn]]['ai']){
+                  for(var hexagon in hexagons){
+                      if(!players[player_ids[turn]]){
+                          break;
+                        }
+                      if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
+                          hexagons[hexagon]['color'] = core_storage_data['default-color'];
+                          lose_hexagon(player_ids[turn]);
+                          unclaimed += 1;
+                      }
+                  }
+                  for(var player in players){
+                      players[player]['done'] = false;
+                  }
+                  end_turn();
+              }
+          },
+        },
+        81: {
+          'todo': canvas_menu_quit,
+        },
+        83: {},
+        87: {},
+      },
+      'mousebinds': {
+        'mousedown': {
+          'todo': function(event){
+              if(canvas_mode <= 0
+                || !players[player_ids[turn]]
+                || players[player_ids[turn]]['ai']){
+                  return;
+              }
+
+              var position = select_hexagon(
+                core_mouse['x'],
+                core_mouse['y']
+              );
+
+              // Check if a hexagon exists at this location
+              //   with a different color.
+              var target = false;
+              for(var hexagon in hexagons){
+                  if(hexagons[hexagon]['x'] === position['x']
+                    && hexagons[hexagon]['y'] === position['y']
+                    && hexagons[hexagon]['color'] !== players[player_ids[turn]]['color']){
+                      target = hexagon;
+                      break;
+                  }
+              }
+              if(target === false){
+                  return;
+              }
+
+              // Check if current player has a hexagon next to target hexagon.
+              if(!check_neighbor_match({
+                'x': hexagons[target]['x'],
+                'y': hexagons[target]['y'],
+              })){
+                  return;
+              }
+
+              // Attempt to conquer the hexagon.
+              conquer_hexagon(hexagon);
+
+              end_turn();
+          },
+        },
+        'mousemove': {
+          'todo': function(){
+              var x = core_mouse['x'] - canvas_x - camera['x'];
+              var y = core_mouse['y'] - canvas_y - camera['y'];
+              var position = select_hexagon(
+                select_y_mod(
+                  x,
+                  y
+                ),
+                y
+              );
+              core_mouse['x'] = position['x'];
+              core_mouse['y'] = position['y'];
+          },
+        },
+      },
       'storage': {
         'ai': 4,
         'camera-keys': 'WASD',
@@ -368,134 +466,6 @@ function repo_init(){
       'title': 'Hexagons-2D.htm',
     });
     canvas_init();
-
-    window.onkeydown = function(e){
-        if(canvas_mode <= 0){
-            return;
-        }
-
-        var key = e.keyCode || e.which;
-
-        // ESC: return to main menu.
-        if(key === 27){
-            core_escape();
-            return;
-        }
-
-        key = String.fromCharCode(key);
-
-        if(key === core_storage_data['camera-keys'][1]){
-            key_left = true;
-
-        }else if(key === core_storage_data['camera-keys'][3]){
-            key_right = true;
-
-        }else if(key === core_storage_data['camera-keys'][2]){
-            key_down = true;
-
-        }else if(key === core_storage_data['camera-keys'][0]){
-            key_up = true;
-
-        }else if(key === 'Q'){
-            canvas_menu_quit();
-
-        }else if(players[player_ids[turn]]
-          && !players[player_ids[turn]]['ai']){
-            if(key === core_storage_data['end-turn-key']){
-                end_turn();
-
-            }else if(key === core_storage_data['delete-player']){
-                if(!game_over){
-                    for(var hexagon in hexagons){
-                        if(!players[player_ids[turn]]){
-                            break;
-                        }
-                        if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
-                            hexagons[hexagon]['color'] = core_storage_data['default-color'];
-                            lose_hexagon(player_ids[turn]);
-                            unclaimed += 1;
-                        }
-                    }
-                    for(var player in players){
-                        players[player]['done'] = false;
-                    }
-                    end_turn();
-                }
-            }
-        }
-    };
-
-    window.onkeyup = function(e){
-        var key = String.fromCharCode(e.keyCode || e.which);
-
-        if(key === core_storage_data['camera-keys'][1]){
-            key_left = false;
-
-        }else if(key === core_storage_data['camera-keys'][3]){
-            key_right = false;
-
-        }else if(key === core_storage_data['camera-keys'][2]){
-            key_down = false;
-
-        }else if(key === core_storage_data['camera-keys'][0]){
-            key_up = false;
-        }
-    };
-
-    window.onmousedown = function(e){
-        if(canvas_mode <= 0
-          || !players[player_ids[turn]]
-          || players[player_ids[turn]]['ai']){
-            return;
-        }
-
-        var position = select_hexagon(
-          mouse_x,
-          mouse_y
-        );
-
-        // Check if a hexagon exists at this location
-        //   with a different color.
-        var target = false;
-        for(var hexagon in hexagons){
-            if(hexagons[hexagon]['x'] === position['x']
-              && hexagons[hexagon]['y'] === position['y']
-              && hexagons[hexagon]['color'] !== players[player_ids[turn]]['color']){
-                target = hexagon;
-                break;
-            }
-        }
-        if(target === false){
-            return;
-        }
-
-        // Check if current player has a hexagon next to target hexagon.
-        if(!check_neighbor_match({
-          'x': hexagons[target]['x'],
-          'y': hexagons[target]['y'],
-        })){
-            return;
-        }
-
-        // Attempt to conquer the hexagon.
-        conquer_hexagon(hexagon);
-
-        end_turn();
-    };
-
-    window.onmousemove = function(e){
-        var x = e.pageX - canvas_x - camera['x'];
-        var y = e.pageY - canvas_y - camera['y'];
-        var position = select_hexagon(
-          select_y_mod(
-            x,
-            y
-          ),
-          y
-        );
-        mouse_x = position['x'];
-        mouse_y = position['y'];
-    };
 }
 
 function select_hexagon(x, y){
@@ -561,11 +531,6 @@ function setmode_logic(newgame){
           ? '/' + core_storage_data['turn-limit']
           : '';
 
-        key_down = false;
-        key_left = false;
-        key_right = false;
-        key_up = false;
-
         x_scaled = core_storage_data['hexagon-size'] * 1.84;
         x_scaled_half = x_scaled / 2;
         y_scaled = core_storage_data['hexagon-size'] * 1.6;
@@ -597,12 +562,6 @@ var game_over = false;
 var height_half = 0;
 var hexagon_size = 0;
 var hexagons = [];
-var key_down = false;
-var key_left = false;
-var key_right = false;
-var key_up = false;
-var mouse_x = 0;
-var mouse_y = 0;
 var player_count = 0;
 var player_ids = [];
 var players = {};
