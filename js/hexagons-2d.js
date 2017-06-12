@@ -350,6 +350,7 @@ function lose_hexagon(player){
 
 function repo_init(){
     core_repo_init({
+      'info': '<a onclick=canvas_setmode({mode:1,newgame:true})>New Game</a>',
       'keybinds': {
         65: {},
         68: {},
@@ -383,12 +384,10 @@ function repo_init(){
               }
           },
         },
-        81: {
-          'todo': canvas_menu_quit,
-        },
         83: {},
         87: {},
       },
+      'menu': true,
       'mousebinds': {
         'mousedown': {
           'todo': function(event){
@@ -450,10 +449,7 @@ function repo_init(){
       },
       'storage': {
         'ai': 4,
-        'camera-keys': 'WASD',
         'default-color': '#ffffff',
-        'delete-player': 'P',
-        'end-turn-key': 'H',
         'height': 500,
         'hexagon-size': 25,
         'hexagons': 150,
@@ -463,6 +459,7 @@ function repo_init(){
         'turn-limit': Infinity,
         'width': 500,
       },
+      'storage-menu': '<input id=ai>AI<br><input id=default-color type=color>Default Color<br><input id=height>Height<br><input id=hexagons>Hexagons<br><input id=hexagon-size>Hexagon Size<br><input id=ms-per-frame>ms/Frame<br><input id=players>Players<br><input id=scroll-speed>Scroll Speed<br><input id=turn-limit>Turn Limit<br><input id=width>Width',
       'title': 'Hexagons-2D.htm',
     });
     canvas_init();
@@ -485,61 +482,6 @@ function select_y_mod(x, y, move){
     }
 
     return x;
-}
-
-function setmode_logic(newgame){
-    camera = {
-      'x': 0,
-      'y': 0,
-    };
-    game_over = false;
-    hexagons = [];
-    player_count = 0;
-    player_ids = [];
-    players = {};
-    scoreboard = [];
-    turn = 0;
-    turns = 0;
-    unclaimed = 0;
-
-    // Main menu mode.
-    if(canvas_mode === 0){
-        document.getElementById('wrap').innerHTML = '<div><div><a onclick=canvas_setmode({mode:1,newgame:true})>New Game</a></div></div>'
-          + '<div class=right><div><input id=camera-keys maxlength=4>Camera ↑←↓→<br>'
-          + '<input id=delete-player>Delete Player<br>'
-          + '<input id=end-turn-key>End Turn<br>'
-          + '<input disabled value=ESC>Menu</div><hr>'
-          + '<div><input id=ai>AI<br>'
-          + '<input id=default-color type=color>Default Color<br>'
-          + '<input id=height>Height<br>'
-          + '<input id=hexagons>Hexagons<br>'
-          + '<input id=hexagon-size>Hexagon Size<br>'
-          + '<input id=ms-per-frame>ms/Frame<br>'
-          + '<input id=players>Players<br>'
-          + '<input id=scroll-speed>Scroll Speed<br>'
-          + '<input id=turn-limit>Turn Limit<br>'
-          + '<input id=width>Width<br>'
-          + '<a onclick=core_storage_reset()>Reset Settings</a></div></div>';
-        core_storage_update();
-
-    // New game mode.
-    }else if(newgame){
-        core_storage_save();
-        canvas_interval_ms = core_storage_data['ms-per-frame'];
-        hexagon_size = Math.floor(core_storage_data['hexagon-size'] * 3.2);
-        turn_limit_string = isFinite(core_storage_data['turn-limit'])
-          ? '/' + core_storage_data['turn-limit']
-          : '';
-
-        x_scaled = core_storage_data['hexagon-size'] * 1.84;
-        x_scaled_half = x_scaled / 2;
-        y_scaled = core_storage_data['hexagon-size'] * 1.6;
-        y_scaled_double = y_scaled * 2;
-        y_scaled_half = y_scaled / 2;
-
-        height_half = core_storage_data['height'] / 2;
-        width_half = core_storage_data['width'] / 2;
-    }
 }
 
 function update_scoreboard(){
