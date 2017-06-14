@@ -350,7 +350,7 @@ function lose_hexagon(player){
 
 function repo_init(){
     core_repo_init({
-      'info': '<a onclick=canvas_setmode({mode:1,newgame:true})>New Game</a>',
+      'info': '<input onclick=canvas_setmode({mode:1,newgame:true}) type=button value="New Game">',
       'keybinds': {
         65: {},
         68: {},
