@@ -458,7 +458,7 @@ function repo_init(){
         'turn-limit': Infinity,
         'width': 500,
       },
-      'storage-menu': '<input id=ai>AI<br><input id=default-color type=color>Default Color<br><input id=height>Height<br><input id=hexagons>Hexagons<br><input id=hexagon-size>Hexagon Size<br><input id=players>Players<br><input id=scroll-speed>Scroll Speed<br><input id=turn-limit>Turn Limit<br><input id=width>Width',
+      'storage-menu': '<table><tr><td><input id=ai><td>AI<tr><td><input id=default-color type=color><td>Default Color<tr><td><input id=height><td>Height<tr><td><input id=hexagons><td>Hexagons<tr><td><input id=hexagon-size><td>Hexagon Size<tr><td><input id=players><td>Players<tr><td><input id=scroll-speed><td>Scroll Speed<tr><td><input id=turn-limit><td>Turn Limit<tr><td><input id=width><td>Width</table>',
       'title': 'Hexagons-2D.htm',
     });
     canvas_init();
