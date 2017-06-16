@@ -15,7 +15,6 @@ function load_data(id){
     turns = 0;
     unclaimed = 0;
 
-    canvas_interval_ms = core_storage_data['ms-per-frame'];
     hexagon_size = Math.floor(core_storage_data['hexagon-size'] * 3.2);
     turn_limit_string = isFinite(core_storage_data['turn-limit'])
       ? '/' + core_storage_data['turn-limit']
