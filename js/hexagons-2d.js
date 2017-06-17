@@ -407,8 +407,7 @@ function repo_init(){
       'mousebinds': {
         'mousedown': {
           'todo': function(event){
-              if(canvas_mode <= 0
-                || !players[player_ids[turn]]
+              if(!players[player_ids[turn]]
                 || players[player_ids[turn]]['ai']){
                   return;
               }
