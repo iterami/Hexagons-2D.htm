@@ -1,5 +1,56 @@
 'use strict';
 
+function check_done(id){
+    var target = false;
+
+    var options = [];
+    var options_used = true;
+    for(var hexagon in hexagons){
+        if(hexagons[hexagon]['color'] === players[id]['color']){
+            continue;
+        }
+
+        if(check_neighbor_match({
+          'x': hexagons[hexagon]['x'],
+          'y': hexagons[hexagon]['y'],
+        })){
+            if(hexagons[hexagon]['color'] === core_storage_data['default-color']){
+                target = hexagon;
+                options_used = false;
+                break;
+
+            }else{
+                options.push(hexagon);
+            }
+        }
+    }
+    if(options_used){
+        if(options.length > 0){
+            sort_random({
+              'array': options,
+            });
+            scoreboard_loop:
+            for(var i = scoreboard.length; i--;){
+                if(!players[scoreboard[i]['id']]){
+                    continue;
+                }
+
+                for(var option in options){
+                    if(hexagons[options[option]]['color'] === players[scoreboard[i]['id']]['color']){
+                        target = options[option];
+                        break scoreboard_loop;
+                    }
+                }
+            }
+
+        }else{
+            players[id]['done'] = true;
+        }
+    }
+
+    return target;
+}
+
 function check_neighbor_match(position){
     var next_positions = [
       [-x_scaled_half, -y_scaled,],
@@ -108,6 +159,7 @@ function create_player(properties){
       player_count
     );
 
+    check_done(player_count);
     player_count += 1;
 }
 
@@ -250,61 +302,23 @@ function end_turn(){
         end_turn();
 
     }else{
+        input_required = !players[player_ids[turn]]['ai'];
         turns += 1;
     }
 }
 
-function handle_ai_turn(){
+function handle_turn(){
     if(!players[player_ids[turn]]
-      || !players[player_ids[turn]]['ai']
+      || (input_required && !players[player_ids[turn]]['done'])
       || game_over){
         return;
     }
 
     if(!players[player_ids[turn]]['done']){
-        var options = [];
-        var options_used = true;
-        for(var hexagon in hexagons){
-            if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
-                continue;
-            }
-
-            if(check_neighbor_match({
-              'x': hexagons[hexagon]['x'],
-              'y': hexagons[hexagon]['y'],
-            })){
-                if(hexagons[hexagon]['color'] === core_storage_data['default-color']){
-                    conquer_hexagon(hexagon);
-                    options_used = false;
-                    break;
-
-                }else{
-                    options.push(hexagon);
-                }
-            }
-        }
-        if(options_used){
-            if(options.length > 0){
-                sort_random({
-                  'array': options,
-                });
-                scoreboard_loop:
-                for(var i = scoreboard.length; i--;){
-                    if(!players[scoreboard[i]['id']]){
-                        continue;
-                    }
-
-                    for(var option in options){
-                        if(hexagons[options[option]]['color'] === players[scoreboard[i]['id']]['color']){
-                            conquer_hexagon(options[option]);
-                            break scoreboard_loop;
-                        }
-                    }
-                }
-
-            }else{
-                players[player_ids[turn]]['done'] = true;
-            }
+        var target = check_done(player_ids[turn]);
+        if(players[player_ids[turn]]['ai']
+          && target !== false){
+            conquer_hexagon(target);
         }
     }
 
@@ -336,7 +350,7 @@ function logic(){
         camera['y'] += core_storage_data['scroll-speed'];
     }
 
-    handle_ai_turn();
+    handle_turn();
     update_scoreboard();
 }
 
@@ -358,6 +372,7 @@ function repo_init(){
           'todo': function(){
               if(players[player_ids[turn]]
                 && !players[player_ids[turn]]['ai']){
+                  input_required = false;
                   end_turn();
               }
           },
@@ -380,6 +395,7 @@ function repo_init(){
                   for(var player in players){
                       players[player]['done'] = false;
                   }
+                  input_required = false;
                   end_turn();
               }
           },
@@ -428,7 +444,7 @@ function repo_init(){
               // Attempt to conquer the hexagon.
               conquer_hexagon(hexagon);
 
-              end_turn();
+              input_required = false;
           },
         },
         'mousemove': {
@@ -503,6 +519,7 @@ var game_over = false;
 var height_half = 0;
 var hexagon_size = 0;
 var hexagons = [];
+var input_required = false;
 var player_count = 0;
 var player_ids = [];
 var players = {};

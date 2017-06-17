@@ -56,4 +56,6 @@ function load_data(id){
           'ai': true,
         });
     }
+
+    input_required = !players[player_ids[turn]]['ai'];
 }
