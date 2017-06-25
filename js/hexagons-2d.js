@@ -223,29 +223,7 @@ function draw_logic(){
     // Restore the buffer state.
     canvas_buffer.restore();
 
-    var x = 25;
-
-    // Draw turn info.
-    if(players[player_ids[turn]]){
-        canvas_buffer.fillStyle = '#fff';
-        canvas_buffer.fillText(
-          'Turn#' + turns + turn_limit_string + ' ' + players[player_ids[turn]]['name'],
-          0,
-          x
-        );
-        x += 25;
-    }
-
-    if(unclaimed > 0){
-        // Draw unclaimed hexagons.
-        canvas_buffer.fillStyle = core_storage_data['default-color'],
-        canvas_buffer.fillText(
-          'Unclaimed:' + unclaimed,
-          0,
-          x
-        );
-        x += 25;
-    }
+    var x = 100;
 
     // Draw scoreboard.
     for(var player in scoreboard){
@@ -352,6 +330,13 @@ function logic(){
 
     handle_turn();
     update_scoreboard();
+
+    core_ui_update({
+      'ids': {
+        'turn': turns + turn_limit_string + ' ' + players[player_ids[turn]]['name'],
+        'unclaimed': unclaimed,
+      },
+    });
 }
 
 function lose_hexagon(player){
@@ -475,6 +460,7 @@ function repo_init(){
       },
       'storage-menu': '<table><tr><td><input id=ai><td>AI<tr><td><input id=default-color type=color><td>Default Color<tr><td><input id=height><td>Height<tr><td><input id=hexagons><td>Hexagons<tr><td><input id=hexagon-size><td>Hexagon Size<tr><td><input id=players><td>Players<tr><td><input id=scroll-speed><td>Scroll Speed<tr><td><input id=turn-limit><td>Turn Limit<tr><td><input id=width><td>Width</table>',
       'title': 'Hexagons-2D.htm',
+      'ui': '<input id=ui-turn>Turn<br><input id=ui-unclaimed>Unclaimed',
     });
     canvas_init();
 }
