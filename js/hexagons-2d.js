@@ -201,7 +201,8 @@ function draw_logic(){
 
     // Draw selection if not AI turn.
     if(players[player_ids[turn]]
-      && players[player_ids[turn]]['ai'] === false){
+      && players[player_ids[turn]]['ai'] === false
+      && !players[player_ids[turn]]['done']){
         draw_hexagon(
           core_mouse['x'],
           core_mouse['y'],
