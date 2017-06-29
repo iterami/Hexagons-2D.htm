@@ -1,10 +1,8 @@
 'use strict';
 
 function check_done(id){
-    var target = false;
-
     var options = [];
-    var options_used = true;
+
     for(var hexagon in hexagons){
         if(hexagons[hexagon]['color'] === players[id]['color']){
             continue;
@@ -15,40 +13,35 @@ function check_done(id){
           'y': hexagons[hexagon]['y'],
         })){
             if(hexagons[hexagon]['color'] === core_storage_data['default-color']){
-                target = hexagon;
-                options_used = false;
-                break;
+                return hexagon;
 
             }else{
                 options.push(hexagon);
             }
         }
     }
-    if(options_used){
-        if(options.length > 0){
-            sort_random({
-              'array': options,
-            });
-            scoreboard_loop:
-            for(var i = scoreboard.length; i--;){
-                if(!players[scoreboard[i]['id']]){
-                    continue;
-                }
 
-                for(var option in options){
-                    if(hexagons[options[option]]['color'] === players[scoreboard[i]['id']]['color']){
-                        target = options[option];
-                        break scoreboard_loop;
-                    }
-                }
+    if(options.length > 0){
+        sort_random({
+          'array': options,
+        });
+        for(var i = scoreboard.length; i--;){
+            if(!players[scoreboard[i]['id']]){
+                continue;
             }
 
-        }else{
-            players[id]['done'] = true;
+            for(var option in options){
+                if(hexagons[options[option]]['color'] === players[scoreboard[i]['id']]['color']){
+                    return options[option];
+                }
+            }
         }
+
+    }else{
+        players[id]['done'] = true;
     }
 
-    return target;
+    return false;
 }
 
 function check_neighbor_match(position){
