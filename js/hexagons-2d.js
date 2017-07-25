@@ -126,7 +126,8 @@ function repo_init(){
                   for(var hexagon in hexagons){
                       if(!players[player_ids[turn]]){
                           break;
-                        }
+                      }
+
                       if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
                           hexagons[hexagon]['color'] = core_storage_data['default-color'];
                           lose_hexagon(player_ids[turn]);
