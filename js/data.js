@@ -2,23 +2,31 @@
 
 function check_done(id){
     var options = [];
+    var returned = false;
 
-    for(var hexagon in hexagons){
-        if(hexagons[hexagon]['color'] === players[id]['color']){
-            continue;
-        }
+    core_group_modify({
+      'groups': [
+        'hexagon',
+      ],
+      'todo': function(entity){
+          if(core_entities[entity]['color'] !== players[id]['color']){
+              if(check_neighbor_match({
+                'x': core_entities[entity]['x'],
+                'y': core_entities[entity]['y'],
+              })){
+                  if(core_entities[entity]['color'] === core_storage_data['default-color']){
+                      returned = entity;
 
-        if(check_neighbor_match({
-          'x': hexagons[hexagon]['x'],
-          'y': hexagons[hexagon]['y'],
-        })){
-            if(hexagons[hexagon]['color'] === core_storage_data['default-color']){
-                return hexagon;
+                  }else{
+                      options.push(entity);
+                  }
+              }
+          }
+      },
+    });
 
-            }else{
-                options.push(hexagon);
-            }
-        }
+    if(returned !== false){
+        return returned;
     }
 
     if(options.length > 0){
@@ -31,7 +39,7 @@ function check_done(id){
             }
 
             for(var option in options){
-                if(hexagons[options[option]]['color'] === players[scoreboard[i]['id']]['color']){
+                if(core_entities[options[option]]['color'] === players[scoreboard[i]['id']]['color']){
                     return options[option];
                 }
             }
@@ -53,6 +61,8 @@ function check_neighbor_match(position){
       [x_scaled, 0,],
       [x_scaled_half, y_scaled,],
     ];
+    var returned = false;
+
     for(var next_position in next_positions){
         if(position['y'] % y_scaled_double){
             next_positions[next_position][0] += x_scaled;
@@ -65,30 +75,35 @@ function check_neighbor_match(position){
           ),
           position['y'] + next_positions[next_position][1]
         );
-        for(var hexagon in hexagons){
-            if(hexagons[hexagon]['x'] === new_next_position['x']
-              && hexagons[hexagon]['y'] === new_next_position['y']
-              && hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
-                return true;
-            }
-        }
+        core_group_modify({
+          'groups': [
+            'hexagon',
+          ],
+          'todo': function(entity){
+              if(core_entities[entity]['x'] === new_next_position['x']
+                && core_entities[entity]['y'] === new_next_position['y']
+                && core_entities[entity]['color'] === players[player_ids[turn]]['color']){
+                  returned = true;
+              }
+          },
+        });
     }
 
-    return false;
+    return returned;
 }
 
 function conquer_hexagon(hexagon, playerid){
     playerid = playerid || player_ids[turn];
 
-    if(hexagons[hexagon]['color'] !== players[playerid]['color']){
-        if(hexagons[hexagon]['color'] === core_storage_data['default-color']){
-            hexagons[hexagon]['color'] = players[playerid]['color'];
+    if(core_entities[hexagon]['color'] !== players[playerid]['color']){
+        if(core_entities[hexagon]['color'] === core_storage_data['default-color']){
+            core_entities[hexagon]['color'] = players[playerid]['color'];
             players[playerid]['hexagons'] += 1;
             unclaimed -= 1;
 
         }else if(core_random_boolean()){
-            var old_color = hexagons[hexagon]['color'];
-            hexagons[hexagon]['color'] = players[playerid]['color'];
+            var old_color = core_entities[hexagon]['color'];
+            core_entities[hexagon]['color'] = players[playerid]['color'];
             players[playerid]['hexagons'] += 1;
             for(var player in players){
                 if(old_color === players[player]['color']){
@@ -102,24 +117,38 @@ function conquer_hexagon(hexagon, playerid){
 
 function create_hexagon(position, size){
     // Only create a hexagon if one doesn't already exist at this x,y.
-    for(var hexagon in hexagons){
-        if(hexagons[hexagon]['x'] === position['x']
-          && hexagons[hexagon]['y'] === position['y']){
-            return;
-        }
+    var exists = false;
+    core_group_modify({
+      'groups': [
+        'hexagon',
+      ],
+      'todo': function(entity){
+          if(core_entities[entity]['x'] === position['x']
+            && core_entities[entity]['y'] === position['y']){
+              exists = true;
+          }
+      },
+    });
+    if(exists){
+        return;
     }
 
-    hexagons.push({
-      'color': core_storage_data['default-color'],
-      'size': size,
-      'x': position['x'],
-      'y': position['y'],
+    core_entity_create({
+      'properties': {
+        'color': core_storage_data['default-color'],
+        'size': size,
+        'x': position['x'],
+        'y': position['y'],
+      },
+      'types': [
+        'hexagon',
+      ],
     });
-    unclaimed = hexagons.length;
+    unclaimed = core_entity_info['hexagon']['count'];
 }
 
 function create_player(properties){
-    if(player_count > hexagons.length - 1){
+    if(player_count > core_entity_info['hexagon']['count'] - 1){
         return;
     }
 
@@ -139,12 +168,12 @@ function create_player(properties){
     players[player_count] = properties;
     player_ids.push(player_count);
 
-    var hexagon = core_random_integer({
-      'max': hexagons.length,
+    var hexagon = core_random_key({
+      'object': core_groups['hexagon'],
     });
-    while(hexagons[hexagon]['color'] !== core_storage_data['default-color']){
-        hexagon = core_random_integer({
-          'max': hexagons.length,
+    while(core_entities[hexagon]['color'] !== core_storage_data['default-color']){
+        hexagon = core_random_key({
+          'object': core_groups['hexagon'],
         });
     }
     conquer_hexagon(
@@ -236,7 +265,6 @@ function load_data(id){
       'y': 0,
     };
     game_over = false;
-    hexagons = [];
     player_count = 0;
     player_ids = [];
     players = {};

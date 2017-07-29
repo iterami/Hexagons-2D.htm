@@ -23,14 +23,19 @@ function draw_logic(){
     }
 
     // Draw hexagons.
-    for(var hexagon in hexagons){
-        draw_hexagon(
-          hexagons[hexagon]['x'],
-          hexagons[hexagon]['y'],
-          hexagons[hexagon]['size'],
-          hexagons[hexagon]['color']
-        );
-    }
+    core_group_modify({
+      'groups': [
+        'hexagon',
+      ],
+      'todo': function(entity){
+          draw_hexagon(
+            core_entities[entity]['x'],
+            core_entities[entity]['y'],
+            core_entities[entity]['size'],
+            core_entities[entity]['color']
+          );
+      },
+    });
 
     // Restore the buffer state.
     canvas_buffer.restore();
@@ -105,6 +110,9 @@ function logic(){
 
 function repo_init(){
     core_repo_init({
+      'entities': {
+        'hexagon': {},
+      },
       'info': '<input onclick=canvas_setmode({newgame:true}) type=button value="Start New Game">',
       'keybinds': {
         65: {},
@@ -123,17 +131,22 @@ function repo_init(){
               if(!game_over
                 && players[player_ids[turn]]
                 && !players[player_ids[turn]]['ai']){
-                  for(var hexagon in hexagons){
-                      if(!players[player_ids[turn]]){
-                          break;
-                      }
+                  core_group_modify({
+                    'groups': [
+                      'hexagon',
+                    ],
+                    'todo': function(entity){
+                        if(!players[player_ids[turn]]){
+                            return;
+                        }
 
-                      if(hexagons[hexagon]['color'] === players[player_ids[turn]]['color']){
-                          hexagons[hexagon]['color'] = core_storage_data['default-color'];
-                          lose_hexagon(player_ids[turn]);
-                          unclaimed += 1;
-                      }
-                  }
+                        if(core_entities[entity]['color'] === players[player_ids[turn]]['color']){
+                            core_entities[entity]['color'] = core_storage_data['default-color'];
+                            lose_hexagon(player_ids[turn]);
+                            unclaimed += 1;
+                        }
+                    },
+                  });
                   for(var player in players){
                       players[player]['done'] = false;
                   }
@@ -162,28 +175,32 @@ function repo_init(){
               // Check if a hexagon exists at this location
               //   with a different color.
               var target = false;
-              for(var hexagon in hexagons){
-                  if(hexagons[hexagon]['x'] === position['x']
-                    && hexagons[hexagon]['y'] === position['y']
-                    && hexagons[hexagon]['color'] !== players[player_ids[turn]]['color']){
-                      target = hexagon;
-                      break;
-                  }
-              }
+              core_group_modify({
+                'groups': [
+                  'hexagon',
+                ],
+                'todo': function(entity){
+                    if(core_entities[entity]['x'] === position['x']
+                     && core_entities[entity]['y'] === position['y']
+                     && core_entities[entity]['color'] !== players[player_ids[turn]]['color']){
+                        target = entity;
+                    }
+                },
+              });
               if(target === false){
                   return;
               }
 
               // Check if current player has a hexagon next to target hexagon.
               if(!check_neighbor_match({
-                'x': hexagons[target]['x'],
-                'y': hexagons[target]['y'],
+                'x': core_entities[target]['x'],
+                'y': core_entities[target]['y'],
               })){
                   return;
               }
 
               // Attempt to conquer the hexagon.
-              conquer_hexagon(hexagon);
+              conquer_hexagon(target);
 
               input_required = false;
           },
@@ -226,7 +243,6 @@ var camera = {};
 var game_over = false;
 var height_half = 0;
 var hexagon_size = 0;
-var hexagons = [];
 var input_required = false;
 var player_count = 0;
 var player_ids = [];
