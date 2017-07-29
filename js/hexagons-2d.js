@@ -11,14 +11,14 @@ function draw_logic(){
     );
 
     // Draw selection if not AI turn.
-    if(players[player_ids[turn]]
-      && players[player_ids[turn]]['ai'] === false
-      && !players[player_ids[turn]]['done']){
+    if(core_entities[player_ids[turn]]
+      && core_entities[player_ids[turn]]['ai'] === false
+      && !core_entities[player_ids[turn]]['done']){
         draw_hexagon(
           core_mouse['x'],
           core_mouse['y'],
           core_storage_data['hexagon-size'] + 5,
-          players[player_ids[turn]]['color']
+          core_entities[player_ids[turn]]['color']
         );
     }
 
@@ -44,14 +44,14 @@ function draw_logic(){
 
     // Draw scoreboard.
     for(var player in scoreboard){
-        if(!players[scoreboard[player]['id']]){
+        if(!core_entities[scoreboard[player]['id']]){
             continue;
         }
 
-        canvas_buffer.fillStyle = players[scoreboard[player]['id']]['color'];
+        canvas_buffer.fillStyle = core_entities[scoreboard[player]['id']]['color'];
         canvas_buffer.fillText(
-          players[scoreboard[player]['id']]['name']
-            + (players[scoreboard[player]['id']]['done']
+          core_entities[scoreboard[player]['id']]['name']
+            + (core_entities[scoreboard[player]['id']]['done']
               ? '='
               : ':')
             + scoreboard[player]['hexagons'],
@@ -63,9 +63,9 @@ function draw_logic(){
 
     // Draw winner.
     if(game_over){
-        canvas_buffer.fillStyle = players[scoreboard[0]['id']]['color'];
+        canvas_buffer.fillStyle = core_entities[scoreboard[0]['id']]['color'];
         canvas_buffer.fillText(
-          players[scoreboard[0]['id']]['name'] + ' wins!',
+          core_entities[scoreboard[0]['id']]['name'] + ' wins!',
           0,
           x
         );
@@ -102,7 +102,7 @@ function logic(){
 
     core_ui_update({
       'ids': {
-        'turn': turns + turn_limit_string + ' ' + players[player_ids[turn]]['name'],
+        'turn': turns + turn_limit_string + ' ' + core_entities[player_ids[turn]]['name'],
         'unclaimed': unclaimed,
       },
     });
@@ -112,6 +112,13 @@ function repo_init(){
     core_repo_init({
       'entities': {
         'hexagon': {},
+        'player': {
+          'properties': {
+            'done': false,
+            'hexagons': 0,
+            'name': '',
+          },
+        },
       },
       'info': '<input onclick=canvas_setmode({newgame:true}) type=button value="Start New Game">',
       'keybinds': {
@@ -119,8 +126,8 @@ function repo_init(){
         68: {},
         72: {
           'todo': function(){
-              if(players[player_ids[turn]]
-                && !players[player_ids[turn]]['ai']){
+              if(core_entities[player_ids[turn]]
+                && !core_entities[player_ids[turn]]['ai']){
                   input_required = false;
                   end_turn();
               }
@@ -129,27 +136,32 @@ function repo_init(){
         80: {
           'todo': function(){
               if(!game_over
-                && players[player_ids[turn]]
-                && !players[player_ids[turn]]['ai']){
+                && core_entities[player_ids[turn]]
+                && !core_entities[player_ids[turn]]['ai']){
                   core_group_modify({
                     'groups': [
                       'hexagon',
                     ],
                     'todo': function(entity){
-                        if(!players[player_ids[turn]]){
+                        if(!core_entities[player_ids[turn]]){
                             return;
                         }
 
-                        if(core_entities[entity]['color'] === players[player_ids[turn]]['color']){
+                        if(core_entities[entity]['color'] === core_entities[player_ids[turn]]['color']){
                             core_entities[entity]['color'] = core_storage_data['default-color'];
                             lose_hexagon(player_ids[turn]);
                             unclaimed += 1;
                         }
                     },
                   });
-                  for(var player in players){
-                      players[player]['done'] = false;
-                  }
+                  core_group_modify({
+                    'groups': [
+                      'player',
+                    ],
+                    'todo': function(entity){
+                        core_entities[entity]['done'] = false;
+                    },
+                  });
                   input_required = false;
                   end_turn();
               }
@@ -162,8 +174,8 @@ function repo_init(){
       'mousebinds': {
         'mousedown': {
           'todo': function(event){
-              if(!players[player_ids[turn]]
-                || players[player_ids[turn]]['ai']){
+              if(!core_entities[player_ids[turn]]
+                || core_entities[player_ids[turn]]['ai']){
                   return;
               }
 
@@ -182,7 +194,7 @@ function repo_init(){
                 'todo': function(entity){
                     if(core_entities[entity]['x'] === position['x']
                      && core_entities[entity]['y'] === position['y']
-                     && core_entities[entity]['color'] !== players[player_ids[turn]]['color']){
+                     && core_entities[entity]['color'] !== core_entities[player_ids[turn]]['color']){
                         target = entity;
                     }
                 },
@@ -244,9 +256,7 @@ var game_over = false;
 var height_half = 0;
 var hexagon_size = 0;
 var input_required = false;
-var player_count = 0;
 var player_ids = [];
-var players = {};
 var scoreboard = [];
 var turn = 0;
 var turn_limit_string = '';

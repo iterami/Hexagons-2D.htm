@@ -9,7 +9,7 @@ function check_done(id){
         'hexagon',
       ],
       'todo': function(entity){
-          if(core_entities[entity]['color'] !== players[id]['color']){
+          if(core_entities[entity]['color'] !== core_entities[id]['color']){
               if(check_neighbor_match({
                 'x': core_entities[entity]['x'],
                 'y': core_entities[entity]['y'],
@@ -34,19 +34,19 @@ function check_done(id){
           'array': options,
         });
         for(var i = scoreboard.length; i--;){
-            if(!players[scoreboard[i]['id']]){
+            if(!core_entities[scoreboard[i]['id']]){
                 continue;
             }
 
             for(var option in options){
-                if(core_entities[options[option]]['color'] === players[scoreboard[i]['id']]['color']){
+                if(core_entities[options[option]]['color'] === core_entities[scoreboard[i]['id']]['color']){
                     return options[option];
                 }
             }
         }
 
     }else{
-        players[id]['done'] = true;
+        core_entities[id]['done'] = true;
     }
 
     return false;
@@ -82,7 +82,7 @@ function check_neighbor_match(position){
           'todo': function(entity){
               if(core_entities[entity]['x'] === new_next_position['x']
                 && core_entities[entity]['y'] === new_next_position['y']
-                && core_entities[entity]['color'] === players[player_ids[turn]]['color']){
+                && core_entities[entity]['color'] === core_entities[player_ids[turn]]['color']){
                   returned = true;
               }
           },
@@ -95,22 +95,26 @@ function check_neighbor_match(position){
 function conquer_hexagon(hexagon, playerid){
     playerid = playerid || player_ids[turn];
 
-    if(core_entities[hexagon]['color'] !== players[playerid]['color']){
+    if(core_entities[hexagon]['color'] !== core_entities[playerid]['color']){
         if(core_entities[hexagon]['color'] === core_storage_data['default-color']){
-            core_entities[hexagon]['color'] = players[playerid]['color'];
-            players[playerid]['hexagons'] += 1;
+            core_entities[hexagon]['color'] = core_entities[playerid]['color'];
+            core_entities[playerid]['hexagons'] += 1;
             unclaimed -= 1;
 
         }else if(core_random_boolean()){
             var old_color = core_entities[hexagon]['color'];
-            core_entities[hexagon]['color'] = players[playerid]['color'];
-            players[playerid]['hexagons'] += 1;
-            for(var player in players){
-                if(old_color === players[player]['color']){
-                    lose_hexagon(player);
-                    break;
-                }
-            }
+            core_entities[hexagon]['color'] = core_entities[playerid]['color'];
+            core_entities[playerid]['hexagons'] += 1;
+            core_group_modify({
+              'groups': [
+                'player',
+              ],
+              'todo': function(entity){
+                  if(old_color === core_entities[entity]['color']){
+                      lose_hexagon(entity);
+                  }
+              },
+            });
         }
     }
 }
@@ -148,25 +152,29 @@ function create_hexagon(position, size){
 }
 
 function create_player(properties){
-    if(player_count > core_entity_info['hexagon']['count'] - 1){
+    if(core_entity_info['player']['count'] > core_entity_info['hexagon']['count'] - 1){
         return;
     }
 
+    var id = core_entity_info['player']['count'];
     properties = properties || {};
     properties = {
       'ai': properties['ai'] || false,
       'color': properties['color'] || '#' + core_random_hex(),
-      'done': false,
-      'hexagons': 0,
-      'name': '',
     };
     properties['name'] = (properties['ai']
       ? 'AI'
       : 'P')
       + properties['color'];
 
-    players[player_count] = properties;
-    player_ids.push(player_count);
+    core_entity_create({
+      'id': id,
+      'properties': properties,
+      'types': [
+        'player',
+      ],
+    });
+    player_ids.push(id);
 
     var hexagon = core_random_key({
       'object': core_groups['hexagon'],
@@ -178,11 +186,10 @@ function create_player(properties){
     }
     conquer_hexagon(
       hexagon,
-      player_count
+      id
     );
 
-    check_done(player_count);
-    player_count += 1;
+    check_done(id);
 }
 
 function draw_hexagon(x, y, size, color){
@@ -213,12 +220,16 @@ function draw_hexagon(x, y, size, color){
 
 function end_turn(){
     var over = true;
-    for(var player in players){
-        if(!players[player]['done']){
-            over = false;
-            break;
-        }
-    }
+    core_group_modify({
+      'groups': [
+        'player',
+      ],
+      'todo': function(entity){
+          if(!core_entities[entity]['done']){
+              over = false;
+          }
+      },
+    });
     if(over
       || turns >= core_storage_data['turn-limit']){
         game_over = true;
@@ -232,25 +243,25 @@ function end_turn(){
         turn += 1;
     }
 
-    if(!players[player_ids[turn]]){
+    if(!core_entities[player_ids[turn]]){
         end_turn();
 
     }else{
-        input_required = !players[player_ids[turn]]['ai'];
+        input_required = !core_entities[player_ids[turn]]['ai'];
         turns += 1;
     }
 }
 
 function handle_turn(){
-    if(!players[player_ids[turn]]
-      || (input_required && !players[player_ids[turn]]['done'])
+    if(!core_entities[player_ids[turn]]
+      || (input_required && !core_entities[player_ids[turn]]['done'])
       || game_over){
         return;
     }
 
-    if(!players[player_ids[turn]]['done']){
+    if(!core_entities[player_ids[turn]]['done']){
         var target = check_done(player_ids[turn]);
-        if(players[player_ids[turn]]['ai']
+        if(core_entities[player_ids[turn]]['ai']
           && target !== false){
             conquer_hexagon(target);
         }
@@ -265,9 +276,7 @@ function load_data(id){
       'y': 0,
     };
     game_over = false;
-    player_count = 0;
     player_ids = [];
-    players = {};
     scoreboard = [];
     turn = 0;
     turns = 0;
@@ -315,14 +324,17 @@ function load_data(id){
         });
     }
 
-    input_required = !players[player_ids[turn]]['ai'];
+    input_required = !core_entities[player_ids[turn]]['ai'];
 }
 
 function lose_hexagon(player){
-    players[player]['hexagons'] -= 1;
-    if(players[player]['hexagons'] <= 0){
-        delete players[player];
-        player_count -= 1;
+    core_entities[player]['hexagons'] -= 1;
+    if(core_entities[player]['hexagons'] <= 0){
+        core_entity_remove({
+          'entities': [
+            player,
+          ],
+        });
     }
 }
 
@@ -347,12 +359,17 @@ function select_y_mod(x, y, move){
 
 function update_scoreboard(){
     scoreboard = [];
-    for(var player in players){
-        scoreboard.push({
-          'hexagons': players[player]['hexagons'],
-          'id': player,
-        });
-    }
+    core_group_modify({
+      'groups': [
+        'player',
+      ],
+      'todo': function(entity){
+          scoreboard.push({
+            'hexagons': core_entities[entity]['hexagons'],
+            'id': entity,
+          });
+      },
+    });
     sort_property({
       'array': scoreboard,
       'property': 'hexagons',
