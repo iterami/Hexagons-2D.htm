@@ -345,13 +345,11 @@ function select_hexagon(x, y){
     };
 }
 
-function select_y_mod(x, y, move){
-    move = move || -(x_scaled_half);
-
+function select_y_mod(x, y){
     var y_mod = Math.abs(y % y_scaled_double);
     if(y_mod > y_scaled_half
       && y_mod < y_scaled * 1.5){
-        x += move;
+        x += -x_scaled_half;
     }
 
     return x;
