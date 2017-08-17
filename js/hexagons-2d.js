@@ -48,7 +48,11 @@ function draw_logic(){
             continue;
         }
 
-        canvas_buffer.fillStyle = core_entities[scoreboard[player]['id']]['color'];
+        canvas_setproperties({
+          'properties': {
+            'fillStyle': core_entities[scoreboard[player]['id']]['color'],
+          },
+        });
         canvas_buffer.fillText(
           core_entities[scoreboard[player]['id']]['name']
             + (core_entities[scoreboard[player]['id']]['done']
@@ -63,7 +67,11 @@ function draw_logic(){
 
     // Draw winner.
     if(game_over){
-        canvas_buffer.fillStyle = core_entities[scoreboard[0]['id']]['color'];
+        canvas_setproperties({
+          'properties': {
+            'fillStyle': core_entities[scoreboard[0]['id']]['color'],
+          },
+        });
         canvas_buffer.fillText(
           core_entities[scoreboard[0]['id']]['name'] + ' wins!',
           0,
