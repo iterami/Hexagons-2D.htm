@@ -236,11 +236,9 @@ function end_turn(){
         return;
     }
 
-    if(turn >= player_ids.length - 1){
+    turn += 1;
+    if(turn >= player_ids.length){
         turn = 0;
-
-    }else{
-        turn += 1;
     }
 
     if(!core_entities[player_ids[turn]]){
