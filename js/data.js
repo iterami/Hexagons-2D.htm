@@ -206,8 +206,8 @@ function draw_hexagon(x, y, size, color){
           'type': i === 0
             ? 'moveTo'
             : 'lineTo',
-          'x': x + Math.cos(angle) * size + canvas_x,
-          'y': y + Math.sin(angle) * size + canvas_y,
+          'x': x + Math.cos(angle) * size + canvas_properties['width-half'],
+          'y': y + Math.sin(angle) * size + canvas_properties['height-half'],
         });
     }
     canvas_draw_path({

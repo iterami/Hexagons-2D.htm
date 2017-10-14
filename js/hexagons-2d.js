@@ -236,8 +236,8 @@ function repo_init(){
         },
         'mousemove': {
           'todo': function(){
-              var x = core_mouse['x'] - canvas_x - camera['x'];
-              var y = core_mouse['y'] - canvas_y - camera['y'];
+              var x = core_mouse['x'] - canvas_properties['width-half'] - camera['x'];
+              var y = core_mouse['y'] - canvas_properties['height-half'] - camera['y'];
               var position = select_hexagon(
                 select_y_mod(
                   x,
