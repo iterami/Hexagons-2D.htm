@@ -316,7 +316,10 @@ function load_data(id){
     }
 
     // Create AI.
-    for(var i = core_storage_data['ai']; i--;){
+    var ai_count = core_entity_info['hexagon']['count'] < core_storage_data['ai']
+      ? core_entity_info['hexagon']['count'] - 2
+      : core_storage_data['ai'];
+    for(var i = ai_count; i--;){
         create_player({
           'ai': true,
         });
