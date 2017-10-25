@@ -375,21 +375,3 @@ function update_scoreboard(){
       'reverse': true,
     });
 }
-
-var camera = {};
-var game_over = false;
-var height_half = 0;
-var hexagon_size = 0;
-var input_required = false;
-var player_ids = [];
-var scoreboard = [];
-var turn = 0;
-var turn_limit_string = '';
-var turns = 0;
-var unclaimed = 0;
-var width_half = 0;
-var x_scaled = 0;
-var x_scaled_half = 0;
-var y_scaled = 0;
-var y_scaled_double = 0;
-var y_scaled_half = 0;
