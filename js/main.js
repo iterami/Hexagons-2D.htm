@@ -128,16 +128,16 @@ function repo_init(){
           },
         },
       },
-      'info': '<input id=start type=button value="Start New Game">',
-      'info-events': {
+      'events': {
         'start': {
-          'todo': function(){
+          'onclick': function(){
               canvas_setmode({
                 'newgame': true,
               });
           },
         },
       },
+      'info': '<input id=start type=button value="Start New Game">',
       'keybinds': {
         65: {},
         68: {},
