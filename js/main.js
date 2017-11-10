@@ -82,25 +82,25 @@ function draw_logic(){
 
 function logic(){
     // Move camera left.
-    if(core_keys[65]['state']
+    if(core_keys[core_storage_data['move-←']]['state']
       && camera['x'] < width_half){
         camera['x'] += core_storage_data['scroll-speed'];
     }
 
     // Move camera right.
-    if(core_keys[68]['state']
+    if(core_keys[core_storage_data['move-→']]['state']
       && camera['x'] > -width_half){
         camera['x'] -= core_storage_data['scroll-speed'];
     }
 
     // Move camera down.
-    if(core_keys[83]['state']
+    if(core_keys[core_storage_data['move-↓']]['state']
       && camera['y'] > -height_half){
         camera['y'] -= core_storage_data['scroll-speed'];
     }
 
     // Move camera up.
-    if(core_keys[87]['state']
+    if(core_keys[core_storage_data['move-↑']]['state']
       && camera['y'] < height_half){
         camera['y'] += core_storage_data['scroll-speed'];
     }
@@ -158,8 +158,6 @@ function repo_init(){
       },
       'info': '<input id=start type=button value="Start New Game">',
       'keybinds': {
-        65: {},
-        68: {},
         72: {
           'todo': function(){
               if(core_entities[player_ids[turn]]
@@ -203,8 +201,6 @@ function repo_init(){
               }
           },
         },
-        83: {},
-        87: {},
       },
       'menu': true,
       'mousebinds': {
