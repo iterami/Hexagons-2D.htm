@@ -199,7 +199,7 @@ function draw_hexagon(x, y, size, color){
 
     var vertices = [];
     for(var i = 0; i < 6; i++){
-        var angle = math_degrees_to_radians({
+        var angle = core_degrees_to_radians({
           'degrees': 30 + i * 60,
         });
         vertices.push({
