@@ -30,7 +30,7 @@ function check_done(id){
     }
 
     if(options.length > 0){
-        sort_random({
+        core_sort_random({
           'array': options,
         });
         for(var i = scoreboard.length; i--;){
@@ -369,7 +369,7 @@ function update_scoreboard(){
           });
       },
     });
-    sort_property({
+    core_sort_property({
       'array': scoreboard,
       'property': 'hexagons',
       'reverse': true,
