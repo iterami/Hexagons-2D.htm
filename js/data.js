@@ -281,7 +281,7 @@ function load_data(id){
     unclaimed = 0;
 
     hexagon_size = Math.floor(core_storage_data['hexagon-size'] * 3.2);
-    turn_limit_string = isFinite(core_storage_data['turn-limit'])
+    turn_limit_string = Number.isFinite(core_storage_data['turn-limit'])
       ? '/' + core_storage_data['turn-limit']
       : '';
 
