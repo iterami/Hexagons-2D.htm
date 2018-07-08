@@ -40,10 +40,10 @@ function draw_logic(){
     // Restore the buffer state.
     canvas_buffer.restore();
 
-    var x = 75;
+    let x = 75;
 
     // Draw scoreboard.
-    for(var player in scoreboard){
+    for(let player in scoreboard){
         if(!core_entities[scoreboard[player]['id']]){
             continue;
         }
@@ -211,14 +211,14 @@ function repo_init(){
                   return;
               }
 
-              var position = select_hexagon(
+              let position = select_hexagon(
                 core_mouse['x'],
                 core_mouse['y']
               );
 
               // Check if a hexagon exists at this location
               //   with a different color.
-              var target = false;
+              let target = false;
               core_group_modify({
                 'groups': [
                   'hexagon',
@@ -251,9 +251,9 @@ function repo_init(){
         },
         'mousemove': {
           'todo': function(){
-              var x = core_mouse['x'] - canvas_properties['width-half'] - camera['x'];
-              var y = core_mouse['y'] - canvas_properties['height-half'] - camera['y'];
-              var position = select_hexagon(
+              let x = core_mouse['x'] - canvas_properties['width-half'] - camera['x'];
+              let y = core_mouse['y'] - canvas_properties['height-half'] - camera['y'];
+              let position = select_hexagon(
                 select_y_mod(
                   x,
                   y

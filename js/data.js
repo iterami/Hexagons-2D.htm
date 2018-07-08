@@ -1,8 +1,8 @@
 'use strict';
 
 function check_done(id){
-    var options = [];
-    var returned = false;
+    let options = [];
+    let returned = false;
 
     core_group_modify({
       'groups': [
@@ -33,12 +33,12 @@ function check_done(id){
         core_sort_random({
           'array': options,
         });
-        for(var i = scoreboard.length; i--;){
+        for(let i = scoreboard.length; i--;){
             if(!core_entities[scoreboard[i]['id']]){
                 continue;
             }
 
-            for(var option in options){
+            for(let option in options){
                 if(core_entities[options[option]]['color'] === core_entities[scoreboard[i]['id']]['color']){
                     return options[option];
                 }
@@ -53,7 +53,7 @@ function check_done(id){
 }
 
 function check_neighbor_match(position){
-    var next_positions = [
+    let next_positions = [
       [-x_scaled_half, -y_scaled,],
       [-x_scaled, 0,],
       [-x_scaled_half, y_scaled,],
@@ -61,14 +61,14 @@ function check_neighbor_match(position){
       [x_scaled, 0,],
       [x_scaled_half, y_scaled,],
     ];
-    var returned = false;
+    let returned = false;
 
-    for(var next_position in next_positions){
+    for(let next_position in next_positions){
         if(position['y'] % y_scaled_double){
             next_positions[next_position][0] += x_scaled;
         }
 
-        var new_next_position = select_hexagon(
+        let new_next_position = select_hexagon(
           select_y_mod(
             position['x'] + next_positions[next_position][0],
             position['y'] + next_positions[next_position][1]
@@ -102,7 +102,7 @@ function conquer_hexagon(hexagon, playerid){
             unclaimed -= 1;
 
         }else if(core_random_boolean()){
-            var old_color = core_entities[hexagon]['color'];
+            let old_color = core_entities[hexagon]['color'];
             core_entities[hexagon]['color'] = core_entities[playerid]['color'];
             core_entities[playerid]['hexagons'] += 1;
             core_group_modify({
@@ -121,7 +121,7 @@ function conquer_hexagon(hexagon, playerid){
 
 function create_hexagon(position, size){
     // Only create a hexagon if one doesn't already exist at this x,y.
-    var exists = false;
+    let exists = false;
     core_group_modify({
       'groups': [
         'hexagon',
@@ -156,7 +156,7 @@ function create_player(properties){
         return;
     }
 
-    var id = core_entity_info['player']['count'];
+    let id = core_entity_info['player']['count'];
     properties = properties || {};
     properties = {
       'ai': properties['ai'] || false,
@@ -176,7 +176,7 @@ function create_player(properties){
     });
     player_ids.push(id);
 
-    var hexagon = core_random_key({
+    let hexagon = core_random_key({
       'object': core_groups['hexagon'],
     });
     while(core_entities[hexagon]['color'] !== core_storage_data['default-color']){
@@ -197,9 +197,9 @@ function draw_hexagon(x, y, size, color){
         x += x_scaled_half;
     }
 
-    var vertices = [];
-    for(var i = 0; i < 6; i++){
-        var angle = core_degrees_to_radians({
+    let vertices = [];
+    for(let i = 0; i < 6; i++){
+        let angle = core_degrees_to_radians({
           'degrees': 30 + i * 60,
         });
         vertices.push({
@@ -219,7 +219,7 @@ function draw_hexagon(x, y, size, color){
 }
 
 function end_turn(){
-    var over = true;
+    let over = true;
     core_group_modify({
       'groups': [
         'player',
@@ -258,7 +258,7 @@ function handle_turn(){
     }
 
     if(!core_entities[player_ids[turn]]['done']){
-        var target = check_done(player_ids[turn]);
+        let target = check_done(player_ids[turn]);
         if(core_entities[player_ids[turn]]['ai']
           && target !== false){
             conquer_hexagon(target);
@@ -295,7 +295,7 @@ function load_data(id){
     width_half = core_storage_data['width'] / 2;
 
     // Create base hexagons.
-    var loop_counter = core_storage_data['hexagons'] - 1;
+    let loop_counter = core_storage_data['hexagons'] - 1;
     do{
         create_hexagon(
           select_hexagon(
@@ -311,15 +311,15 @@ function load_data(id){
     }while(loop_counter--);
 
     // Create players.
-    for(var i = core_storage_data['players']; i--;){
+    for(let i = core_storage_data['players']; i--;){
         create_player();
     }
 
     // Create AI.
-    var ai_count = core_entity_info['hexagon']['count'] < core_storage_data['ai']
+    let ai_count = core_entity_info['hexagon']['count'] < core_storage_data['ai']
       ? core_entity_info['hexagon']['count'] - 2
       : core_storage_data['ai'];
-    for(var i = ai_count; i--;){
+    for(let i = ai_count; i--;){
         create_player({
           'ai': true,
         });
@@ -347,7 +347,7 @@ function select_hexagon(x, y){
 }
 
 function select_y_mod(x, y){
-    var y_mod = Math.abs(y % y_scaled_double);
+    let y_mod = Math.abs(y % y_scaled_double);
     if(y_mod > y_scaled_half
       && y_mod < y_scaled * 1.5){
         x += -x_scaled_half;
