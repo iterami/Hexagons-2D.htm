@@ -137,7 +137,9 @@ function create_hexagon(position, size){
         return;
     }
 
+    unclaimed = core_entity_info['hexagon']['count'] + 1;
     core_entity_create({
+      'id': 'hexagon-' + unclaimed,
       'properties': {
         'color': core_storage_data['default-color'],
         'size': size,
@@ -148,7 +150,6 @@ function create_hexagon(position, size){
         'hexagon',
       ],
     });
-    unclaimed = core_entity_info['hexagon']['count'];
 }
 
 function create_player(properties){
