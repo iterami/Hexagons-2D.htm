@@ -98,13 +98,13 @@ function conquer_hexagon(hexagon, playerid){
     if(core_entities[hexagon]['color'] !== core_entities[playerid]['color']){
         if(core_entities[hexagon]['color'] === core_storage_data['default-color']){
             core_entities[hexagon]['color'] = core_entities[playerid]['color'];
-            core_entities[playerid]['hexagons'] += 1;
+            core_entities[playerid]['hexagon-count'] += 1;
             unclaimed -= 1;
 
         }else if(core_random_boolean()){
             let old_color = core_entities[hexagon]['color'];
             core_entities[hexagon]['color'] = core_entities[playerid]['color'];
-            core_entities[playerid]['hexagons'] += 1;
+            core_entities[playerid]['hexagon-count'] += 1;
             core_group_modify({
               'groups': [
                 'player',
@@ -296,7 +296,7 @@ function load_data(id){
     width_half = core_storage_data['width'] / 2;
 
     // Create base hexagons.
-    let loop_counter = core_storage_data['hexagons'] - 1;
+    let loop_counter = core_storage_data['hexagon-count'] - 1;
     do{
         create_hexagon(
           select_hexagon(
@@ -330,8 +330,8 @@ function load_data(id){
 }
 
 function lose_hexagon(player){
-    core_entities[player]['hexagons'] -= 1;
-    if(core_entities[player]['hexagons'] <= 0){
+    core_entities[player]['hexagon-count'] -= 1;
+    if(core_entities[player]['hexagon-count'] <= 0){
         core_entity_remove({
           'entities': [
             player,
@@ -365,14 +365,14 @@ function update_scoreboard(){
       ],
       'todo': function(entity){
           scoreboard.push({
-            'hexagons': core_entities[entity]['hexagons'],
+            'hexagon-count': core_entities[entity]['hexagon-count'],
             'id': entity,
           });
       },
     });
     core_sort_property({
       'array': scoreboard,
-      'property': 'hexagons',
+      'property': 'hexagon-count',
       'reverse': true,
     });
 }
