@@ -81,6 +81,10 @@ function draw_logic(){
 }
 
 function logic(){
+    if(!core_entities[player_ids[turn]]){
+        return;
+    }
+
     // Move camera left.
     if(core_keys[core_storage_data['move-←']]['state']
       && camera['x'] < width_half){
