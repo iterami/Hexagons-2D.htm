@@ -186,7 +186,7 @@ function repo_init(){
                         }
 
                         if(core_entities[entity]['color'] === core_entities[player_ids[turn]]['color']){
-                            core_entities[entity]['color'] = core_storage_data['default-color'];
+                            core_entities[entity]['color'] = core_storage_data['unclaimed-color'];
                             lose_hexagon(player_ids[turn]);
                             unclaimed += 1;
                         }
@@ -271,16 +271,16 @@ function repo_init(){
       },
       'storage': {
         'ai': 4,
-        'default-color': '#ffffff',
         'height': 500,
         'hexagon-count': 150,
         'hexagon-size': 25,
         'players': 1,
         'scroll-speed': 5,
         'turn-limit': Infinity,
+        'unclaimed-color': '#ffffff',
         'width': 500,
       },
-      'storage-menu': '<table><tr><td><input id=ai><td>AI<tr><td><input id=default-color type=color><td>Default Color<tr><td><input id=height><td>Height<tr><td><input id=hexagon-count><td>Hexagons<tr><td><input id=hexagon-size><td>Hexagon Size<tr><td><input id=players><td>Players<tr><td><input id=scroll-speed><td>Scroll Speed<tr><td><input id=turn-limit><td>Turn Limit<tr><td><input id=width><td>Width</table>',
+      'storage-menu': '<table><tr><td><input id=ai><td>AI<tr><td><input id=height><td>Height<tr><td><input id=hexagon-count><td>Hexagons<tr><td><input id=hexagon-size><td>Hexagon Size<tr><td><input id=players><td>Players<tr><td><input id=scroll-speed><td>Scroll Speed<tr><td><input id=turn-limit><td>Turn Limit<tr><td><input id=unclaimed-color type=color><td>Unclaimed Color<tr><td><input id=width><td>Width</table>',
       'title': 'Hexagons-2D.htm',
       'ui': 'Turn: <span id=turn></span><br>Unclaimed: <span id=unclaimed></span>',
     });

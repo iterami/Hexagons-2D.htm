@@ -14,7 +14,7 @@ function check_done(id){
                 'x': core_entities[entity]['x'],
                 'y': core_entities[entity]['y'],
               })){
-                  if(core_entities[entity]['color'] === core_storage_data['default-color']){
+                  if(core_entities[entity]['color'] === core_storage_data['unclaimed-color']){
                       returned = entity;
 
                   }else{
@@ -96,7 +96,7 @@ function conquer_hexagon(hexagon, playerid){
     playerid = playerid || player_ids[turn];
 
     if(core_entities[hexagon]['color'] !== core_entities[playerid]['color']){
-        if(core_entities[hexagon]['color'] === core_storage_data['default-color']){
+        if(core_entities[hexagon]['color'] === core_storage_data['unclaimed-color']){
             core_entities[hexagon]['color'] = core_entities[playerid]['color'];
             core_entities[playerid]['hexagon-count'] += 1;
             unclaimed -= 1;
@@ -141,7 +141,7 @@ function create_hexagon(position, size){
     core_entity_create({
       'id': 'hexagon-' + unclaimed,
       'properties': {
-        'color': core_storage_data['default-color'],
+        'color': core_storage_data['unclaimed-color'],
         'size': size,
         'x': position['x'],
         'y': position['y'],
@@ -180,7 +180,7 @@ function create_player(properties){
     let hexagon = core_random_key({
       'object': core_groups['hexagon'],
     });
-    while(core_entities[hexagon]['color'] !== core_storage_data['default-color']){
+    while(core_entities[hexagon]['color'] !== core_storage_data['unclaimed-color']){
         hexagon = core_random_key({
           'object': core_groups['hexagon'],
         });
