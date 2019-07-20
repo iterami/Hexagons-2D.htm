@@ -200,7 +200,7 @@ function draw_hexagon(x, y, size, color){
 
     let vertices = [];
     for(let i = 0; i < 6; i++){
-        let angle = core_degrees_to_radians({
+        let angle = math_degrees_to_radians({
           'degrees': 30 + i * 60,
         });
         vertices.push({
