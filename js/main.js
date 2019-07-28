@@ -11,28 +11,28 @@ function draw_logic(){
     );
 
     // Draw selection if not AI turn.
-    if(core_entities[player_ids[turn]]
-      && core_entities[player_ids[turn]]['ai'] === false
-      && !core_entities[player_ids[turn]]['done']){
+    if(entity_entities[player_ids[turn]]
+      && entity_entities[player_ids[turn]]['ai'] === false
+      && !entity_entities[player_ids[turn]]['done']){
         draw_hexagon(
           core_mouse['x'],
           core_mouse['y'],
           core_storage_data['hexagon-size'] + 5,
-          core_entities[player_ids[turn]]['color']
+          entity_entities[player_ids[turn]]['color']
         );
     }
 
     // Draw hexagons.
-    core_group_modify({
+    entity_group_modify({
       'groups': [
         'hexagon',
       ],
       'todo': function(entity){
           draw_hexagon(
-            core_entities[entity]['x'],
-            core_entities[entity]['y'],
-            core_entities[entity]['size'],
-            core_entities[entity]['color']
+            entity_entities[entity]['x'],
+            entity_entities[entity]['y'],
+            entity_entities[entity]['size'],
+            entity_entities[entity]['color']
           );
       },
     });
@@ -44,18 +44,18 @@ function draw_logic(){
 
     // Draw scoreboard.
     for(let player in scoreboard){
-        if(!core_entities[scoreboard[player]['id']]){
+        if(!entity_entities[scoreboard[player]['id']]){
             continue;
         }
 
         canvas_setproperties({
           'properties': {
-            'fillStyle': core_entities[scoreboard[player]['id']]['color'],
+            'fillStyle': entity_entities[scoreboard[player]['id']]['color'],
           },
         });
         canvas_buffer.fillText(
-          core_entities[scoreboard[player]['id']]['name']
-            + (core_entities[scoreboard[player]['id']]['done']
+          entity_entities[scoreboard[player]['id']]['name']
+            + (entity_entities[scoreboard[player]['id']]['done']
               ? '='
               : ':')
             + scoreboard[player]['hexagon-count'],
@@ -69,11 +69,11 @@ function draw_logic(){
     if(game_over){
         canvas_setproperties({
           'properties': {
-            'fillStyle': core_entities[scoreboard[0]['id']]['color'],
+            'fillStyle': entity_entities[scoreboard[0]['id']]['color'],
           },
         });
         canvas_buffer.fillText(
-          core_entities[scoreboard[0]['id']]['name'] + ' wins!',
+          entity_entities[scoreboard[0]['id']]['name'] + ' wins!',
           0,
           x
         );
@@ -81,7 +81,7 @@ function draw_logic(){
 }
 
 function logic(){
-    if(!core_entities[player_ids[turn]]){
+    if(!entity_entities[player_ids[turn]]){
         return;
     }
 
@@ -114,7 +114,7 @@ function logic(){
 
     core_ui_update({
       'ids': {
-        'turn': turns + turn_limit_string + ' ' + core_entities[player_ids[turn]]['name'],
+        'turn': turns + turn_limit_string + ' ' + entity_entities[player_ids[turn]]['name'],
         'unclaimed': unclaimed,
       },
     });
@@ -122,16 +122,6 @@ function logic(){
 
 function repo_init(){
     core_repo_init({
-      'entities': {
-        'hexagon': {},
-        'player': {
-          'properties': {
-            'done': false,
-            'hexagon-count': 0,
-            'name': '',
-          },
-        },
-      },
       'events': {
         'start': {
           'onclick': function(){
@@ -164,8 +154,8 @@ function repo_init(){
       'keybinds': {
         72: {
           'todo': function(){
-              if(core_entities[player_ids[turn]]
-                && !core_entities[player_ids[turn]]['ai']){
+              if(entity_entities[player_ids[turn]]
+                && !entity_entities[player_ids[turn]]['ai']){
                   input_required = false;
                   end_turn();
               }
@@ -174,30 +164,30 @@ function repo_init(){
         80: {
           'todo': function(){
               if(!game_over
-                && core_entities[player_ids[turn]]
-                && !core_entities[player_ids[turn]]['ai']){
-                  core_group_modify({
+                && entity_entities[player_ids[turn]]
+                && !entity_entities[player_ids[turn]]['ai']){
+                  entity_group_modify({
                     'groups': [
                       'hexagon',
                     ],
                     'todo': function(entity){
-                        if(!core_entities[player_ids[turn]]){
+                        if(!entity_entities[player_ids[turn]]){
                             return;
                         }
 
-                        if(core_entities[entity]['color'] === core_entities[player_ids[turn]]['color']){
-                            core_entities[entity]['color'] = core_storage_data['unclaimed-color'];
+                        if(entity_entities[entity]['color'] === entity_entities[player_ids[turn]]['color']){
+                            entity_entities[entity]['color'] = core_storage_data['unclaimed-color'];
                             lose_hexagon(player_ids[turn]);
                             unclaimed += 1;
                         }
                     },
                   });
-                  core_group_modify({
+                  entity_group_modify({
                     'groups': [
                       'player',
                     ],
                     'todo': function(entity){
-                        core_entities[entity]['done'] = false;
+                        entity_entities[entity]['done'] = false;
                     },
                   });
                   input_required = false;
@@ -210,8 +200,8 @@ function repo_init(){
       'mousebinds': {
         'mousedown': {
           'todo': function(event){
-              if(!core_entities[player_ids[turn]]
-                || core_entities[player_ids[turn]]['ai']){
+              if(!entity_entities[player_ids[turn]]
+                || entity_entities[player_ids[turn]]['ai']){
                   return;
               }
 
@@ -223,14 +213,14 @@ function repo_init(){
               // Check if a hexagon exists at this location
               //   with a different color.
               let target = false;
-              core_group_modify({
+              entity_group_modify({
                 'groups': [
                   'hexagon',
                 ],
                 'todo': function(entity){
-                    if(core_entities[entity]['x'] === position['x']
-                     && core_entities[entity]['y'] === position['y']
-                     && core_entities[entity]['color'] !== core_entities[player_ids[turn]]['color']){
+                    if(entity_entities[entity]['x'] === position['x']
+                     && entity_entities[entity]['y'] === position['y']
+                     && entity_entities[entity]['color'] !== entity_entities[player_ids[turn]]['color']){
                         target = entity;
                     }
                 },
@@ -241,8 +231,8 @@ function repo_init(){
 
               // Check if current player has a hexagon next to target hexagon.
               if(!check_neighbor_match({
-                'x': core_entities[target]['x'],
-                'y': core_entities[target]['y'],
+                'x': entity_entities[target]['x'],
+                'y': entity_entities[target]['y'],
               })){
                   return;
               }
@@ -291,6 +281,17 @@ function repo_init(){
         + '<tr><td><input id=width><td>Width</table>',
       'title': 'Hexagons-2D.htm',
       'ui': 'Turn: <span id=turn></span><br>Unclaimed: <span id=unclaimed></span>',
+    });
+    entity_set({
+      'type': 'hexagon',
+    });
+    entity_set({
+      'properties': {
+        'done': false,
+        'hexagon-count': 0,
+        'name': '',
+      },
+      'type': 'player',
     });
     canvas_init();
 }
