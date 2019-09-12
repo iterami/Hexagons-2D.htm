@@ -30,7 +30,7 @@ function check_done(id){
     }
 
     if(options.length > 0){
-        core_sort_random({
+        options = core_sort_random({
           'array': options,
         });
         for(let i = scoreboard.length; i--;){
@@ -370,7 +370,7 @@ function update_scoreboard(){
           });
       },
     });
-    core_sort_property({
+    scoreboard = core_sort_property({
       'array': scoreboard,
       'property': 'hexagon-count',
       'reverse': true,
