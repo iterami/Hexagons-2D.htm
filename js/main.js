@@ -152,15 +152,6 @@ function repo_init(){
       },
       'info': '<input id=start type=button value="Start New Game">',
       'keybinds': {
-        72: {
-          'todo': function(){
-              if(entity_entities[player_ids[turn]]
-                && !entity_entities[player_ids[turn]]['ai']){
-                  input_required = false;
-                  end_turn();
-              }
-          },
-        },
         80: {
           'todo': function(){
               if(!game_over
@@ -190,6 +181,15 @@ function repo_init(){
                         entity_entities[entity]['done'] = false;
                     },
                   });
+                  input_required = false;
+                  end_turn();
+              }
+          },
+        },
+        88: {
+          'todo': function(){
+              if(entity_entities[player_ids[turn]]
+                && !entity_entities[player_ids[turn]]['ai']){
                   input_required = false;
                   end_turn();
               }
