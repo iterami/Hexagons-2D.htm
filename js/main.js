@@ -124,11 +124,7 @@ function repo_init(){
     core_repo_init({
       'events': {
         'start': {
-          'onclick': function(){
-              canvas_setmode({
-                'newgame': true,
-              });
-          },
+          'onclick': core_repo_reset,
         },
       },
       'globals': {
@@ -259,6 +255,7 @@ function repo_init(){
           },
         },
       },
+      'reset': canvas_setmode,
       'storage': {
         'ai': 4,
         'height': 500,
