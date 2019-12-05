@@ -137,9 +137,10 @@ function create_hexagon(position, size){
         return;
     }
 
-    unclaimed = entity_info['hexagon']['count'] + 1;
+    let count = entity_info['hexagon']['count'];
+    unclaimed = count + 1;
     entity_create({
-      'id': 'hexagon-' + unclaimed,
+      'id': 'hexagon-' + count,
       'properties': {
         'color': core_storage_data['unclaimed-color'],
         'size': size,

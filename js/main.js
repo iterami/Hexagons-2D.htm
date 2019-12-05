@@ -121,7 +121,7 @@ function logic(){
 }
 
 function repo_escape(){
-    if(!entity_entities['0']
+    if(!entity_entities['hexagon-0']
       && !core_menu_open){
         core_repo_reset();
     }
