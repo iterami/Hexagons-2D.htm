@@ -38,7 +38,7 @@ function check_done(id){
                 continue;
             }
 
-            for(let option in options){
+            for(const option in options){
                 if(entity_entities[options[option]]['color'] === entity_entities[scoreboard[i]['id']]['color']){
                     return options[option];
                 }
@@ -53,7 +53,7 @@ function check_done(id){
 }
 
 function check_neighbor_match(position){
-    let next_positions = [
+    const next_positions = [
       [-x_scaled_half, -y_scaled,],
       [-x_scaled, 0,],
       [-x_scaled_half, y_scaled,],
@@ -63,12 +63,12 @@ function check_neighbor_match(position){
     ];
     let returned = false;
 
-    for(let next_position in next_positions){
+    for(const next_position in next_positions){
         if(position['y'] % y_scaled_double){
             next_positions[next_position][0] += x_scaled;
         }
 
-        let new_next_position = select_hexagon(
+        const new_next_position = select_hexagon(
           select_y_mod(
             position['x'] + next_positions[next_position][0],
             position['y'] + next_positions[next_position][1]
@@ -102,7 +102,7 @@ function conquer_hexagon(hexagon, playerid){
             unclaimed -= 1;
 
         }else if(core_random_boolean()){
-            let old_color = entity_entities[hexagon]['color'];
+            const old_color = entity_entities[hexagon]['color'];
             entity_entities[hexagon]['color'] = entity_entities[playerid]['color'];
             entity_entities[playerid]['hexagon-count'] += 1;
             entity_group_modify({
@@ -137,7 +137,7 @@ function create_hexagon(position, size){
         return;
     }
 
-    let count = entity_info['hexagon']['count'];
+    const count = entity_info['hexagon']['count'];
     unclaimed = count + 1;
     entity_create({
       'id': 'hexagon-' + count,
@@ -158,7 +158,7 @@ function create_player(properties){
         return;
     }
 
-    let id = entity_info['player']['count'];
+    const id = entity_info['player']['count'];
     properties = properties || {};
     properties = {
       'ai': properties['ai'] || false,
@@ -178,7 +178,7 @@ function create_player(properties){
     });
     player_ids.push(id);
 
-    let hexagon = core_random_key({
+    const hexagon = core_random_key({
       'object': entity_groups['hexagon'],
     });
     while(entity_entities[hexagon]['color'] !== core_storage_data['unclaimed-color']){
@@ -199,9 +199,9 @@ function draw_hexagon(x, y, size, color){
         x += x_scaled_half;
     }
 
-    let vertices = [];
+    const vertices = [];
     for(let i = 0; i < 6; i++){
-        let angle = math_degrees_to_radians({
+        const angle = math_degrees_to_radians({
           'degrees': 30 + i * 60,
         });
         vertices.push({
@@ -260,7 +260,7 @@ function handle_turn(){
     }
 
     if(!entity_entities[player_ids[turn]]['done']){
-        let target = check_done(player_ids[turn]);
+        const target = check_done(player_ids[turn]);
         if(entity_entities[player_ids[turn]]['ai']
           && target !== false){
             conquer_hexagon(target);
@@ -318,7 +318,7 @@ function load_data(id){
     }
 
     // Create AI.
-    let ai_count = entity_info['hexagon']['count'] < core_storage_data['ai']
+    const ai_count = entity_info['hexagon']['count'] < core_storage_data['ai']
       ? entity_info['hexagon']['count'] - 2
       : core_storage_data['ai'];
     for(let i = ai_count; i--;){
@@ -349,7 +349,7 @@ function select_hexagon(x, y){
 }
 
 function select_y_mod(x, y){
-    let y_mod = Math.abs(y % y_scaled_double);
+    const y_mod = Math.abs(y % y_scaled_double);
     if(y_mod > y_scaled_half
       && y_mod < y_scaled * 1.5){
         x += -x_scaled_half;

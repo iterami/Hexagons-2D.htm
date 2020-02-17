@@ -43,7 +43,7 @@ function draw_logic(){
     let x = 75;
 
     // Draw scoreboard.
-    for(let player in scoreboard){
+    for(const player in scoreboard){
         if(!entity_entities[scoreboard[player]['id']]){
             continue;
         }
@@ -208,7 +208,7 @@ function repo_init(){
                   return;
               }
 
-              let position = select_hexagon(
+              const position = select_hexagon(
                 core_mouse['x'],
                 core_mouse['y']
               );
@@ -248,9 +248,9 @@ function repo_init(){
         },
         'mousemove': {
           'todo': function(){
-              let x = core_mouse['x'] - canvas_properties['width-half'] - camera['x'];
-              let y = core_mouse['y'] - canvas_properties['height-half'] - camera['y'];
-              let position = select_hexagon(
+              const x = core_mouse['x'] - canvas_properties['width-half'] - camera['x'];
+              const y = core_mouse['y'] - canvas_properties['height-half'] - camera['y'];
+              const position = select_hexagon(
                 select_y_mod(
                   x,
                   y
