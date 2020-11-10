@@ -178,7 +178,7 @@ function create_player(properties){
     });
     player_ids.push(id);
 
-    const hexagon = core_random_key({
+    let hexagon = core_random_key({
       'object': entity_groups['hexagon'],
     });
     while(entity_entities[hexagon]['color'] !== core_storage_data['unclaimed-color']){
