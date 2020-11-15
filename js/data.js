@@ -153,7 +153,7 @@ function create_hexagon(position, size){
     });
 }
 
-function create_player(properties){
+function create_player(properties, homebase){
     if(entity_info['player']['count'] > entity_info['hexagon']['count'] - 1){
         return;
     }
@@ -178,16 +178,8 @@ function create_player(properties){
     });
     player_ids.push(id);
 
-    let hexagon = core_random_key({
-      'object': entity_groups['hexagon'],
-    });
-    while(entity_entities[hexagon]['color'] !== core_storage_data['unclaimed-color']){
-        hexagon = core_random_key({
-          'object': entity_groups['hexagon'],
-        });
-    }
     conquer_hexagon(
-      hexagon,
+      homebase,
       id
     );
 
@@ -312,9 +304,20 @@ function load_data(id){
         );
     }while(loop_counter--);
 
+    const available_hexagons = Object.keys(entity_groups['hexagon']);
+
     // Create players.
     for(let i = core_storage_data['players']; i--;){
-        create_player();
+        if(available_hexagons.length === 0){
+            break;
+        }
+
+        create_player(
+          {},
+          core_random_splice({
+            'array': available_hexagons,
+          })
+        );
     }
 
     // Create AI.
@@ -322,9 +325,18 @@ function load_data(id){
       ? entity_info['hexagon']['count'] - 2
       : core_storage_data['ai'];
     for(let i = ai_count; i--;){
-        create_player({
-          'ai': true,
-        });
+        if(available_hexagons.length === 0){
+            break;
+        }
+
+        create_player(
+          {
+            'ai': true,
+          },
+          core_random_splice({
+            'array': available_hexagons,
+          })
+        );
     }
 
     input_required = !entity_entities[player_ids[turn]]['ai'];
