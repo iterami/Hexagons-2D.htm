@@ -209,8 +209,8 @@ function repo_init(){
               }
 
               const position = select_hexagon(
-                core_mouse['x'],
-                core_mouse['y']
+                core_mouse['x'] - canvas_properties['width-half'] - camera['x'],
+                core_mouse['y'] - canvas_properties['height-half'] - camera['y']
               );
 
               // Check if a hexagon exists at this location
