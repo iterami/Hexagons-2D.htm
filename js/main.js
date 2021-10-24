@@ -1,6 +1,6 @@
 'use strict';
 
-function draw_logic(){
+function repo_drawlogic(){
     // Save the current buffer state.
     canvas_buffer.save();
 
@@ -80,7 +80,7 @@ function draw_logic(){
     }
 }
 
-function logic(){
+function repo_logic(){
     if(!entity_entities[player_ids[turn]]){
         return;
     }
