@@ -212,6 +212,8 @@ function repo_init(){
                 core_mouse['x'] - canvas_properties['width-half'] - camera['x'],
                 core_mouse['y'] - canvas_properties['height-half'] - camera['y']
               );
+              core_mouse['x'] = position['x'];
+              core_mouse['y'] = position['y'];
 
               // Check if a hexagon exists at this location
               //   with a different color.
