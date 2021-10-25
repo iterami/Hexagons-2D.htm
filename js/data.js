@@ -370,6 +370,22 @@ function select_y_mod(x, y){
     return x;
 }
 
+function update_position(){
+   const x = core_mouse['x'] - canvas_properties['width-half'] - camera['x'];
+   const y = core_mouse['y'] - canvas_properties['height-half'] - camera['y'];
+   const position = select_hexagon(
+     select_y_mod(
+       x,
+       y
+     ),
+     y
+   );
+   core_mouse['x'] = position['x'];
+   core_mouse['y'] = position['y'];
+
+   return position;
+}
+
 function update_scoreboard(){
     scoreboard = [];
     entity_group_modify({

@@ -208,12 +208,7 @@ function repo_init(){
                   return;
               }
 
-              const position = select_hexagon(
-                core_mouse['x'] - canvas_properties['width-half'] - camera['x'],
-                core_mouse['y'] - canvas_properties['height-half'] - camera['y']
-              );
-              core_mouse['x'] = position['x'];
-              core_mouse['y'] = position['y'];
+              const position = update_position();
 
               // Check if a hexagon exists at this location
               //   with a different color.
@@ -249,19 +244,7 @@ function repo_init(){
           },
         },
         'mousemove': {
-          'todo': function(){
-              const x = core_mouse['x'] - canvas_properties['width-half'] - camera['x'];
-              const y = core_mouse['y'] - canvas_properties['height-half'] - camera['y'];
-              const position = select_hexagon(
-                select_y_mod(
-                  x,
-                  y
-                ),
-                y
-              );
-              core_mouse['x'] = position['x'];
-              core_mouse['y'] = position['y'];
-          },
+          'todo': update_position,
         },
       },
       'reset': canvas_setmode,
