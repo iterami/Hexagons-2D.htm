@@ -29,7 +29,7 @@ function check_done(id){
         return returned;
     }
 
-    if(options.length > 0){
+    if(options.length){
         options = core_sort_random({
           'array': options,
         });
