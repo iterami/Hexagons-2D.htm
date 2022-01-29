@@ -1,16 +1,12 @@
 'use strict';
 
 function repo_drawlogic(){
-    // Save the current buffer state.
     canvas_buffer.save();
-
-    // Translate to camera position.
     canvas_buffer.translate(
       camera['x'],
       camera['y']
     );
 
-    // Draw selection if not AI turn.
     if(entity_entities[player_ids[turn]]
       && entity_entities[player_ids[turn]]['ai'] === false
       && !entity_entities[player_ids[turn]]['done']){
@@ -22,7 +18,6 @@ function repo_drawlogic(){
         );
     }
 
-    // Draw hexagons.
     entity_group_modify({
       'groups': [
         'hexagon',
@@ -37,12 +32,10 @@ function repo_drawlogic(){
       },
     });
 
-    // Restore the buffer state.
     canvas_buffer.restore();
 
     let x = 75;
 
-    // Draw scoreboard.
     for(const player in scoreboard){
         if(!entity_entities[scoreboard[player]['id']]){
             continue;
@@ -65,7 +58,6 @@ function repo_drawlogic(){
         x += 25;
     }
 
-    // Draw winner.
     if(game_over){
         canvas_setproperties({
           'properties': {
@@ -85,25 +77,18 @@ function repo_logic(){
         return;
     }
 
-    // Move camera left.
     if(core_keys[core_storage_data['move-←']]['state']
       && camera['x'] < width_half){
         camera['x'] += core_storage_data['scroll-speed'];
     }
-
-    // Move camera right.
     if(core_keys[core_storage_data['move-→']]['state']
       && camera['x'] > -width_half){
         camera['x'] -= core_storage_data['scroll-speed'];
     }
-
-    // Move camera down.
     if(core_keys[core_storage_data['move-↓']]['state']
       && camera['y'] > -height_half){
         camera['y'] -= core_storage_data['scroll-speed'];
     }
-
-    // Move camera up.
     if(core_keys[core_storage_data['move-↑']]['state']
       && camera['y'] < height_half){
         camera['y'] += core_storage_data['scroll-speed'];
@@ -210,8 +195,6 @@ function repo_init(){
 
               const position = update_position();
 
-              // Check if a hexagon exists at this location
-              //   with a different color.
               let target = false;
               entity_group_modify({
                 'groups': [
@@ -229,7 +212,6 @@ function repo_init(){
                   return;
               }
 
-              // Check if current player has a hexagon next to target hexagon.
               if(!check_neighbor_match({
                 'x': entity_entities[target]['x'],
                 'y': entity_entities[target]['y'],
@@ -237,7 +219,6 @@ function repo_init(){
                   return;
               }
 
-              // Attempt to conquer the hexagon.
               conquer_hexagon(target);
 
               input_required = false;
@@ -255,19 +236,19 @@ function repo_init(){
         'hexagon-size': 25,
         'players': 1,
         'scroll-speed': 5,
-        'turn-limit': Infinity,
+        'turn-limit': 0,
         'unclaimed-color': '#ffffff',
         'width': 500,
       },
-      'storage-menu': '<table><tr><td><input id=ai><td>AI'
-        + '<tr><td><input id=height><td>Height'
-        + '<tr><td><input id=hexagon-count><td>Hexagons'
-        + '<tr><td><input id=hexagon-size><td>Hexagon Size'
-        + '<tr><td><input id=players><td>Players'
-        + '<tr><td><input id=scroll-speed><td>Scroll Speed'
-        + '<tr><td><input id=turn-limit><td>Turn Limit'
+      'storage-menu': '<table><tr><td><input id=ai min=0 type=number><td>AI'
+        + '<tr><td><input id=height min=1 type=number><td>Height'
+        + '<tr><td><input id=hexagon-count min=1 type=number><td>Hexagons'
+        + '<tr><td><input id=hexagon-size min=1 type=number><td>Hexagon Size'
+        + '<tr><td><input id=players min=0 type=number><td>Players'
+        + '<tr><td><input id=scroll-speed min=1 type=number><td>Scroll Speed'
+        + '<tr><td><input id=turn-limit min=0 type=number><td>Turn Limit'
         + '<tr><td><input id=unclaimed-color type=color><td>Unclaimed Color'
-        + '<tr><td><input id=width><td>Width</table>',
+        + '<tr><td><input id=width min=1 type=number><td>Width</table>',
       'title': 'Hexagons-2D.htm',
       'ui': 'Turn: <span id=turn></span><br>Unclaimed: <span id=unclaimed></span>',
     });

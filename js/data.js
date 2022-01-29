@@ -120,7 +120,6 @@ function conquer_hexagon(hexagon, playerid){
 }
 
 function create_hexagon(position, size){
-    // Only create a hexagon if one doesn't already exist at this x,y.
     let exists = false;
     entity_group_modify({
       'groups': [
@@ -225,7 +224,7 @@ function end_turn(){
       },
     });
     if(over
-      || turns >= core_storage_data['turn-limit']){
+      || (core_storage_data['turn-limit'] > 0 && turns >= core_storage_data['turn-limit'])){
         game_over = true;
         return;
     }
@@ -275,7 +274,7 @@ function load_data(id){
     unclaimed = 0;
 
     hexagon_size = Math.floor(core_storage_data['hexagon-size'] * 3.2);
-    turn_limit_string = Number.isFinite(core_storage_data['turn-limit'])
+    turn_limit_string = core_storage_data['turn-limit'] > 0
       ? '/' + core_storage_data['turn-limit']
       : '';
 
@@ -288,7 +287,6 @@ function load_data(id){
     height_half = core_storage_data['height'] / 2;
     width_half = core_storage_data['width'] / 2;
 
-    // Create base hexagons.
     let loop_counter = core_storage_data['hexagon-count'] - 1;
     do{
         create_hexagon(
@@ -306,7 +304,6 @@ function load_data(id){
 
     const available_hexagons = Object.keys(entity_groups['hexagon']);
 
-    // Create players.
     for(let i = core_storage_data['players']; i--;){
         if(available_hexagons.length === 0){
             break;
@@ -320,7 +317,6 @@ function load_data(id){
         );
     }
 
-    // Create AI.
     const ai_count = entity_info['hexagon']['count'] < core_storage_data['ai']
       ? entity_info['hexagon']['count'] - 2
       : core_storage_data['ai'];
