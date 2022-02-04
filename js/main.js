@@ -240,15 +240,15 @@ function repo_init(){
         'unclaimed-color': '#ffffff',
         'width': 500,
       },
-      'storage-menu': '<table><tr><td><input id=ai min=0 step=any type=number><td>AI'
-        + '<tr><td><input id=height min=1 step=any type=number><td>Height'
-        + '<tr><td><input id=hexagon-count min=1 step=any type=number><td>Hexagons'
-        + '<tr><td><input id=hexagon-size min=1 step=any type=number><td>Hexagon Size'
-        + '<tr><td><input id=players min=0 step=any type=number><td>Players'
-        + '<tr><td><input id=scroll-speed min=1 step=any type=number><td>Scroll Speed'
-        + '<tr><td><input id=turn-limit min=0 step=any type=number><td>Turn Limit'
+      'storage-menu': '<table><tr><td><input class=mini id=ai min=0 step=any type=number><td>AI'
+        + '<tr><td><input class=mini id=height min=1 step=any type=number><td>Height'
+        + '<tr><td><input class=mini id=hexagon-count min=1 step=any type=number><td>Hexagons'
+        + '<tr><td><input class=mini id=hexagon-size min=1 step=any type=number><td>Hexagon Size'
+        + '<tr><td><input class=mini id=players min=0 step=any type=number><td>Players'
+        + '<tr><td><input class=mini id=scroll-speed min=1 step=any type=number><td>Scroll Speed'
+        + '<tr><td><input class=mini id=turn-limit min=0 step=any type=number><td>Turn Limit'
         + '<tr><td><input id=unclaimed-color type=color><td>Unclaimed Color'
-        + '<tr><td><input id=width min=1 step=any type=number><td>Width</table>',
+        + '<tr><td><input class=mini id=width min=1 step=any type=number><td>Width</table>',
       'title': 'Hexagons-2D.htm',
       'ui': 'Turn: <span id=turn></span><br>Unclaimed: <span id=unclaimed></span>',
     });
