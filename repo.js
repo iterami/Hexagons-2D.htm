@@ -350,8 +350,8 @@ function lose_hexagon(player){
 }
 
 function repo_drawlogic(){
-    canvas_buffer.save();
-    canvas_buffer.translate(
+    canvas.save();
+    canvas.translate(
       camera['x'],
       camera['y']
     );
@@ -381,7 +381,7 @@ function repo_drawlogic(){
       },
     });
 
-    canvas_buffer.restore();
+    canvas.restore();
 
     let x = 75;
 
@@ -395,7 +395,7 @@ function repo_drawlogic(){
             'fillStyle': entity_entities[scoreboard[player]['id']]['color'],
           },
         });
-        canvas_buffer.fillText(
+        canvas.fillText(
           entity_entities[scoreboard[player]['id']]['name']
             + (entity_entities[scoreboard[player]['id']]['done']
               ? '='
@@ -413,7 +413,7 @@ function repo_drawlogic(){
             'fillStyle': entity_entities[scoreboard[0]['id']]['color'],
           },
         });
-        canvas_buffer.fillText(
+        canvas.fillText(
           entity_entities[scoreboard[0]['id']]['name'] + ' wins!',
           0,
           x
