@@ -489,7 +489,7 @@ function repo_init(){
       },
       'info': '<input id=start type=button value="Start New Game">',
       'keybinds': {
-        80: {
+        'KeyP': {
           'todo': function(){
               if(!game_over
                 && entity_entities[player_ids[turn]]
@@ -523,7 +523,7 @@ function repo_init(){
               }
           },
         },
-        88: {
+        'KeyX': {
           'todo': function(){
               if(entity_entities[player_ids[turn]]
                 && !entity_entities[player_ids[turn]]['ai']){
