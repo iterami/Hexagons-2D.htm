@@ -192,9 +192,7 @@ function draw_hexagon(x, y, size, color){
 
     const vertices = [];
     for(let i = 0; i < 6; i++){
-        const angle = math_degrees_to_radians({
-          'degrees': 30 + i * 60,
-        });
+        const angle = math_degrees_to_radians(30 + i * 60);
         vertices.push({
           'type': i === 0
             ? 'moveTo'
