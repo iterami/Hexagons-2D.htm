@@ -30,9 +30,7 @@ function check_done(id){
     }
 
     if(options.length){
-        options = core_sort_random({
-          'array': options,
-        });
+        options = core_sort_random(options);
         for(let i = scoreboard.length; i--;){
             if(!entity_entities[scoreboard[i]['id']]){
                 continue;
