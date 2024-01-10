@@ -309,9 +309,7 @@ function load_data(id){
 
         create_player(
           {},
-          core_random_splice({
-            'array': available_hexagons,
-          })
+          core_random_splice(available_hexagons)
         );
     }
 
@@ -327,9 +325,7 @@ function load_data(id){
           {
             'ai': true,
           },
-          core_random_splice({
-            'array': available_hexagons,
-          })
+          core_random_splice(available_hexagons)
         );
     }
 
