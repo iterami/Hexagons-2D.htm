@@ -479,7 +479,7 @@ function repo_init(){
         'y_scaled_double': 0,
         'y_scaled_half': 0,
       },
-      'info': '<input id=start type=button value="Start New Game">',
+      'info': '<button id=start type=button>Start New Game</button>',
       'keybinds': {
         'KeyP': {
           'todo': function(){
