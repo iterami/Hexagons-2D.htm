@@ -383,9 +383,7 @@ function repo_drawlogic(){
         }
 
         canvas_setproperties({
-          'properties': {
-            'fillStyle': entity_entities[scoreboard[player]['id']]['color'],
-          },
+          'fillStyle': entity_entities[scoreboard[player]['id']]['color'],
         });
         canvas.fillText(
           entity_entities[scoreboard[player]['id']]['name']
@@ -401,9 +399,7 @@ function repo_drawlogic(){
 
     if(game_over){
         canvas_setproperties({
-          'properties': {
-            'fillStyle': entity_entities[scoreboard[0]['id']]['color'],
-          },
+          'fillStyle': entity_entities[scoreboard[0]['id']]['color'],
         });
         canvas.fillText(
           entity_entities[scoreboard[0]['id']]['name'] + ' wins!',
