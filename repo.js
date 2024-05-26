@@ -1,7 +1,7 @@
 'use strict';
 
 function check_done(id){
-    let options = [];
+    const options = [];
     let returned = false;
 
     entity_group_modify({
@@ -30,7 +30,10 @@ function check_done(id){
     }
 
     if(options.length){
-        options = core_sort_random(options);
+        core_sort_random({
+          'array': options,
+          'clone': false,
+        });
         for(let i = scoreboard.length; i--;){
             if(!entity_entities[scoreboard[i]['id']]){
                 continue;
