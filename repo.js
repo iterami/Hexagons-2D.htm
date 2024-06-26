@@ -286,7 +286,7 @@ function load_data(id){
     height_half = core_storage_data['height'] / 2;
     width_half = core_storage_data['width'] / 2;
 
-    let loop_counter = core_storage_data['hexagon-count'] - 1;
+    let loop_counter = Math.floor(core_storage_data['hexagon-count']) - 1;
     do{
         create_hexagon(
           select_hexagon(
@@ -303,7 +303,7 @@ function load_data(id){
 
     const available_hexagons = Object.keys(entity_groups['hexagon']);
 
-    for(let i = core_storage_data['players']; i--;){
+    for(let i = Math.floor(core_storage_data['players']); i--;){
         if(available_hexagons.length === 0){
             break;
         }
@@ -314,9 +314,9 @@ function load_data(id){
         );
     }
 
-    const ai_count = entity_info['hexagon']['count'] < core_storage_data['ai']
+    const ai_count = Math.floor(entity_info['hexagon']['count'] < core_storage_data['ai']
       ? entity_info['hexagon']['count'] - 2
-      : core_storage_data['ai'];
+      : core_storage_data['ai']);
     for(let i = ai_count; i--;){
         if(available_hexagons.length === 0){
             break;
@@ -580,11 +580,11 @@ function repo_init(){
         'unclaimed-color': '#ffffff',
         'width': 500,
       },
-      'storage-menu': '<table><tr><td><input class=mini id=ai min=0 step=any type=number><td>AI'
+      'storage-menu': '<table><tr><td><input class=mini id=ai min=0 step=1 type=number><td>AI'
         + '<tr><td><input class=mini id=height min=1 step=any type=number><td>Height'
-        + '<tr><td><input class=mini id=hexagon-count min=1 step=any type=number><td>Hexagons'
+        + '<tr><td><input class=mini id=hexagon-count min=1 step=1 type=number><td>Hexagons'
         + '<tr><td><input class=mini id=hexagon-size min=1 step=any type=number><td>Hexagon Size'
-        + '<tr><td><input class=mini id=players min=0 step=any type=number><td>Players'
+        + '<tr><td><input class=mini id=players min=0 step=1 type=number><td>Players'
         + '<tr><td><input class=mini id=scroll-speed min=1 step=any type=number><td>Scroll Speed'
         + '<tr><td><input class=mini id=turn-limit min=0 step=any type=number><td>Turn Limit'
         + '<tr><td><input id=unclaimed-color type=color><td>Unclaimed Color'
