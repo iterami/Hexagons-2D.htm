@@ -194,13 +194,13 @@ function draw_hexagon(x, y, size, color){
     const vertices = [];
     for(let i = 0; i < 6; i++){
         const angle = math_degrees_to_radians(30 + i * 60);
-        vertices.push({
-          'type': i === 0
+        vertices.push([
+          i === 0
             ? 'moveTo'
             : 'lineTo',
-          'x': x + Math.cos(angle) * size + canvas_properties['width-half'],
-          'y': y + Math.sin(angle) * size + canvas_properties['height-half'],
-        });
+          x + Math.cos(angle) * size + canvas_properties['width-half'],
+          y + Math.sin(angle) * size + canvas_properties['height-half'],
+        ]);
     }
     canvas_draw_path({
       'properties': {
