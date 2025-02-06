@@ -527,7 +527,7 @@ function repo_init(){
       'menu': true,
       'mousebinds': {
         'mousedown': {
-          'todo': function(event){
+          'todo': function(){
               if(!entity_entities[player_ids[turn]]
                 || entity_entities[player_ids[turn]]['ai']){
                   return;
