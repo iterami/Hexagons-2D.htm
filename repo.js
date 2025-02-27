@@ -266,8 +266,8 @@ function load_data(id){
       'y': 0,
     };
     game_over = false;
-    player_ids = [];
-    scoreboard = [];
+    player_ids.length = 0;
+    scoreboard.lenth = 0;
     turn = 0;
     turns = 0;
     unclaimed = 0;
@@ -642,7 +642,7 @@ function update_position(){
 }
 
 function update_scoreboard(){
-    scoreboard = [];
+    scoreboard.length = 0;
     entity_group_modify({
       'groups': [
         'player',
