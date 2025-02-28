@@ -233,6 +233,8 @@ function end_turn(){
         turn = 0;
     }
 
+    update_scoreboard();
+
     if(!entity_entities[player_ids[turn]]){
         end_turn();
 
@@ -261,13 +263,10 @@ function handle_turn(){
 }
 
 function load_data(id){
-    camera = {
-      'x': 0,
-      'y': 0,
-    };
+    camera_x = 0;
+    camera_y = 0;
     game_over = false;
-    player_ids.length = 0;
-    scoreboard.lenth = 0;
+    core_object_reset(player_ids);
     turn = 0;
     turns = 0;
     unclaimed = 0;
@@ -331,6 +330,7 @@ function load_data(id){
     }
 
     input_required = !entity_entities[player_ids[turn]]['ai'];
+    update_scoreboard();
 }
 
 function lose_hexagon(player){
@@ -347,8 +347,8 @@ function lose_hexagon(player){
 function repo_drawlogic(){
     canvas.save();
     canvas.translate(
-      camera['x'],
-      camera['y']
+      camera_x,
+      camera_y
     );
 
     if(entity_entities[player_ids[turn]]
@@ -418,24 +418,23 @@ function repo_logic(){
     }
 
     if(core_keys[core_storage_data['move-←']]['state']
-      && camera['x'] < width_half){
-        camera['x'] += core_storage_data['scroll-speed'];
+      && camera_x < width_half){
+        camera_x += core_storage_data['scroll-speed'];
     }
     if(core_keys[core_storage_data['move-→']]['state']
-      && camera['x'] > -width_half){
-        camera['x'] -= core_storage_data['scroll-speed'];
+      && camera_x > -width_half){
+        camera_x -= core_storage_data['scroll-speed'];
     }
     if(core_keys[core_storage_data['move-↓']]['state']
-      && camera['y'] > -height_half){
-        camera['y'] -= core_storage_data['scroll-speed'];
+      && camera_y > -height_half){
+        camera_y -= core_storage_data['scroll-speed'];
     }
     if(core_keys[core_storage_data['move-↑']]['state']
-      && camera['y'] < height_half){
-        camera['y'] += core_storage_data['scroll-speed'];
+      && camera_y < height_half){
+        camera_y += core_storage_data['scroll-speed'];
     }
 
     handle_turn();
-    update_scoreboard();
 
     core_ui_update({
       'ids': {
@@ -460,7 +459,8 @@ function repo_init(){
         },
       },
       'globals': {
-        'camera': {},
+        'camera_x': 0,
+        'camera_y': 0,
         'game_over': false,
         'height_half': 0,
         'hexagon_size': 0,
@@ -626,8 +626,8 @@ function select_y_mod(x, y){
 }
 
 function update_position(){
-   const x = core_mouse['x'] - canvas_properties['width-half'] - camera['x'];
-   const y = core_mouse['y'] - canvas_properties['height-half'] - camera['y'];
+   const x = core_mouse['x'] - canvas_properties['width-half'] - camera_x;
+   const y = core_mouse['y'] - canvas_properties['height-half'] - camera_y;
    const position = select_hexagon(
      select_y_mod(
        x,
@@ -642,7 +642,7 @@ function update_position(){
 }
 
 function update_scoreboard(){
-    scoreboard.length = 0;
+    core_object_reset(scoreboard);
     entity_group_modify({
       'groups': [
         'player',
