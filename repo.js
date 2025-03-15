@@ -9,16 +9,16 @@ function check_done(id){
         'hexagon',
       ],
       'todo': function(entity){
-          if(entity_entities[entity]['color'] !== entity_entities[id]['color']){
+          if(entity['color'] !== entity_entities[id]['color']){
               if(check_neighbor_match({
-                'x': entity_entities[entity]['x'],
-                'y': entity_entities[entity]['y'],
+                'x': entity['x'],
+                'y': entity['y'],
               })){
-                  if(entity_entities[entity]['color'] === core_storage_data['unclaimed-color']){
-                      returned = entity;
+                  if(entity['color'] === core_storage_data['unclaimed-color']){
+                      returned = entity['id'];
 
                   }else{
-                      options.push(entity);
+                      options.push(entity['id']);
                   }
               }
           }
@@ -81,9 +81,9 @@ function check_neighbor_match(position){
             'hexagon',
           ],
           'todo': function(entity){
-              if(entity_entities[entity]['x'] === new_next_position['x']
-                && entity_entities[entity]['y'] === new_next_position['y']
-                && entity_entities[entity]['color'] === entity_entities[player_ids[turn]]['color']){
+              if(entity['x'] === new_next_position['x']
+                && entity['y'] === new_next_position['y']
+                && entity['color'] === entity_entities[player_ids[turn]]['color']){
                   returned = true;
               }
           },
@@ -111,8 +111,8 @@ function conquer_hexagon(hexagon, playerid){
                 'player',
               ],
               'todo': function(entity){
-                  if(old_color === entity_entities[entity]['color']){
-                      lose_hexagon(entity);
+                  if(old_color === entity['color']){
+                      lose_hexagon(entity['id']);
                   }
               },
             });
@@ -127,8 +127,8 @@ function create_hexagon(position, size){
         'hexagon',
       ],
       'todo': function(entity){
-          if(entity_entities[entity]['x'] === position['x']
-            && entity_entities[entity]['y'] === position['y']){
+          if(entity['x'] === position['x']
+            && entity['y'] === position['y']){
               exists = true;
           }
       },
@@ -158,7 +158,6 @@ function create_player(properties, homebase){
         return;
     }
 
-    const id = entity_info['player']['count'];
     properties = properties || {};
     properties = {
       'ai': properties['ai'] || false,
@@ -169,20 +168,19 @@ function create_player(properties, homebase){
       : 'P')
       + properties['color'];
 
+    const id = entity_id_count;
     entity_create({
-      'id': id,
       'properties': properties,
       'types': [
         'player',
       ],
     });
-    player_ids.push(id);
 
+    player_ids.push(id);
     conquer_hexagon(
       homebase,
       id
     );
-
     check_done(id);
 }
 
@@ -217,7 +215,7 @@ function end_turn(){
         'player',
       ],
       'todo': function(entity){
-          if(!entity_entities[entity]['done']){
+          if(!entity['done']){
               over = false;
           }
       },
@@ -368,10 +366,10 @@ function repo_drawlogic(){
       ],
       'todo': function(entity){
           draw_hexagon(
-            entity_entities[entity]['x'],
-            entity_entities[entity]['y'],
-            entity_entities[entity]['size'],
-            entity_entities[entity]['color']
+            entity['x'],
+            entity['y'],
+            entity['size'],
+            entity['color']
           );
       },
     });
@@ -494,8 +492,8 @@ function repo_init(){
                             return;
                         }
 
-                        if(entity_entities[entity]['color'] === entity_entities[player_ids[turn]]['color']){
-                            entity_entities[entity]['color'] = core_storage_data['unclaimed-color'];
+                        if(entity['color'] === entity_entities[player_ids[turn]]['color']){
+                            entity['color'] = core_storage_data['unclaimed-color'];
                             lose_hexagon(player_ids[turn]);
                             unclaimed += 1;
                         }
@@ -506,7 +504,7 @@ function repo_init(){
                       'player',
                     ],
                     'todo': function(entity){
-                        entity_entities[entity]['done'] = false;
+                        entity['done'] = false;
                     },
                   });
                   input_required = false;
@@ -541,10 +539,10 @@ function repo_init(){
                   'hexagon',
                 ],
                 'todo': function(entity){
-                    if(entity_entities[entity]['x'] === position['x']
-                     && entity_entities[entity]['y'] === position['y']
-                     && entity_entities[entity]['color'] !== entity_entities[player_ids[turn]]['color']){
-                        target = entity;
+                    if(entity['x'] === position['x']
+                     && entity['y'] === position['y']
+                     && entity['color'] !== entity_entities[player_ids[turn]]['color']){
+                        target = entity['id'];
                     }
                 },
               });
@@ -649,8 +647,8 @@ function update_scoreboard(){
       ],
       'todo': function(entity){
           scoreboard.push({
-            'hexagon-count': entity_entities[entity]['hexagon-count'],
-            'id': entity,
+            'hexagon-count': entity['hexagon-count'],
+            'id': entity['id'],
           });
       },
     });
