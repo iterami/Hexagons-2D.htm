@@ -445,7 +445,7 @@ function repo_logic(){
 function repo_escape(){
     if(!entity_entities['hexagon-0']
       && !core_menu_open){
-        core_repo_reset();
+        canvas_setmode();
     }
 }
 
@@ -453,7 +453,7 @@ function repo_init(){
     core_repo_init({
       'events': {
         'start': {
-          'onclick': core_repo_reset,
+          'onclick': canvas_setmode,
         },
       },
       'globals': {
@@ -566,7 +566,6 @@ function repo_init(){
           'todo': update_position,
         },
       },
-      'reset': canvas_setmode,
       'storage': {
         'ai': 4,
         'height': 500,
@@ -578,6 +577,7 @@ function repo_init(){
         'unclaimed-color': '#ffffff',
         'width': 500,
       },
+      'storage-controls': true,
       'storage-menu': '<table><tr><td><input class=mini id=ai min=0 step=1 type=number><td>AI'
         + '<tr><td><input class=mini id=height min=1 step=any type=number><td>Height'
         + '<tr><td><input class=mini id=hexagon-count min=1 step=1 type=number><td>Hexagons'
