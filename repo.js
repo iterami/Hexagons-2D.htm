@@ -445,7 +445,7 @@ function repo_logic(){
 function repo_escape(){
     if(!entity_entities['hexagon-0']
       && !core_menu_open){
-        canvas_setmode();
+        start();
     }
 }
 
@@ -453,13 +453,13 @@ function repo_init(){
     core_repo_init({
       'events': {
         'start': {
-          'onclick': canvas_setmode,
+          'onclick': start,
         },
       },
       'globals': {
         'camera_x': 0,
         'camera_y': 0,
-        'game_over': false,
+        'game_over': true,
         'height_half': 0,
         'hexagon_size': 0,
         'input_required': false,
@@ -621,6 +621,14 @@ function select_y_mod(x, y){
     }
 
     return x;
+}
+
+function start(){
+    if(!game_over
+      && !globalThis.confirm('Start new game?')){
+        return;
+    }
+    canvas_setmode();
 }
 
 function update_position(){
