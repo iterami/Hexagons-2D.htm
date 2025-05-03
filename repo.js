@@ -350,8 +350,8 @@ function repo_drawlogic(){
       && entity_entities[player_ids[turn]]['ai'] === false
       && !entity_entities[player_ids[turn]]['done']){
         draw_hexagon(
-          core_mouse['x'],
-          core_mouse['y'],
+          position_x,
+          position_y,
           core_storage_data['hexagon-size'] + 5,
           entity_entities[player_ids[turn]]['color']
         );
@@ -461,6 +461,8 @@ function repo_init(){
         'hexagon_size': 0,
         'input_required': false,
         'player_ids': [],
+        'position_x': 0,
+        'position_y': 0,
         'scoreboard': [],
         'turn': 0,
         'turn_limit_string': '',
@@ -637,9 +639,8 @@ function update_position(){
      ),
      y
    );
-   core_mouse['x'] = position['x'];
-   core_mouse['y'] = position['y'];
-
+   position_x = position['x'];
+   position_y = position['y'];
    return position;
 }
 
