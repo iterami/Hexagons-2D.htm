@@ -415,6 +415,11 @@ function repo_logic(){
         return;
     }
 
+    if(core_mouse['down-0']){
+        camera_x += core_mouse['movement-x'];
+        camera_y += core_mouse['movement-y'];
+    }
+
     if(core_keys[core_storage_data['move-←']]['state']
       && camera_x < width_half){
         camera_x += core_storage_data['scroll-speed'];
