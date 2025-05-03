@@ -261,8 +261,8 @@ function handle_turn(){
 }
 
 function load_data(id){
-    camera_x = 0;
-    camera_y = 0;
+    camera_x = -core_storage_data['width'] / 2;
+    camera_y = -core_storage_data['height'] / 2;
     game_over = false;
     core_object_reset(player_ids);
     turn = 0;
@@ -280,19 +280,16 @@ function load_data(id){
     y_scaled_double = y_scaled * 2;
     y_scaled_half = y_scaled / 2;
 
-    height_half = core_storage_data['height'] / 2;
-    width_half = core_storage_data['width'] / 2;
-
     let loop_counter = Math.floor(core_storage_data['hexagon-count']) - 1;
     do{
         create_hexagon(
           select_hexagon(
             core_random_integer({
               'max': core_storage_data['width'],
-            }) - width_half,
+            }),
             core_random_integer({
               'max': core_storage_data['height'],
-            }) - height_half
+            })
           ),
           core_storage_data['hexagon-size']
         );
@@ -420,20 +417,16 @@ function repo_logic(){
         camera_y += core_mouse['movement-y'];
     }
 
-    if(core_keys[core_storage_data['move-←']]['state']
-      && camera_x < width_half){
+    if(core_keys[core_storage_data['move-←']]['state']){
         camera_x += core_storage_data['scroll-speed'];
     }
-    if(core_keys[core_storage_data['move-→']]['state']
-      && camera_x > -width_half){
+    if(core_keys[core_storage_data['move-→']]['state']){
         camera_x -= core_storage_data['scroll-speed'];
     }
-    if(core_keys[core_storage_data['move-↓']]['state']
-      && camera_y > -height_half){
+    if(core_keys[core_storage_data['move-↓']]['state']){
         camera_y -= core_storage_data['scroll-speed'];
     }
-    if(core_keys[core_storage_data['move-↑']]['state']
-      && camera_y < height_half){
+    if(core_keys[core_storage_data['move-↑']]['state']){
         camera_y += core_storage_data['scroll-speed'];
     }
 
@@ -465,7 +458,6 @@ function repo_init(){
         'camera_x': 0,
         'camera_y': 0,
         'game_over': true,
-        'height_half': 0,
         'hexagon_size': 0,
         'input_required': false,
         'player_ids': [],
@@ -474,7 +466,6 @@ function repo_init(){
         'turn_limit_string': '',
         'turns': 0,
         'unclaimed': 0,
-        'width_half': 0,
         'x_scaled': 0,
         'x_scaled_half': 0,
         'y_scaled': 0,
