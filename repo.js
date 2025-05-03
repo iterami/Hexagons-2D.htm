@@ -10,10 +10,7 @@ function check_done(id){
       ],
       'todo': function(entity){
           if(entity['color'] !== entity_entities[id]['color']){
-              if(check_neighbor_match({
-                'x': entity['x'],
-                'y': entity['y'],
-              })){
+              if(check_neighbor_match(entity['x'], entity['y'])){
                   if(entity['color'] === core_storage_data['unclaimed-color']){
                       returned = entity['id'];
 
@@ -53,7 +50,7 @@ function check_done(id){
     return false;
 }
 
-function check_neighbor_match(position){
+function check_neighbor_match(x, y){
     const next_positions = [
       [-x_scaled_half, -y_scaled,],
       [-x_scaled, 0,],
@@ -65,16 +62,16 @@ function check_neighbor_match(position){
     let returned = false;
 
     for(const next_position in next_positions){
-        if(position['y'] % y_scaled_double){
+        if(y % y_scaled_double){
             next_positions[next_position][0] += x_scaled;
         }
 
         const new_next_position = select_hexagon(
           select_y_mod(
-            position['x'] + next_positions[next_position][0],
-            position['y'] + next_positions[next_position][1]
+            x + next_positions[next_position][0],
+            y + next_positions[next_position][1]
           ),
-          position['y'] + next_positions[next_position][1]
+          y + next_positions[next_position][1]
         );
         entity_group_modify({
           'groups': [
@@ -548,10 +545,7 @@ function repo_init(){
                   return;
               }
 
-              if(!check_neighbor_match({
-                'x': entity_entities[target]['x'],
-                'y': entity_entities[target]['y'],
-              })){
+              if(!check_neighbor_match(entity_entities[target]['x'], entity_entities[target]['y'])){
                   return;
               }
 
