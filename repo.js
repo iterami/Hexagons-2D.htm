@@ -472,51 +472,6 @@ function repo_init(){
         'y_scaled_half': 0,
       },
       'info': '<button id=start type=button>Start New Game</button>',
-      'keybinds': {
-        'KeyP': {
-          'todo': function(){
-              if(!game_over
-                && entity_entities[player_ids[turn]]
-                && !entity_entities[player_ids[turn]]['ai']){
-                  entity_group_modify({
-                    'groups': [
-                      'hexagon',
-                    ],
-                    'todo': function(entity){
-                        if(!entity_entities[player_ids[turn]]){
-                            return;
-                        }
-
-                        if(entity['color'] === entity_entities[player_ids[turn]]['color']){
-                            entity['color'] = core_storage_data['unclaimed-color'];
-                            lose_hexagon(player_ids[turn]);
-                            unclaimed += 1;
-                        }
-                    },
-                  });
-                  entity_group_modify({
-                    'groups': [
-                      'player',
-                    ],
-                    'todo': function(entity){
-                        entity['done'] = false;
-                    },
-                  });
-                  input_required = false;
-                  end_turn();
-              }
-          },
-        },
-        'KeyX': {
-          'todo': function(){
-              if(entity_entities[player_ids[turn]]
-                && !entity_entities[player_ids[turn]]['ai']){
-                  input_required = false;
-                  end_turn();
-              }
-          },
-        },
-      },
       'menu': true,
       'mousebinds': {
         'mousedown': {
