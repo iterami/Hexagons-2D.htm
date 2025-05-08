@@ -409,9 +409,9 @@ function repo_logic(){
         return;
     }
 
-    if(core_mouse['down-0']){
-        camera_x += core_mouse['movement-x'];
-        camera_y += core_mouse['movement-y'];
+    if(core_pointer['down-0']){
+        camera_x += core_pointer['movement-x'];
+        camera_y += core_pointer['movement-y'];
     }
 
     if(core_keys[core_storage_data['move-←']]['state']){
@@ -473,8 +473,8 @@ function repo_init(){
       },
       'info': '<button id=start type=button>Start New Game</button>',
       'menu': true,
-      'mousebinds': {
-        'mousedown': {
+      'pointerbinds': {
+        'pointerdown': {
           'todo': function(){
               if(!entity_entities[player_ids[turn]]
                 || entity_entities[player_ids[turn]]['ai']){
@@ -509,7 +509,7 @@ function repo_init(){
               input_required = false;
           },
         },
-        'mousemove': {
+        'pointermove': {
           'todo': update_position,
         },
       },
@@ -579,8 +579,8 @@ function start(){
 }
 
 function update_position(){
-   const x = core_mouse['x'] - canvas_properties['width-half'] - camera_x;
-   const y = core_mouse['y'] - canvas_properties['height-half'] - camera_y;
+   const x = core_pointer['x'] - canvas_properties['width-half'] - camera_x;
+   const y = core_pointer['y'] - canvas_properties['height-half'] - camera_y;
    const position = select_hexagon(
      select_y_mod(
        x,
