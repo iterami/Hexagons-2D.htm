@@ -474,7 +474,7 @@ function repo_init(){
       'info': '<button id=start type=button>Start New Game</button>',
       'menu': true,
       'pointerbinds': {
-        'pointerdown': {
+        'pointerup': {
           'todo': function(){
               if(!entity_entities[player_ids[turn]]
                 || entity_entities[player_ids[turn]]['ai']){
