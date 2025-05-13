@@ -446,6 +446,13 @@ function repo_escape(){
 
 function repo_init(){
     core_repo_init({
+      'beforeunload': {
+        'todo': function(event){
+            if(!game_over){
+                event.preventDefault();
+            }
+        },
+      },
       'events': {
         'start': {
           'onclick': start,
