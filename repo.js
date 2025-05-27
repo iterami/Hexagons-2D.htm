@@ -258,8 +258,7 @@ function handle_turn(){
 }
 
 function load_data(id){
-    camera_x = -core_storage_data['width'] / 2;
-    camera_y = -core_storage_data['height'] / 2;
+    reset_camera();
     game_over = false;
     core_object_reset(player_ids);
     turn = 0;
@@ -404,39 +403,6 @@ function repo_drawlogic(){
     }
 }
 
-function repo_logic(){
-    if(!entity_entities[player_ids[turn]]){
-        return;
-    }
-
-    if(core_pointer['down-0']){
-        camera_x += core_pointer['movement-x'];
-        camera_y += core_pointer['movement-y'];
-    }
-
-    if(core_keys[core_storage_data['move-←']]['state']){
-        camera_x += core_storage_data['scroll-speed'];
-    }
-    if(core_keys[core_storage_data['move-→']]['state']){
-        camera_x -= core_storage_data['scroll-speed'];
-    }
-    if(core_keys[core_storage_data['move-↓']]['state']){
-        camera_y -= core_storage_data['scroll-speed'];
-    }
-    if(core_keys[core_storage_data['move-↑']]['state']){
-        camera_y += core_storage_data['scroll-speed'];
-    }
-
-    handle_turn();
-
-    core_ui_update({
-      'ids': {
-        'turn': turns + turn_limit_string + ' ' + entity_entities[player_ids[turn]]['name'],
-        'unclaimed': unclaimed,
-      },
-    });
-}
-
 function repo_escape(){
     if(!entity_entities['hexagon-0']
       && !core_menu_open){
@@ -454,6 +420,12 @@ function repo_init(){
         },
       },
       'events': {
+        'reset-camera': {
+          'onclick': function(){
+              reset_camera();
+              core_escape();
+          },
+        },
         'start': {
           'onclick': start,
         },
@@ -478,7 +450,7 @@ function repo_init(){
         'y_scaled_double': 0,
         'y_scaled_half': 0,
       },
-      'info': '<button id=start type=button>Start New Game</button>',
+      'info': '<button id=start type=button>Start New Game</button><button id=reset-camera type=button>Reset Camera</button>',
       'menu': true,
       'pointerbinds': {
         'pointerup': {
@@ -558,6 +530,44 @@ function repo_init(){
     canvas_init({
       'cursor': 'pointer',
     });
+}
+
+function repo_logic(){
+    if(!entity_entities[player_ids[turn]]){
+        return;
+    }
+
+    if(core_pointer['down-0']){
+        camera_x += core_pointer['movement-x'];
+        camera_y += core_pointer['movement-y'];
+    }
+
+    if(core_keys[core_storage_data['move-←']]['state']){
+        camera_x += core_storage_data['scroll-speed'];
+    }
+    if(core_keys[core_storage_data['move-→']]['state']){
+        camera_x -= core_storage_data['scroll-speed'];
+    }
+    if(core_keys[core_storage_data['move-↓']]['state']){
+        camera_y -= core_storage_data['scroll-speed'];
+    }
+    if(core_keys[core_storage_data['move-↑']]['state']){
+        camera_y += core_storage_data['scroll-speed'];
+    }
+
+    handle_turn();
+
+    core_ui_update({
+      'ids': {
+        'turn': turns + turn_limit_string + ' ' + entity_entities[player_ids[turn]]['name'],
+        'unclaimed': unclaimed,
+      },
+    });
+}
+
+function reset_camera(){
+    camera_x = -core_storage_data['width'] / 2;
+    camera_y = -core_storage_data['height'] / 2;
 }
 
 function select_hexagon(x, y){
