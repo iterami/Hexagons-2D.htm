@@ -338,8 +338,8 @@ function lose_hexagon(player){
 function repo_drawlogic(){
     canvas.save();
     canvas.translate(
-      camera_x,
-      camera_y
+      -camera_x,
+      -camera_y
     );
 
     if(entity_entities[player_ids[turn]]
@@ -538,21 +538,21 @@ function repo_logic(){
     }
 
     if(core_pointer['down-0']){
-        camera_x += core_pointer['movement-x'];
-        camera_y += core_pointer['movement-y'];
+        camera_x -= core_pointer['movement-x'];
+        camera_y -= core_pointer['movement-y'];
     }
 
     if(core_keys[core_storage_data['move-←']]['state']){
-        camera_x += core_storage_data['scroll-speed'];
-    }
-    if(core_keys[core_storage_data['move-→']]['state']){
         camera_x -= core_storage_data['scroll-speed'];
     }
+    if(core_keys[core_storage_data['move-→']]['state']){
+        camera_x += core_storage_data['scroll-speed'];
+    }
     if(core_keys[core_storage_data['move-↓']]['state']){
-        camera_y -= core_storage_data['scroll-speed'];
+        camera_y += core_storage_data['scroll-speed'];
     }
     if(core_keys[core_storage_data['move-↑']]['state']){
-        camera_y += core_storage_data['scroll-speed'];
+        camera_y -= core_storage_data['scroll-speed'];
     }
 
     handle_turn();
