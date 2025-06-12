@@ -566,8 +566,8 @@ function repo_logic(){
 }
 
 function reset_camera(){
-    camera_x = -core_storage_data['width'] / 2;
-    camera_y = -core_storage_data['height'] / 2;
+    camera_x = core_storage_data['width'] / 2;
+    camera_y = core_storage_data['height'] / 2;
 }
 
 function select_hexagon(x, y){
@@ -596,8 +596,8 @@ function start(){
 }
 
 function update_position(){
-   const x = core_pointer['x'] - canvas_properties['width-half'] - camera_x;
-   const y = core_pointer['y'] - canvas_properties['height-half'] - camera_y;
+   const x = core_pointer['x'] - canvas_properties['width-half'] + camera_x;
+   const y = core_pointer['y'] - canvas_properties['height-half'] + camera_y;
    const position = select_hexagon(
      select_y_mod(
        x,
