@@ -280,12 +280,8 @@ function load_data(id){
     do{
         create_hexagon(
           select_hexagon(
-            core_random_integer({
-              'max': core_storage_data['width'],
-            }),
-            core_random_integer({
-              'max': core_storage_data['height'],
-            })
+            core_random_integer(core_storage_data['width']),
+            core_random_integer(core_storage_data['height'])
           ),
           core_storage_data['hexagon-size']
         );
