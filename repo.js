@@ -500,7 +500,7 @@ function repo_init(){
         'width': 500,
       },
       'storage_controls': true,
-      'storage-menu': '<table><tr><td><input class=mini id=ai min=0 step=1 type=number><td>AI'
+      'storage_menu': '<table><tr><td><input class=mini id=ai min=0 step=1 type=number><td>AI'
         + '<tr><td><input class=mini id=height min=1 step=any type=number><td>Height'
         + '<tr><td><input class=mini id=hexagon_count min=1 step=1 type=number><td>Hexagons'
         + '<tr><td><input class=mini id=hexagon_size min=1 step=any type=number><td>Hexagon Size'
