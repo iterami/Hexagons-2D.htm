@@ -533,9 +533,9 @@ function repo_logic(){
         return;
     }
 
-    if(core_pointer['down-0']){
-        camera_x -= core_pointer['movement-x'];
-        camera_y -= core_pointer['movement-y'];
+    if(core_pointer.down_0){
+        camera_x -= core_pointer.movement_x;
+        camera_y -= core_pointer.movement_y;
     }
 
     if(core_keys[core_storage_data['move-←']].state){
