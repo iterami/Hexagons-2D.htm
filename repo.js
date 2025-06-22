@@ -538,16 +538,16 @@ function repo_logic(){
         camera_y -= core_pointer.movement_y;
     }
 
-    if(core_keys[core_storage_data['move-←']].state){
+    if(core_keys[core_storage_data.move_left].state){
         camera_x -= core_storage_data.scroll_speed;
     }
-    if(core_keys[core_storage_data['move-→']].state){
+    if(core_keys[core_storage_data.move_right].state){
         camera_x += core_storage_data.scroll_speed;
     }
-    if(core_keys[core_storage_data['move-↓']].state){
+    if(core_keys[core_storage_data.move_down].state){
         camera_y += core_storage_data.scroll_speed;
     }
-    if(core_keys[core_storage_data['move-↑']].state){
+    if(core_keys[core_storage_data.move_up].state){
         camera_y -= core_storage_data.scroll_speed;
     }
 
