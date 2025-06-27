@@ -533,11 +533,6 @@ function repo_logic(){
         return;
     }
 
-    if(core_pointer.down_0){
-        camera_x -= core_pointer.movement_x;
-        camera_y -= core_pointer.movement_y;
-    }
-
     if(core_keys[core_storage_data.move_left].state){
         camera_x -= core_storage_data.scroll_speed;
     }
@@ -592,18 +587,24 @@ function start(){
 }
 
 function update_position(){
-   const x = core_pointer.x - canvas_properties.width_half + camera_x;
-   const y = core_pointer.y - canvas_properties.height_half + camera_y;
-   const position = select_hexagon(
-     select_y_mod(
-       x,
-       y
-     ),
-     y
-   );
-   position_x = position.x;
-   position_y = position.y;
-   return position;
+    if(core_pointer.down_0){
+        camera_x -= core_pointer.movement_x;
+        camera_y -= core_pointer.movement_y;
+        return;
+    }
+
+    const x = core_pointer.x - canvas_properties.width_half + camera_x;
+    const y = core_pointer.y - canvas_properties.height_half + camera_y;
+    const position = select_hexagon(
+      select_y_mod(
+        x,
+        y
+      ),
+      y
+    );
+    position_x = position.x;
+    position_y = position.y;
+    return position;
 }
 
 function update_scoreboard(){
