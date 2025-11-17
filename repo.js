@@ -411,6 +411,7 @@ function repo_init(){
       'beforeunload': {
         'todo': function(event){
             if(!game_over){
+                core_escape(true);
                 event.preventDefault();
             }
         },
