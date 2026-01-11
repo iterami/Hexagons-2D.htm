@@ -257,69 +257,6 @@ function handle_turn(){
     end_turn();
 }
 
-function load_data(id){
-    reset_camera();
-    game_over = false;
-    core_object_reset(player_ids);
-    turn = 0;
-    turns = 0;
-    unclaimed = 0;
-
-    hexagon_size = Math.floor(core_storage_data.hexagon_size * 3.2);
-    turn_limit_string = core_storage_data.turn_limit > 0
-      ? '/' + core_storage_data.turn_limit
-      : '';
-
-    x_scaled = core_storage_data.hexagon_size * 1.84;
-    x_scaled_half = x_scaled / 2;
-    y_scaled = core_storage_data.hexagon_size * 1.6;
-    y_scaled_double = y_scaled * 2;
-    y_scaled_half = y_scaled / 2;
-
-    let loop_counter = Math.floor(core_storage_data.hexagon_count) - 1;
-    do{
-        create_hexagon(
-          select_hexagon(
-            core_random_integer(core_storage_data.width),
-            core_random_integer(core_storage_data.height)
-          ),
-          core_storage_data.hexagon_size
-        );
-    }while(loop_counter--);
-
-    const available_hexagons = Object.keys(entity_groups.hexagon);
-
-    for(let i = Math.floor(core_storage_data.players); i--;){
-        if(available_hexagons.length === 0){
-            break;
-        }
-
-        create_player(
-          {},
-          core_random_splice(available_hexagons)
-        );
-    }
-
-    const ai_count = Math.floor(entity_info.hexagon.count < core_storage_data.ai
-      ? entity_info.hexagon.count - 2
-      : core_storage_data.ai);
-    for(let i = ai_count; i--;){
-        if(available_hexagons.length === 0){
-            break;
-        }
-
-        create_player(
-          {
-            'ai': true,
-          },
-          core_random_splice(available_hexagons)
-        );
-    }
-
-    input_required = !entity_entities[player_ids[turn]].ai;
-    update_scoreboard();
-}
-
 function lose_hexagon(player){
     entity_entities[player].hexagon_count -= 1;
     if(entity_entities[player].hexagon_count <= 0){
@@ -527,6 +464,69 @@ function repo_init(){
     canvas_init({
       'cursor': 'pointer',
     });
+}
+
+function repo_load(id){
+    reset_camera();
+    game_over = false;
+    core_object_reset(player_ids);
+    turn = 0;
+    turns = 0;
+    unclaimed = 0;
+
+    hexagon_size = Math.floor(core_storage_data.hexagon_size * 3.2);
+    turn_limit_string = core_storage_data.turn_limit > 0
+      ? '/' + core_storage_data.turn_limit
+      : '';
+
+    x_scaled = core_storage_data.hexagon_size * 1.84;
+    x_scaled_half = x_scaled / 2;
+    y_scaled = core_storage_data.hexagon_size * 1.6;
+    y_scaled_double = y_scaled * 2;
+    y_scaled_half = y_scaled / 2;
+
+    let loop_counter = Math.floor(core_storage_data.hexagon_count) - 1;
+    do{
+        create_hexagon(
+          select_hexagon(
+            core_random_integer(core_storage_data.width),
+            core_random_integer(core_storage_data.height)
+          ),
+          core_storage_data.hexagon_size
+        );
+    }while(loop_counter--);
+
+    const available_hexagons = Object.keys(entity_groups.hexagon);
+
+    for(let i = Math.floor(core_storage_data.players); i--;){
+        if(available_hexagons.length === 0){
+            break;
+        }
+
+        create_player(
+          {},
+          core_random_splice(available_hexagons)
+        );
+    }
+
+    const ai_count = Math.floor(entity_info.hexagon.count < core_storage_data.ai
+      ? entity_info.hexagon.count - 2
+      : core_storage_data.ai);
+    for(let i = ai_count; i--;){
+        if(available_hexagons.length === 0){
+            break;
+        }
+
+        create_player(
+          {
+            'ai': true,
+          },
+          core_random_splice(available_hexagons)
+        );
+    }
+
+    input_required = !entity_entities[player_ids[turn]].ai;
+    update_scoreboard();
 }
 
 function repo_logic(){
