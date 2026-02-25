@@ -485,8 +485,7 @@ function repo_load(id){
     y_scaled_double = y_scaled * 2;
     y_scaled_half = y_scaled / 2;
 
-    let loop_counter = Math.floor(core_storage_data.hexagon_count) - 1;
-    do{
+    for(let i = 0; i < core_storage_data.hexagon_count; i++){
         create_hexagon(
           select_hexagon(
             core_random_integer(core_storage_data.width),
@@ -494,10 +493,9 @@ function repo_load(id){
           ),
           core_storage_data.hexagon_size
         );
-    }while(loop_counter--);
+    }
 
     const available_hexagons = Object.keys(entity_groups.hexagon);
-
     for(let i = Math.floor(core_storage_data.players); i--;){
         if(available_hexagons.length === 0){
             break;
