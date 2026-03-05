@@ -96,20 +96,20 @@ function conquer_hexagon(hexagon, playerid){
     if(entity_entities[hexagon].color !== entity_entities[playerid].color){
         if(entity_entities[hexagon].color === core_storage_data.unclaimed_color){
             entity_entities[hexagon].color = entity_entities[playerid].color;
-            entity_entities[playerid].hexagon_count += 1;
-            unclaimed -= 1;
+            entity_entities[playerid].hexagons++;
+            unclaimed--;
 
         }else if(core_random_boolean()){
             const old_color = entity_entities[hexagon].color;
             entity_entities[hexagon].color = entity_entities[playerid].color;
-            entity_entities[playerid].hexagon_count += 1;
+            entity_entities[playerid].hexagons++;
             entity_group_modify({
               'groups': [
                 'player',
               ],
               'todo': function(entity){
                   if(old_color === entity.color){
-                      lose_hexagon(entity.id);
+                      entity.hexagons--;
                   }
               },
             });
@@ -223,19 +223,23 @@ function end_turn(){
         return;
     }
 
-    turn += 1;
+    if(entity_entities[player_ids[turn]].hexagons > 0){
+        turns++;
+    }
+
+    turn++;
     if(turn >= player_ids.length){
         turn = 0;
     }
 
     update_scoreboard();
 
-    if(!entity_entities[player_ids[turn]]){
+    const entity = entity_entities[player_ids[turn]];
+    if(!entity){
         end_turn();
 
     }else{
-        input_required = !entity_entities[player_ids[turn]].ai;
-        turns += 1;
+        input_required = !entity.ai;
     }
 }
 
@@ -255,17 +259,6 @@ function handle_turn(){
     }
 
     end_turn();
-}
-
-function lose_hexagon(player){
-    entity_entities[player].hexagon_count -= 1;
-    if(entity_entities[player].hexagon_count <= 0){
-        entity_remove({
-          'entities': [
-            player,
-          ],
-        });
-    }
 }
 
 function repo_drawlogic(){
@@ -317,7 +310,7 @@ function repo_drawlogic(){
             + (entity_entities[scoreboard[player].id].done
               ? '='
               : ':')
-            + scoreboard[player].hexagon_count,
+            + scoreboard[player].hexagons,
           0,
           x
         );
@@ -375,7 +368,6 @@ function repo_init(){
         'position_y': 0,
         'scoreboard': [],
         'turn': 0,
-        'turn_limit_string': '',
         'turns': 0,
         'unclaimed': 0,
         'x_scaled': 0,
@@ -456,7 +448,7 @@ function repo_init(){
     entity_set({
       'properties': {
         'done': false,
-        'hexagon_count': 0,
+        'hexagons': 0,
         'name': '',
       },
       'type': 'player',
@@ -475,9 +467,6 @@ function repo_load(id){
     unclaimed = 0;
 
     hexagon_size = Math.floor(core_storage_data.hexagon_size * 3.2);
-    turn_limit_string = core_storage_data.turn_limit > 0
-      ? '/' + core_storage_data.turn_limit
-      : '';
 
     x_scaled = core_storage_data.hexagon_size * 1.84;
     x_scaled_half = x_scaled / 2;
@@ -546,13 +535,6 @@ function repo_logic(){
     }
 
     handle_turn();
-
-    core_ui_update({
-      'ids': {
-        'turn': turns + turn_limit_string + ' ' + entity_entities[player_ids[turn]].name,
-        'unclaimed': unclaimed,
-      },
-    });
 }
 
 function reset_camera(){
@@ -614,14 +596,24 @@ function update_scoreboard(){
       ],
       'todo': function(entity){
           scoreboard.push({
-            'hexagon_count': entity.hexagon_count,
+            'hexagons': entity.hexagons,
             'id': entity.id,
           });
       },
     });
     scoreboard = core_sort_property({
       'array': scoreboard,
-      'property': 'hexagon_count',
+      'property': 'hexagons',
       'reverse': true,
+    });
+
+    const turn_limit_string = core_storage_data.turn_limit > 0
+      ? '/' + core_storage_data.turn_limit
+      : '';
+    core_ui_update({
+      'ids': {
+        'turn': turns + turn_limit_string + ' ' + entity_entities[player_ids[turn]].name,
+        'unclaimed': unclaimed,
+      },
     });
 }
