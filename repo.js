@@ -340,7 +340,7 @@ function repo_init(){
     core_repo_init({
       'beforeunload': {
         'todo': function(event){
-            if(turns > 0){
+            if(turns !== -1){
                 core_escape(true);
                 event.preventDefault();
             }
@@ -368,7 +368,7 @@ function repo_init(){
         'position_y': 0,
         'scoreboard': [],
         'turn': 0,
-        'turns': 0,
+        'turns': -1,
         'unclaimed': 0,
         'x_scaled': 0,
         'x_scaled_half': 0,
@@ -560,7 +560,7 @@ function select_y_mod(x, y){
 }
 
 function start(){
-    if(turns > 0
+    if(turns !== -1
       && !globalThis.confirm('Start new game?')){
         return;
     }
