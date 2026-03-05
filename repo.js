@@ -340,7 +340,7 @@ function repo_init(){
     core_repo_init({
       'beforeunload': {
         'todo': function(event){
-            if(!game_over){
+            if(turns > 0){
                 core_escape(true);
                 event.preventDefault();
             }
@@ -560,7 +560,7 @@ function select_y_mod(x, y){
 }
 
 function start(){
-    if(!game_over
+    if(turns > 0
       && !globalThis.confirm('Start new game?')){
         return;
     }
