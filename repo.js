@@ -431,14 +431,14 @@ function repo_init(){
       },
       'storage_controls': true,
       'storage_menu': '<table><tr><td><input class=mini id=ai min=0 step=1 type=number><td>AI'
-        + '<tr><td><input class=mini id=height min=1 step=any type=number><td>Height'
-        + '<tr><td><input class=mini id=hexagon_count min=1 step=1 type=number><td>Hexagons'
-        + '<tr><td><input class=mini id=hexagon_size min=1 step=any type=number><td>Hexagon Size'
         + '<tr><td><input class=mini id=players min=0 step=1 type=number><td>Players'
         + '<tr><td><input class=mini id=scroll_speed min=1 step=any type=number><td>Scroll Speed'
         + '<tr><td><input class=mini id=turn_limit min=0 step=any type=number><td>Turn Limit'
         + '<tr><td><input id=unclaimed_color type=color><td>Unclaimed Color'
-        + '<tr><td><input class=mini id=width min=1 step=any type=number><td>Width</table>',
+        + '<tr><td><input class=mini id=height min=1 step=any type=number><td>Height'
+        + '<tr><td><input class=mini id=width min=1 step=any type=number><td>Width'
+        + '<tr><td><input class=mini id=hexagon_count min=1 step=1 type=number><td>Hexagons'
+        + '<tr><td><input class=mini id=hexagon_size min=1 step=any type=number><td>Hexagon Size</table>',
       'title': 'Hexagons-2D.htm',
       'ui': 'Turn: <span id=turn></span><br>Unclaimed: <span id=unclaimed></span>',
     });
