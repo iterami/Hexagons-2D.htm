@@ -512,7 +512,7 @@ function repo_load(id){
         );
     }
 
-    input_required = !entity_entities[player_ids[turn]].ai;
+    input_required = !entity_entities[player_ids[turn]]?.ai;
     update_scoreboard();
 }
 
@@ -612,7 +612,7 @@ function update_scoreboard(){
       : '';
     core_ui_update({
       'ids': {
-        'turn': turns + turn_limit_string + ' ' + entity_entities[player_ids[turn]].name,
+        'turn': turns + turn_limit_string + ' ' + entity_entities[player_ids[turn]]?.name,
         'unclaimed': unclaimed,
       },
     });
