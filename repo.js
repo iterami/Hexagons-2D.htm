@@ -52,12 +52,12 @@ function check_done(id){
 
 function check_neighbor_match(x, y){
     const next_positions = [
-      [-x_scaled_half, -y_scaled,],
-      [-x_scaled, 0,],
-      [-x_scaled_half, y_scaled,],
-      [x_scaled_half, -y_scaled,],
-      [x_scaled, 0,],
-      [x_scaled_half, y_scaled,],
+      [-x_scaled_half, -y_scaled],
+      [-x_scaled, 0],
+      [-x_scaled_half, y_scaled],
+      [x_scaled_half, -y_scaled],
+      [x_scaled, 0],
+      [x_scaled_half, y_scaled],
     ];
     let returned = false;
 
