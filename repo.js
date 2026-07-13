@@ -5,9 +5,7 @@ function check_done(id){
     let returned = false;
 
     entity_group_modify({
-      'groups': [
-        'hexagon',
-      ],
+      'groups': ['hexagon'],
       'todo': function(entity){
           if(entity.color !== entity_entities[id].color){
               if(check_neighbor_match(entity.x, entity.y)){
@@ -74,9 +72,7 @@ function check_neighbor_match(x, y){
           y + next_positions[next_position][1]
         );
         entity_group_modify({
-          'groups': [
-            'hexagon',
-          ],
+          'groups': ['hexagon'],
           'todo': function(entity){
               if(entity.x === new_next_position.x
                 && entity.y === new_next_position.y
@@ -104,9 +100,7 @@ function conquer_hexagon(hexagon, playerid){
             entity_entities[hexagon].color = entity_entities[playerid].color;
             entity_entities[playerid].hexagons++;
             entity_group_modify({
-              'groups': [
-                'player',
-              ],
+              'groups': ['player'],
               'todo': function(entity){
                   if(old_color === entity.color){
                       entity.hexagons--;
@@ -120,9 +114,7 @@ function conquer_hexagon(hexagon, playerid){
 function create_hexagon(position, size){
     let exists = false;
     entity_group_modify({
-      'groups': [
-        'hexagon',
-      ],
+      'groups': ['hexagon'],
       'todo': function(entity){
           if(entity.x === position.x
             && entity.y === position.y){
@@ -144,9 +136,7 @@ function create_hexagon(position, size){
         'x': position.x,
         'y': position.y,
       },
-      'types': [
-        'hexagon',
-      ],
+      'types': ['hexagon'],
     });
 }
 
@@ -168,9 +158,7 @@ function create_player(properties, homebase){
     const id = entity_id_count;
     entity_create({
       'properties': properties,
-      'types': [
-        'player',
-      ],
+      'types': ['player'],
     });
 
     player_ids.push(id);
@@ -208,9 +196,7 @@ function draw_hexagon(x, y, size, color){
 function end_turn(){
     let over = true;
     entity_group_modify({
-      'groups': [
-        'player',
-      ],
+      'groups': ['player'],
       'todo': function(entity){
           if(!entity.done){
               over = false;
@@ -280,9 +266,7 @@ function repo_drawlogic(){
     }
 
     entity_group_modify({
-      'groups': [
-        'hexagon',
-      ],
+      'groups': ['hexagon'],
       'todo': function(entity){
           draw_hexagon(
             entity.x,
@@ -338,13 +322,11 @@ function repo_escape(){
 
 function repo_init(){
     core_repo_init({
-      'beforeunload': {
-        'todo': function(event){
-            if(turns !== -1){
-                core_escape(true);
-                event.preventDefault();
-            }
-        },
+      'beforeunload': function(event){
+          if(turns !== -1){
+              core_escape(true);
+              event.preventDefault();
+          }
       },
       'events': {
         'reset_camera': {
@@ -379,44 +361,38 @@ function repo_init(){
       'info': '<button class=medium id=start type=button>Start New Game</button><button id=reset_camera type=button>Reset Camera</button>',
       'menu': true,
       'pointerbinds': {
-        'pointerup': {
-          'todo': function(){
-              if(!entity_entities[player_ids[turn]]
-                || entity_entities[player_ids[turn]].ai){
-                  return;
-              }
+        'pointerup': function(){
+            if(!entity_entities[player_ids[turn]]
+              || entity_entities[player_ids[turn]].ai){
+                return;
+            }
 
-              const position = update_position();
+            const position = update_position();
 
-              let target = false;
-              entity_group_modify({
-                'groups': [
-                  'hexagon',
-                ],
-                'todo': function(entity){
-                    if(entity.x === position.x
-                     && entity.y === position.y
-                     && entity.color !== entity_entities[player_ids[turn]].color){
-                        target = entity.id;
-                    }
-                },
-              });
-              if(target === false){
-                  return;
-              }
+            let target = false;
+            entity_group_modify({
+              'groups': ['hexagon'],
+              'todo': function(entity){
+                  if(entity.x === position.x
+                   && entity.y === position.y
+                   && entity.color !== entity_entities[player_ids[turn]].color){
+                      target = entity.id;
+                  }
+              },
+            });
+            if(target === false){
+                return;
+            }
 
-              if(!check_neighbor_match(entity_entities[target].x, entity_entities[target].y)){
-                  return;
-              }
+            if(!check_neighbor_match(entity_entities[target].x, entity_entities[target].y)){
+                return;
+            }
 
-              conquer_hexagon(target);
+            conquer_hexagon(target);
 
-              input_required = false;
-          },
+            input_required = false;
         },
-        'pointermove': {
-          'todo': update_position,
-        },
+        'pointermove': update_position,
       },
       'storage': {
         'ai': 4,
@@ -591,9 +567,7 @@ function update_position(){
 function update_scoreboard(){
     core_object_reset(scoreboard);
     entity_group_modify({
-      'groups': [
-        'player',
-      ],
+      'groups': ['player'],
       'todo': function(entity){
           scoreboard.push({
             'hexagons': entity.hexagons,
