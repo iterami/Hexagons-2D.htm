@@ -322,12 +322,6 @@ function repo_escape(){
 
 function repo_init(){
     core_repo_init({
-      'beforeunload': function(event){
-          if(turns !== -1){
-              core_escape(true);
-              event.preventDefault();
-          }
-      },
       'events': {
         'reset_camera': {
           'onclick': function(){
